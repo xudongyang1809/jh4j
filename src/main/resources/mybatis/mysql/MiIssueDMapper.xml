@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+     @desc “此代码是自动生成，请继续优化注释”
+	 @author 超级管理员 admin
+	 @version 1.0.0
+	 @date 2019-05-07 09:16:29
+	 @Copyright: 江苏金恒信息科技股份有限公司
+ -->
+<mapper namespace="MiIssueDDao">
+    <!-- 查询所有记录 过滤公司别 -->
+    <select id="findAll" parameterType="map" resultType="MiIssueDEntity">
+        select
+        id,
+        intIsActive,
+        intIsDelete,
+        createUserId,
+        createDateTime,
+        updateUserId,
+        updateDateTime,
+        updateUserNo,
+        companyId,
+        strSaleNo,
+        strShipItem,
+        strApplyNo,
+        strPoNo,
+        strPoItemNo,
+        strInspNo,
+        strInspItemCon,
+        strOrderNo,
+        strOrderItem,
+        strMatrlNo,
+        (select strName from mf_store_location d where d.id=a.strAreaId) strAreaId,
+        strMatrlName,
+        strSpec,
+        strUnit,
+        strBrand,
+        bdRealPrice,
+        bdSaleQty,
+        bdAmt,
+        strCfmEmpNo,
+        strCfmDateTime,
+        strOutUserId,
+        strOutTime,
+        bdQty,
+        strUserCust,
+        strRedRush,
+        strMemo,
+        strStus,
+        strReqNo,
+        strReqItem,
+        strVerifyUser,
+        strA,
+        strB
+        from mi_issue_d a
+        <where>
+            <if test="currentCompany != null and currentCompany != ''">
+                and a.companyId = #{currentCompany}
+            </if>
+            <if test="strSaleNo != null and strSaleNo != ''">
+                and a.strSaleNo like '%${strSaleNo}%'
+            </if>
+            <if test="strApplyNo != null and strApplyNo != ''">
+                and a.strApplyNo like '%${strApplyNo}%'
+            </if>
+            <if test="strStus != null and strStus != ''">
+                and (a.strStus like '%${strStus}%' or a.strStus like '%${strStusB}%')
+            </if>
+            <if test="strReqNo != null and strReqNo != ''">
+                and a.strReqNo like '%${strReqNo}%'
+            </if>
+        </where>
+        order by createDateTime desc
+    </select>
+
+    <!-- 查询所有记录 过滤公司别 -->
+    <select id="getCount" resultType="int" parameterType="map">
+        select count(id) from mi_issue_d
+        <where>
+            <if test="currentCompany != null and currentCompany != ''">
+                and companyId = #{currentCompany}
+            </if>
+            <if test="strSaleNo != null and strSaleNo != ''">
+                and strSaleNo like '%${strSaleNo}%'
+            </if>
+            <if test="strApplyNo != null and strApplyNo != ''">
+                and strApplyNo like '%${strApplyNo}%'
+            </if>
+            <if test="strStus != null and strStus != ''">
+                and (strStus like '%${strStus}%' or strStus like '%${strStusB}%')
+            </if>
+            <if test="strReqNo != null and strReqNo != ''">
+                and strReqNo like '%${strReqNo}%'
+            </if>
+        </where>
+        order by createDateTime desc
+    </select>
+
+    <!-- 根据ID查询记录 -->
+    <select id="findOneById" parameterType="String" resultType="MiIssueDEntity">
+		select 
+			*
+		from mi_issue_d
+		where id = #{id}
+	</select>
+
+    <!-- 添加记录 -->
+    <insert id="create" parameterType="MiIssueDEntity">
+		insert into mi_issue_d
+		(id, intIsActive, intIsDelete, createUserId, createDateTime, updateUserNo, companyId, strSaleNo, strShipItem, strApplyNo, strPoNo, strPoItemNo, strInspNo, strInspItem, strOrderNo, strOrderItem, strMatrlNo, strAreaId, strMatrlName, strSpec, strUnit, strBrand, bdRealPrice, bdSaleQty, bdAmt, strCfmEmpNo, strCfmDateTime, strOutUserId, strOutTime, bdQty, strUserCust, strRedRush, strMemo, strStus, strReqNo, strReqItem, strVerifyUser, strA, strB)
+		values(#{id}, #{intIsActive}, #{intIsDelete}, #{createUser.id}, #{createDateTime}, #{updateUserNo}, #{company.id}, #{strSaleNo}, #{strShipItem}, #{strApplyNo}, #{strPoNo}, #{strPoItemNo}, #{strInspNo}, #{strInspItem}, #{strOrderNo}, #{strOrderItem}, #{strMatrlNo}, #{strAreaId}, #{strMatrlName}, #{strSpec}, #{strUnit}, #{strBrand}, #{bdRealPrice}, #{bdSaleQty}, #{bdAmt}, #{strCfmEmpNo}, #{strCfmDateTime}, #{strOutUserId}, #{strOutTime}, #{bdQty}, #{strUserCust}, #{strRedRush}, #{strMemo}, #{strStus}, #{strReqNo}, #{strReqItem}, #{strVerifyUser}, #{strA}, #{strB})
+	</insert>
+
+    <!-- 修改记录 -->
+    <update id="update" parameterType="MiIssueDEntity">
+        update mi_issue_d
+        <set>
+            <if test="updateUserNo != null and updateUserNo != ''">
+                updateUserNo = #{updateUserNo},
+            </if>
+            <if test="strSaleNo != null and strSaleNo != ''">
+                strSaleNo = #{strSaleNo},
+            </if>
+            <if test="strShipItem != null and strShipItem != ''">
+                strShipItem = #{strShipItem},
+            </if>
+            <if test="strApplyNo != null and strApplyNo != ''">
+                strApplyNo = #{strApplyNo},
+            </if>
+            <if test="strPoNo != null and strPoNo != ''">
+                strPoNo = #{strPoNo},
+            </if>
+            <if test="strPoItemNo != null and strPoItemNo != ''">
+                strPoItemNo = #{strPoItemNo},
+            </if>
+            <if test="strInspNo != null and strInspNo != ''">
+                strInspNo = #{strInspNo},
+            </if>
+            <if test="strInspItem != null and strInspItem != ''">
+                strInspItem = #{strInspItem},
+            </if>
+            <if test="strOrderNo != null and strOrderNo != ''">
+                strOrderNo = #{strOrderNo},
+            </if>
+            <if test="strOrderItem != null and strOrderItem != ''">
+                strOrderItem = #{strOrderItem},
+            </if>
+            <if test="strMatrlNo != null and strMatrlNo != ''">
+                strMatrlNo = #{strMatrlNo},
+            </if>
+            <if test="strAreaId != null and strAreaId != ''">
+                strAreaId = #{strAreaId},
+            </if>
+            <if test="strMatrlName != null and strMatrlName != ''">
+                strMatrlName = #{strMatrlName},
+            </if>
+            <if test="strSpec != null and strSpec != ''">
+                strSpec = #{strSpec},
+            </if>
+            <if test="strUnit != null and strUnit != ''">
+                strUnit = #{strUnit},
+            </if>
+            <if test="strBrand != null and strBrand != ''">
+                strBrand = #{strBrand},
+            </if>
+            <if test="bdRealPrice != null">
+                bdRealPrice = #{bdRealPrice},
+            </if>
+            <if test="bdSaleQty != null">
+                bdSaleQty = #{bdSaleQty},
+            </if>
+            <if test="bdAmt != null">
+                bdAmt = #{bdAmt},
+            </if>
+            <if test="strCfmEmpNo != null">
+                strCfmEmpNo = #{strCfmEmpNo},
+            </if>
+            <if test="strCfmDateTime != null and strCfmDateTime != ''">
+                strCfmDateTime = #{strCfmDateTime},
+            </if>
+            <if test="strOutUserId != null and strOutUserId != ''">
+                strOutUserId = #{strOutUserId},
+            </if>
+            <if test="strOutTime != null and strOutTime != ''">
+                strOutTime = #{strOutTime},
+            </if>
+            <if test="bdQty != null">
+                bdQty = #{bdQty},
+            </if>
+            <if test="strUserCust != null and strUserCust != ''">
+                strUserCust = #{strUserCust},
+            </if>
+            <if test="strRedRush != null and strRedRush != ''">
+                strRedRush = #{strRedRush},
+            </if>
+            <if test="strMemo != null and strMemo != ''">
+                strMemo = #{strMemo},
+            </if>
+            <if test="strStus != null and strStus != ''">
+                strStus = #{strStus},
+            </if>
+            <if test="strReqNo != null and strReqNo != ''">
+                strReqNo = #{strReqNo},
+            </if>
+            <if test="strReqItem != null and strReqItem != ''">
+                strReqItem = #{strReqItem},
+            </if>
+            <if test="strVerifyUser != null and strVerifyUser != ''">
+                strVerifyUser = #{strVerifyUser},
+            </if>
+            <if test="strA != null and strA != ''">
+                strA = #{strA},
+            </if>
+            <if test="strB != null and strB != ''">
+                strB = #{strB},
+            </if>
+            <if test="updateUser != null">
+                updateUserId = #{updateUser.id},
+            </if>
+            <if test="updateDateTime != null and updateDateTime != ''">
+                updateDateTime = #{updateDateTime},
+            </if>
+            <if test="intIsActive != null and intIsActive != ''">
+                intIsActive = #{intIsActive},
+            </if>
+            <if test="intIsDelete != null and intIsDelete != ''">
+                intIsDelete = #{intIsDelete}
+            </if>
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+    <!-- 查询最大编码 -->
+    <select id="findMaxCode" parameterType="String" resultType="String">
+     select MAX(strSaleNo) from mi_issue_d a where strSaleNo like
+    #{strSaleNo}
+  </select>
+    <!-- 根据出库单号查询最大入库项次号-->
+    <select id="findMaxItemCode" parameterType="String" resultType="String">
+     	select MAX(strShipItem) from mi_issue_d a where strApplyNo like
+    	#{strApplyNo}
+  </select>
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="String">
+		delete from mi_issue_d where id = #{id}
+	</delete>
+    <!--销账方法-->
+    <update id="selesAcount" parameterType="map">
+		UPDATE mi_inventory
+		SET BDAMT = BDAMT - #{salesAmount},BDQTY = BDQTY - #{salesNum},deleteNum = #{salesNum},deleteAmt = #{salesAmount},status=#{status}
+		WHERE viewnum = #{viewnum} and strPoNo = #{strPoNo}
+	</update>
+    <!--取消销账方法-->
+    <update id="unSelesAcount" parameterType="map">
+		UPDATE mi_inventory
+		SET BDAMT = #{salesAmount},BDQTY = #{salesNum},deleteNum = 0,deleteAmt = 0,status=#{status}
+		WHERE viewnum = #{viewnum} and strPoNo = #{strPoNo}
+	</update>
+    <!--根据到货明细插入入库明细数据-->
+    <select id="selectInsert" parameterType="String" resultType="map">
+		insert into mi_issue_d
+			SELECT
+            UUID() id,
+            0 intIsActive,
+            0 intIsDelete,
+            d.createUserId createUserId,
+            d.createDateTime createDateTime,
+            d.updateUserId updateUserId,
+            '' updateDateTime,
+            '' updateUserNo,
+            d.companyId companyId,
+            #{strSaleNo} strSaleNo,
+            #{strShipItem} strShipItem,
+            #{strApplyNo} strApplyNo,
+            '' strPoNo,
+            '' strPoItemNo,
+            d.viewnum strInspNo,
+            d.strPoNo strInspItem,
+            '' strOrderNo,
+            '' strOrderItem,
+            d.strMatrlNo strMatrlNo,
+            d.strAreaId strAreaId,
+            d.strMatrlName strMatrlName,
+            d.strSpec strSpec,
+            d.strUnit strUnit,
+            d. strBrand strBrand,
+            d.bdBuyPrice bdRealPrice,
+            0 bdSaleQty,
+            d.bdAmt bdAmt,
+            0 strCfmEmpNo,
+            '' strCfmDateTime,
+            '' strOutUserId,
+            '' strOutTime,
+            d.bdQty bdQty,
+            '' strUserCust,
+            '' strRedRush,
+            '' strMemo,
+            'A' strStus,
+            '' strReqNo,
+            '' strReqItem,
+            '' strVerifyUser,
+            '' strA,
+            d.supplier strB
+        FROM
+            mi_inventory d
+        where d.id = #{InventoryID}
+	</select>
+</mapper>

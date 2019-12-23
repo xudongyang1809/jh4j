@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+     @desc “此代码是自动生成，请继续优化注释”
+	 @author 王梦奇 022347
+	 @version 1.0.0
+	 @date 2019-04-29 16:17:39
+	 @Copyright: 江苏金恒信息科技股份有限公司
+ -->
+<mapper namespace="MpPonoMDao">
+	<!-- 查询所有记录 过滤公司别 -->
+	<select id="findAll" parameterType="map" resultType="MpPonoMEntity">
+		select 
+			*
+		from mp_pono_m
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+			<if test="strPoName != null and strPoName != ''">
+				and strPoName like '%${strPoName}%'
+			</if>
+			<if test="strPoNo != null and strPoNo != ''">
+				and strPoNo like '%${strPoNo}%'
+			</if>
+			<if test="strRevision != null and strRevision != ''">
+				and strRevision like '%${strRevision}%'
+			</if>
+			<if test="strVendorNo != null and strVendorNo != ''">
+				and strVendorNo like '%${strVendorNo}%'
+			</if>
+  			<if test="strVendorName != null and strVendorName != ''">
+				and strVendorName like '%${strVendorName}%'
+			</if>
+			<if test="strStus != null and strStus != ''">
+				and strStus like '%${strStus}%'
+			</if>
+            <if test="strStus != null and strStus != ''">
+                and strStus like '%${strStus}%'
+            </if>
+				  and strIsActiveCont='Y'
+		</where>
+		order by strPoNo  desc,createDateTime desc
+	</select>
+
+	<!--返回所有map -->
+	<select id="findAllMap" parameterType="map" resultType="map">
+		select 	m.*,
+		(select a.strName FROM du_user a where a.id = m.strRespEmpNo ) strRespEmpName
+		from mp_pono_m m
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and m.companyId = #{currentCompany}
+			</if>
+			<if test="strPoName != null and strPoName != ''">
+				and m.strPoName like '%${strPoName}%'
+			</if>
+			<if test="strPoNo != null and strPoNo != ''">
+				and m.strPoNo like '%${strPoNo}%'
+			</if>
+			<if test="strRevision != null and strRevision != ''">
+				and m.strRevision like '%${strRevision}%'
+			</if>
+			<if test="strVendorNo != null and strVendorNo != ''">
+				and m.strVendorNo like '%${strVendorNo}%'
+			</if>
+			<if test="strVendorName != null and strVendorName != ''">
+				and m.strVendorName like '%${strVendorName}%'
+			</if>
+			<if test="strStus != null and strStus != ''">
+				and m.strStus like '%${strStus}%'
+			</if>
+		  	  	and m.strIsActiveCont='Y'
+		</where>
+		order by strPoNo  desc,createDateTime desc
+	</select>
+
+	<!-- 查询所有记录 过滤公司别 -->
+	<select id="getCount" resultType="int" parameterType="map">
+		select count(id) from mp_pono_m
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+			<if test="strPoName != null and strPoName != ''">
+				and strPoName like '%${strPoName}%'
+			</if>
+			<if test="strPoNo != null and strPoNo != ''">
+				and strPoNo like '%${strPoNo}%'
+			</if>
+			<if test="strRevision != null and strRevision != ''">
+				and strRevision like '%${strRevision}%'
+			</if>
+			<if test="strVendorNo != null and strVendorNo != ''">
+				and strVendorNo like '%${strVendorNo}%'
+			</if>
+			<if test="strVendorName != null and strVendorName != ''">
+				and strVendorName like '%${strVendorName}%'
+			</if>
+			<if test="strStus != null and strStus != ''">
+				and strStus like '%${strStus}%'
+			</if>
+			<if test="strStus != null and strStus != ''">
+				and strStus like '%${strStus}%'
+			</if>
+			and strIsActiveCont='Y'
+		</where>
+	</select>
+	
+	<!-- 根据ID查询记录 -->
+	<select id="findOneById" parameterType="String" resultType="MpPonoMEntity">
+		select 
+			*
+		from mp_pono_m
+		where id = #{id}
+	</select>
+	<!-- 根据ID查询记录  返回参数map -->
+	<select id="findOneByIdMap" parameterType="String" resultType="map">
+		select 	m.*,
+		(select a.strName FROM du_user a where a.id = m.strRespEmpNo ) strRespEmpName
+		from mp_pono_m m
+		where m.id = #{id}
+	</select>
+	
+	<!-- 添加记录 -->
+	<insert id="create" parameterType="MpPonoMEntity">
+		insert into mp_pono_m
+		(id, intIsActive, intIsDelete, createUserId, createDateTime, companyId, strPoNo, strRevision, strPoName, strTypeId, strIsActiveCont, strBeginDate, strEndDate, strVendorNo, strVendorName, strCurrencyId, strRate, bdTotalQty, bdTotalAmt, strTransType, strRespEmpNo, strPoDate, strMemo, strStus, strComfirmDate)
+		values(#{id}, #{intIsActive}, #{intIsDelete}, #{createUser.id}, #{createDateTime}, #{company.id}, #{strPoNo}, #{strRevision}, #{strPoName}, #{strTypeId}, #{strIsActiveCont}, #{strBeginDate}, #{strEndDate}, #{strVendorNo}, #{strVendorName}, #{strCurrencyId}, #{strRate}, #{bdTotalQty}, #{bdTotalAmt}, #{strTransType}, #{strRespEmpNo}, #{strPoDate}, #{strMemo}, #{strStus}, #{strComfirmDate})
+	</insert>
+	
+	<!-- 修改记录 -->
+	<update id="update" parameterType="MpPonoMEntity">
+		update mp_pono_m
+		<set>
+			<if test="strPoNo != null and strPoNo != ''">
+				strPoNo = #{strPoNo},
+			</if>
+			<if test="strRevision != null and strRevision != ''">
+				strRevision = #{strRevision},
+			</if>
+			<if test="strPoName != null and strPoName != ''">
+				strPoName = #{strPoName},
+			</if>
+			<if test="strTypeId != null and strTypeId != ''">
+				strTypeId = #{strTypeId},
+			</if>
+			<if test="strIsActiveCont != null and strIsActiveCont != ''">
+				strIsActiveCont = #{strIsActiveCont},
+			</if>
+			<if test="strBeginDate != null and strBeginDate != ''">
+				strBeginDate = #{strBeginDate},
+			</if>
+			<if test="strEndDate != null and strEndDate != ''">
+				strEndDate = #{strEndDate},
+			</if>
+			<if test="strVendorNo != null and strVendorNo != ''">
+				strVendorNo = #{strVendorNo},
+			</if>
+			<if test="strVendorName != null and strVendorName != ''">
+				strVendorName = #{strVendorName},
+			</if>
+			<if test="strCurrencyId != null and strCurrencyId != ''">
+				strCurrencyId = #{strCurrencyId},
+			</if>
+			<if test="strRate != null and strRate != ''">
+				strRate = #{strRate},
+			</if>
+			<if test="bdTotalQty != null">
+				bdTotalQty = #{bdTotalQty},
+			</if>
+			<if test="bdTotalAmt != null">
+				bdTotalAmt = #{bdTotalAmt},
+			</if>
+			<if test="strTransType != null and strTransType != ''">
+				strTransType = #{strTransType},
+			</if>
+			<if test="strRespEmpNo != null and strRespEmpNo != ''">
+				strRespEmpNo = #{strRespEmpNo},
+			</if>
+			<if test="strPoDate != null ">
+				strPoDate = #{strPoDate},
+			</if>
+			<if test="strMemo != null and strMemo != ''">
+				strMemo = #{strMemo},
+			</if>
+			<if test="strStus != null and strStus != ''">
+				strStus = #{strStus},
+			</if>
+			<if test="strComfirmDate != null ">
+				strComfirmDate = #{strComfirmDate},
+			</if>
+			<if test="updateUser != null">
+				updateUserId = #{updateUser.id},
+			</if>
+			<if test="updateDateTime != null and updateDateTime != ''">
+				updateDateTime = #{updateDateTime},
+			</if>
+			<if test="intIsActive != null and intIsActive != ''">
+				intIsActive = #{intIsActive},
+			</if>
+			<if test="intIsDelete != null and intIsDelete != ''">
+				intIsDelete = #{intIsDelete}
+			</if>
+		</set>
+		<where>
+			id = #{id}
+		</where>
+	</update>
+	
+	<!-- 删除记录 -->
+	<delete id="delete" parameterType="String">
+		delete from mp_pono_m where id = #{id}
+	</delete>
+
+	<!--生成合同号-->
+	<select id="findMaxCode" parameterType="String" resultType="String">
+		select max(strPoNo)from  mp_pono_m
+			where strPoNo like #{strPoNo}
+		</select>
+
+
+
+	<select id="findMaxEdition" parameterType="String" resultType="String">
+		select max(a.strRevision) from  mp_pono_m a
+		where a.strPoNo = #{strPoNo}
+	</select>
+
+	<select id="findOneByEdition" parameterType="map" resultType="MpPonoMEntity">
+		select
+			*
+				from mp_pono_m
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+			<if test="strPoNo != null and strPoNo != ''">
+				and strPoNo = #{strPoNo}
+			</if>
+			<if test="strRevision != null and strRevision != ''">
+				and strRevision = #{strRevision}
+			</if>
+			<if test="id != null and id != ''">
+				and id = #{id}
+			</if>
+		</where>
+	</select>
+
+
+
+</mapper>

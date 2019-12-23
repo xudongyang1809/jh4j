@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- Hints:
+     1. The code was automatic created;
+     2. Any other questions can ask the software engineer for help.
+	 @author sysadmin
+	 @date 2018-10-22
+	 @Copyright:江苏金恒信息科技股份有限公司
+ -->
+<mapper namespace="DcCurrencyDao">
+	
+	<select id="findAll" resultType="map"  parameterType="map">
+		SELECT *  from dc_currency A
+	<where>
+	<if test="message!=null and message!=''">
+		AND A.strSn = #{message} or A.strName = #{message}
+	</if>
+	</where>
+	</select>
+	
+	<!--用于查询默认货币是否存在-->
+	<select id="findByLocCurrency" resultType="map"  parameterType="string">
+		SELECT * from dc_currency A
+	<where>
+	<if test="locCurrency!=null and locCurrency!=''">
+		and A.locCurrency = #{locCurrency}
+	</if>
+	</where>
+	</select>
+	
+	<!--查询所有记录 过滤公司别-->
+	<select id="getCount" resultType="int"  parameterType="map">
+		SELECT COUNT(ID) from dc_currency A
+	<where>
+	<if test="message!=null and message!=''">
+		AND A.strSn = #{message} or A.strName = #{message}
+	</if>
+	</where>
+	</select>
+	
+	<!--根据中文名称查询-->
+	<select id="findDcCurrencyBystrName" resultType="DcCurrency"  parameterType="string">
+		SELECT * from dc_currency A
+	<where>
+	<if test="locCurrency!=null and locCurrency!=''">
+		and A.strName = #{strName}
+	</if>
+	</where>
+	</select> 
+</mapper>

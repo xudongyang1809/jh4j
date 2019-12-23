@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+	用户角色管理 mapper文件
+	@author WangWeiWei_020463
+ -->
+<mapper namespace="UserRoleDao">
+	<!-- 
+		根据条件查询用户角色列表
+		@author WangWeiWei_020463
+	 -->
+	<resultMap type="com.nisco.dms.entity.UserRole" id="findAllMap">
+		<id column="id" property="id" />
+		<association property="createUser" column="createUserId" select="UserDao.findByUserNo" javaType="com.nisco.dms.entity.User"></association>
+	</resultMap>
+	<select id="findAll" parameterType="map" resultMap="findAllMap">
+		select 
+			*
+		from ds_user_role a
+		<where>
+			<if test="strName != null and strName != ''">
+				and a.strName = #{strName}
+			</if>
+		</where>
+		order by a.createDateTime desc
+	</select>
+	
+	<!-- 
+		创建用户角色
+		@author WangWeiWei_020463
+	-->
+	<insert id="create" parameterType="com.nisco.dms.entity.UserRole">
+		insert into ds_user_role
+			(id, userAccount, roleId, intPriority, companyId, createUserId, createDateTime)
+		values(#{id}, #{user.strAccount}, #{role.id}, #{intPriority}, #{company.id}, #{createUser.id}, #{createDateTime})
+	</insert>
+	
+	<!-- 根据id查询出一条用户角色信息 -->
+	<select id="findOneById" parameterType="String" resultType="com.nisco.dms.entity.UserRole">
+		select * from ds_user_role where id = #{id}
+	</select>
+	
+	<!-- 根据工号查找出人员的已分配角色列表 -->
+	<resultMap type="com.nisco.dms.entity.UserRole" id="findRoleByUserAccountMap">
+		<id column="id" property="id" />
+		<association property="role" column="roleId" select="RoleDao.findOneById" javaType="com.nisco.dms.entity.Role"></association>
+	</resultMap>
+	<select id="findRoleByUserAccount" parameterType="String" resultMap="findRoleByUserAccountMap">
+		select * from ds_user_role where userAccount = #{strAccount}
+	</select>
+	
+	<select id="findByRoleId" parameterType="String" resultType="com.nisco.dms.entity.UserRole">
+		select * from ds_user_role where roleId = #{roleId}
+	</select>
+	
+	<!-- 
+		根据角色Id查找出该角色下所有的人员信息
+		@author WangWeiWei_020463
+	 -->
+	<select id="findUserByRoleId" parameterType="String" resultType="com.nisco.dms.entity.User">
+		select u.* from ds_user_role a
+		left join du_user u on a.userAccount = u.strAccount  
+		where roleId = #{roleId}
+	</select>
+	
+	<select id="findUserByRoleIdNum" parameterType="String" resultType="int">
+		select count(u.id) from ds_user_role a
+		left join du_user u on a.userAccount = u.strAccount  
+		where roleId = #{roleId}
+	</select>
+	
+	<!-- 
+		根据Id删除一条用户角色
+		@author WangWeiWei_020463
+	-->
+	<delete id="delete" parameterType="String">
+		delete from ds_user_role where id = #{id}
+	</delete>
+	
+	<!-- 删除用户角色 -->
+	<delete id="deleteByRoleIdAndUserNo" parameterType="map">
+		delete from ds_user_role where userAccount = #{userAccount} and roleId = #{roleId}
+	</delete>
+	
+	<!-- 根据角色Id删除人员角色对应信息 -->
+	<delete id="deleteByRoleId" parameterType="String">
+		delete from ds_user_role where roleId = #{roleId}
+	</delete>
+	
+	<!-- 根据账号删除人员角色对应信息 -->
+	<delete id="deleteByUserAccount" parameterType="String">
+		delete from ds_user_role where userAccount = #{userAccount}
+	</delete>
+</mapper>

@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+     @desc “此代码是自动生成，请继续优化注释”
+	 @author 超级管理员 admin
+	 @version 1.0.0
+	 @date 2019-04-28 16:26:22
+	 @Copyright: 江苏金恒信息科技股份有限公司
+ -->
+<mapper namespace="MiAcceptanceMDao">
+    <!-- 查询所有记录 过滤公司别 -->
+    <select id="findAll" parameterType="map" resultType="MiAcceptanceMEntity">
+        SELECT
+        id,
+        intIsActive,
+        intIsDelete,
+        createUserId,
+        createDateTime,
+        updateUserId,
+        updateDateTime,
+        updateUserNo,
+        companyId,
+        strInspNo,
+        strInspType,
+        (select strValue from dc_sys_dictionary_dtl d where d.id=a.strLocNo and d.strValue != '请选择') strLocNo,
+        strSaleVendor,
+        strInUserId,
+        strApplyDateTime,
+        strOrderNo,
+        strPoNo,
+        strInspNoPrice,
+        strCfmEmpNo,
+        strCfmDateTime,
+        strRedRush,
+        strActualDate,
+        strStatus,
+        (select strName from mf_store_location d where d.id=a.strAreaId) strAreaId,
+        strMemo
+        FROM
+        mi_acceptance_m a
+        <where>
+            <if test="currentCompany != null and currentCompany != ''">
+                and companyId = #{currentCompany}
+            </if>
+            <if test="strInspNo != null and strInspNo != ''">
+                and strInspNo like '%${strInspNo}%'
+            </if>
+            <if test="strInspType != null and strInspType != ''">
+                and strInspType like '%${strInspType}%'
+            </if>
+            <if test="strLocNo != null and strLocNo != ''">
+                and strLocNo like '%${strLocNo}%'
+            </if>
+            <if test="strInUserId != null and strInUserId != ''">
+                and strInUserId like '%${strInUserId}%'
+            </if>
+            <if test="strOrderNo != null and strOrderNo != ''">
+                and strOrderNo like '%${strOrderNo}%'
+            </if>
+            <if test="strPoNo != null and strPoNo != ''">
+                and strPoNo like '%${strPoNo}%'
+            </if>
+            <if test="strStatus != null and strStatus != ''">
+                and strStatus like '%${strStatus}%'
+            </if>
+            <if test="strMemo != null and strMemo != ''">
+                and strMemo like '%${strMemo}%'
+            </if>
+        </where>
+        order by  strInspNo desc ,createDateTime desc
+    </select>
+
+    <!-- 查询所有记录 过滤公司别 -->
+    <select id="getCount" resultType="int" parameterType="map">
+        select count(id) from mi_acceptance_m
+        <where>
+            <if test="currentCompany != null and currentCompany != ''">
+                and companyId = #{currentCompany}
+            </if>
+            <if test="strInspNo != null and strInspNo != ''">
+                and strInspNo like '%${strInspNo}%'
+            </if>
+            <if test="strInspType != null and strInspType != ''">
+                and strInspType like '%${strInspType}%'
+            </if>
+            <if test="strLocNo != null and strLocNo != ''">
+                and strLocNo like '%${strLocNo}%'
+            </if>
+            <if test="strInUserId != null and strInUserId != ''">
+                and strInUserId like '%${strInUserId}%'
+            </if>
+            <if test="strOrderNo != null and strOrderNo != ''">
+                and strOrderNo like '%${strOrderNo}%'
+            </if>
+            <if test="strPoNo != null and strPoNo != ''">
+                and strPoNo like '%${strPoNo}%'
+            </if>
+            <if test="strStatus != null and strStatus != ''">
+                and strStatus like '%${strStatus}%'
+            </if>
+
+            <if test="strMemo != null and strMemo != ''">
+                and strMemo like '%${strMemo}%'
+            </if>
+        </where>
+    </select>
+
+    <!-- 根据ID查询记录 -->
+    <select id="findOneById" parameterType="String" resultType="map">
+		select 
+			*
+		from mi_acceptance_m
+		where id = #{id}
+	</select>
+
+    <!-- 添加记录 -->
+    <insert id="create" parameterType="MiAcceptanceMEntity">
+		insert into mi_acceptance_m
+		(id, intIsActive, intIsDelete, createUserId, createDateTime, updateUserNo, companyId, strInspNo, strInspType, strLocNo, strSaleVendor, strInUserId, strApplyDateTime, strOrderNo, strPoNo, strInspNoPrice, strCfmEmpNo, strCfmDateTime, strRedRush, strActualDate,strAreaId,strStatus, strMemo)
+		values(#{id}, #{intIsActive}, #{intIsDelete}, #{createUser.id}, #{createDateTime}, #{updateUserNo}, #{company.id}, #{strInspNo}, #{strInspType}, #{strLocNo}, #{strSaleVendor}, #{strInUserId}, #{strApplyDateTime}, #{strOrderNo}, #{strPoNo}, #{strInspNoPrice}, #{strCfmEmpNo}, #{strCfmDateTime}, #{strRedRush}, #{strActualDate}, #{strAreaId}, #{strStatus}, #{strMemo})
+	</insert>
+
+    <!-- 修改记录 -->
+    <update id="update" parameterType="MiAcceptanceMEntity">
+        update mi_acceptance_m
+        <set>
+            <if test="updateUserNo != null and updateUserNo != ''">
+                updateUserNo = #{updateUserNo},
+            </if>
+            <if test="strInspNo != null and strInspNo != ''">
+                strInspNo = #{strInspNo},
+            </if>
+            <if test="strInspType != null and strInspType != ''">
+                strInspType = #{strInspType},
+            </if>
+            <if test="strLocNo != null and strLocNo != ''">
+                strLocNo = #{strLocNo},
+            </if>
+            <if test="strSaleVendor != null and strSaleVendor != ''">
+                strSaleVendor = #{strSaleVendor},
+            </if>
+            <if test="strInUserId != null and strInUserId != ''">
+                strInUserId = #{strInUserId},
+            </if>
+            <if test="strApplyDateTime != null and strApplyDateTime != ''">
+                strApplyDateTime = #{strApplyDateTime},
+            </if>
+            <if test="strOrderNo != null and strOrderNo != ''">
+                strOrderNo = #{strOrderNo},
+            </if>
+            <if test="strPoNo != null and strPoNo != ''">
+                strPoNo = #{strPoNo},
+            </if>
+            <if test="strInspNoPrice != null" >
+                strInspNoPrice = #{strInspNoPrice},
+            </if>
+            <if test="strCfmEmpNo != null and strCfmEmpNo != ''">
+                strCfmEmpNo = #{strCfmEmpNo},
+            </if>
+            <if test="strCfmDateTime != null and strCfmDateTime != ''">
+                strCfmDateTime = #{strCfmDateTime},
+            </if>
+            <if test="strRedRush != null and strRedRush != ''">
+                strRedRush = #{strRedRush},
+            </if>
+            <if test="strActualDate != null and strActualDate != ''">
+                strActualDate = #{strActualDate},
+            </if>
+            <if test="strStatus != null and strStatus != ''">
+                strStatus = #{strStatus},
+            </if>
+            <if test="updateUser != null">
+                updateUserId = #{updateUser.id},
+            </if>
+            <if test="updateDateTime != null and updateDateTime != ''">
+                updateDateTime = #{updateDateTime},
+            </if>
+            <if test="intIsActive != null and intIsActive != ''">
+                intIsActive = #{intIsActive},
+            </if>
+            <if test="strAreaId != null and strAreaId != ''">
+                strAreaId = #{strAreaId}
+            </if>
+            <if test="intIsDelete != null and intIsDelete != ''">
+                intIsDelete = #{intIsDelete}
+            </if>
+            <if test="strMemo != null and strMemo != ''">
+                strMemo = #{strMemo}
+            </if>
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="String">
+		delete from mi_acceptance_m where id = #{id}
+	</delete>
+    <!-- 查询最大编码 -->
+    <select id="findMaxCode" parameterType="String" resultType="String">
+     select MAX(strInspNo) from mi_acceptance_m a where strInspNo like
+    #{strInspNo}
+  </select>
+    <select id="findbyOrdNo" parameterType="String" resultType="map">
+    select *
+    from mi_acceptance_m a where strInspNo = #{strInspNo}
+  </select>
+    <!--新增方法-->
+    <select id="findnameById" parameterType="String" resultType="String">
+      select strInUserId
+      from mi_acceptance_m a where id = #{id}
+  </select>
+    <select id="updateSIsDelete" parameterType="String" resultType="String">
+      delete from  mi_inventory
+      where viewid = #{viewid}
+  </select>
+    <select id="updateFIsDelete" parameterType="String" resultType="String">
+      delete from  mi_inventory_trade
+      where strTradeItem = #{viewid}
+  </select>
+    <!--插入库存表-->
+    <select id="insertStorage" parameterType="String" resultType="map">
+		INSERT INTO mi_inventory SELECT
+            UUID() ID,
+            0 intIsActive,
+            0 intIsDelete,
+            M.createUserId createUserId,
+            M.createDateTime createDateTime,
+            '' updateUserId,
+            '' updateDateTime,
+            '' updateUserNo,
+            M.companyId companyId,
+            D.strInspItem strPoNo,
+            D.strAreaId strAreaId,
+            D.strMatrlNo strMatrlNo,
+            D.strMatrlName strMatrlName,
+            D.strBrand strBrand,
+            D.bdBuyPrice bdBuyPrice,
+            D.bdInStoreQty bdQty,
+            D.bdTotalAmt bdAmt,
+            #{typename} viewtype,
+            M.id viewid,
+            M.strInspNo viewnum,
+            D.strSpec strSpec,
+            D.strUnit strUnit,
+            D.bdTotalAmt deleteamt,
+            D.bdInStoreQty deletenum,
+            D.strB supplier,
+            #{status} status
+        FROM
+            mi_acceptance_m M
+        RIGHT JOIN mi_acceptance_d D ON M.STRINSPNO = D.STRINSPNO
+		where M.id = #{id}
+	</select>
+    <!--插入收发存表-->
+    <select id="insertSF" parameterType="String" resultType="map">
+		INSERT INTO mi_inventory_trade SELECT
+            UUID() ID,
+            0 intIsActive,
+            0 intIsDelete,
+            M.createUserId createUserId,
+            M.createDateTime createDateTime,
+            '' updateUserId,
+            '' updateDateTime,
+            '' updateUserNo,
+            M.companyId companyId,
+            M.strInspNo strTradeNo,
+            M.id strTradeItem,
+            '' strAcctNo,
+            '' strAcctDate,
+            #{typename} strActionStyle,
+            D.strInspItem strBatchNo,
+            D.id strIssueItem,
+            '' strMemoNo,
+            '' strMemoItem,
+            D.strAreaId strAreaId,
+            D.strMatrlNo strMatrlNo,
+            D.bdInStoreQty bdQty,
+            D.bdTotalAmt bdAmt
+        FROM
+            mi_acceptance_m M
+        RIGHT JOIN mi_acceptance_d D ON M.STRINSPNO = D.STRINSPNO
+        WHERE
+            M.id = #{id}
+	</select>
+    <!-- 新增，修改，删除子表记录时修改主表入库金额 -->
+    <update id="updateAddNum" parameterType="MiAcceptanceMEntity">
+        update mi_acceptance_m set strInspNoPrice = (SELECT IFNULL(SUM(bdTotalAmt),0)  FROM mi_acceptance_d D WHERE D.strInspNo = #{strInspNo}) where strInspNo = #{strInspNo}
+    </update>
+
+</mapper>

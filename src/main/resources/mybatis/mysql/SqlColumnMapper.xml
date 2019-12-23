@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="SqlColumnDao">
+	<!-- 列表、查询、模糊查询、高级查询公用sql -->
+	<resultMap type="com.nisco.dms.entity.SqlColumn" id="findAllMap">
+		<id property="id" column="id" />
+  		<association property="createUser" column="createUserId" select="UserDao.findByUserNo" javaType="com.nisco.dms.entity.User"></association>
+	</resultMap>
+	<select id="findAll" parameterType="map" resultMap="findAllMap">
+		select * from sm_sql_column 
+		<where>
+			<if test="keywords != ''">
+				colName like '%${keywords}%' or colNameCn like '%${keywords}%'
+			</if>
+		</where>
+		order by createDateTime asc
+	</select>
+	
+	<select id="findAllNum" parameterType="map" resultType="int">
+		select count(id) from sm_sql_column 
+		<where>
+			<if test="keywords != ''">
+				colName like '%${keywords}%' or colNameCn like '%${keywords}%'
+			</if>
+		</where>
+	</select>
+	
+	<resultMap type="com.nisco.dms.entity.SqlColumn" id="findBySqlTableIdMap">
+		<id property="id" column="id" />
+  		<association property="sqlTable" column="tabId" select="SqlTableDao.findOneById" javaType="com.nisco.dms.entity.SqlTable"></association>
+	</resultMap>
+	<select id="findBySqlTableId" parameterType="String" resultMap="findBySqlTableIdMap">
+		select * from sm_sql_column where tabId = #{tabId}
+		order by createDateTime asc
+	</select>
+	
+	<select id="findBySqlTableIdNum" parameterType="String" resultType="int">
+		select count(id) from sm_sql_column where tabId = #{tabId}
+	</select>
+	
+	<!-- 创建公司信息 -->
+	<insert id="create" parameterType="com.nisco.dms.entity.SqlColumn">
+		insert into sm_sql_column (id, colName, colNameCn, colType, colSize, colPrikey, colDisplayType, defaultValue, colDisplayWidth, colFormat, colValidation, isLookupCondition, colHidden, colReadonly, contentInfalte, colDes, tabId, memo, colNull, companyId, createUserId, createDateTime) 
+		values (#{id}, #{colName}, #{colNameCn}, #{colType}, #{colSize}, #{colPrikey}, #{colDisplayType}, #{defaultValue}, #{colDisplayWidth}, #{colFormat}, #{colValidation}, #{isLookupCondition}, #{colHidden}, #{colReadonly}, #{contentInfalte}, #{colDes}, #{sqlTable.id}, #{memo}, #{colNull}, #{company.id}, #{createUser.strAccount}, #{createDateTime})
+	</insert>
+	
+	<!-- 根据ID查询一条公司信息 -->
+	<resultMap type="com.nisco.dms.entity.SqlColumn" id="findOneByIdMap">
+		<id property="id" column="id" />
+  		<association property="sqlTable" column="tabId" select="SqlTableDao.findOneById" javaType="com.nisco.dms.entity.SqlTable"></association>
+	</resultMap>
+	<select id="findOneById" parameterType="String" resultMap="findOneByIdMap">
+		select * from sm_sql_column where id = #{companyId}
+	</select>
+	
+	<!-- 编辑公司信息 -->
+	<update id="update" parameterType="com.nisco.dms.entity.SqlColumn">
+		update sm_sql_column
+		<set>
+			<if test="colName != null and colName != ''">
+				colName = #{colName},
+			</if>
+			<if test="colNameCn != null and colNameCn != ''">
+				colNameCn = #{colNameCn},
+			</if>
+			<if test="colType != null and colType != ''">
+				colType = #{colType},
+			</if>
+			<if test="colSize != null and colSize != ''">
+				colSize = #{colSize},
+			</if>
+			<if test="colPrikey != null and colPrikey != ''">
+				colPrikey = #{colPrikey},
+			</if>
+			<if test="colDisplayType != null and colDisplayType != ''">
+				colDisplayType = #{colDisplayType},
+			</if>
+			<if test="defaultValue != null and defaultValue != ''">
+				defaultValue = #{defaultValue},
+			</if>
+			<if test="colDisplayWidth != null and colDisplayWidth != ''">
+				colDisplayWidth = #{colDisplayWidth},
+			</if>
+			<if test="colFormat != null and colFormat != ''">
+				colFormat = #{colFormat},
+			</if>
+			<if test="colValidation != null and colValidation != ''">
+				colValidation = #{colValidation},
+			</if>
+			<if test="isLookupCondition != null and isLookupCondition != ''">
+				isLookupCondition = #{isLookupCondition},
+			</if>
+			colHidden = #{colHidden},
+			<if test="colReadonly != null and colReadonly != ''">
+				colReadonly = #{colReadonly},
+			</if>
+			<if test="contentInfalte != null and contentInfalte != ''">
+				contentInfalte = #{contentInfalte},
+			</if>
+			<if test="colDes != null and colDes != ''">
+				colDes = #{colDes},
+			</if>
+			<if test="sqlTable != null">
+				tabId = #{sqlTable.id},
+			</if>
+			memo = #{memo},
+			<if test="updateUser != null">
+				updateUserId = #{updateUser.id},
+			</if>
+			<if test="updateDateTime != null and updateDateTime != ''">
+				updateDateTime = #{updateDateTime}
+			</if>
+		</set>
+		<where>
+			id = #{id}
+		</where>
+	</update>
+	
+	<!-- 根据主键Id删除一条业务字段信息 -->
+	<delete id="delete" parameterType="String">
+		delete from sm_sql_column where id = #{id}
+	</delete>
+	
+	<!-- 根据已抽取表的Id删除该表的字段信息 -->
+	<delete id="deleteByTabId" parameterType="String">
+		delete from sm_sql_column where tabId = #{tabId}
+	</delete>
+</mapper>

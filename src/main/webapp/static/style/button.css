@@ -1,0 +1,475 @@
+@CHARSET "UTF-8";
+
+a.add, input[type="button"].add, button.add,
+a.edit, input[type="button"].edit, button.edit,
+a.delete, input[type="button"].delete, button.delete,
+a.view, input[type="button"].view, button.view,
+a.preview, input[type="button"].preview, button.preview,
+a.search, input[type="button"].search, button.search,
+a.import, input[type="button"].import, button.import,
+a.export, input[type="button"].export, button.export,
+a.deleteList, input[type="button"].deleteList, button.deleteList,
+a.sendback, input[type="button"].sendback, button.sendback,
+a.approve, input[type="button"].approve, button.approve,
+a.grant, input[type="button"].grant, button.grant,
+a.confirm, input[type="button"].confirm, button.confirm,
+a.cancelConfirm, input[type="button"].cancelConfirm, button.cancelConfirm,
+a.print, input[type="button"].print, button.print,
+a.choose, input[type="button"].choose, button.choose,
+a.report, input[type="button"].report, button.report,
+a.delivery, input[type="button"].delivery, button.delivery,
+a.cancelDelivery, input[type="button"].cancelDelivery, button.cancelDelivery,
+a.end, input[type="button"].end, button.end,
+a.database, input[type="button"].database, button.database,
+a.lock, input[type="button"].lock, button.lock,
+a.unlock, input[type="button"].unlock, button.unlock,
+a.build, input[type="button"].build, button.build,
+a.download, input[type="button"].download, button.download,
+a.upload, input[type="button"].upload, button.upload,
+a.code, input[type="button"].code, button.code {
+	font-family: layui-icon;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 10px;
+    font-size: 12px;
+    display: inline-block;
+    color: #fff;
+    white-space: nowrap;
+    text-align: center;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    outline: 0;
+    -webkit-appearance: none;
+    -webkit-transition: all .3s;
+    box-sizing: border-box;
+    vertical-align: middle;
+    margin-right: 10px;
+    margin-bottom: 5px;
+}
+
+a.add:hover, input[type="button"].add:hover, button.add:hover,
+a.edit:hover, input[type="button"].edit:hover, button.edit:hover,
+a.delete:hover, input[type="button"].delete:hover, button.delete:hover,
+a.search:hover, input[type="button"].search:hover, button.search:hover,
+a.view:hover, input[type="button"].view:hover, button.view:hover,
+a.preview:hover, input[type="button"].preview:hover, button.preview:hover,
+a.search:hover, input[type="button"].search:hover, button.search:hover,
+a.import:hover, input[type="button"].import:hover, button.import:hover,
+a.export:hover, input[type="button"].export:hover, button.export:hover,
+a.deleteList:hover, input[type="button"].deleteList:hover, button.deleteList:hover,
+a.sendback:hover, input[type="button"].sendback:hover, button.sendback:hover,
+a.approve:hover, input[type="button"].approve:hover, button.approve:hover,
+a.grant:hover, input[type="button"].grant:hover, button.grant:hover,
+a.confirm:hover, input[type="button"].confirm:hover, button.confirm:hover,
+a.cancelConfirm:hover, input[type="button"].cancelConfirm:hover, button.cancelConfirm:hover,
+a.print:hover, input[type="button"].print:hover, button.print:hover,
+a.choose:hover, input[type="button"].choose:hover, button.choose:hover,
+a.report:hover, input[type="button"].report:hover, button.report:hover,
+a.delivery:hover, input[type="button"].delivery:hover, button.delivery:hover,
+a.cancelDelivery:hover, input[type="button"].cancelDelivery:hover, button.cancelDelivery:hover,
+a.end:hover, input[type="button"].end:hover, button.end:hover,
+a.database:hover, input[type="button"].database:hover, button.database:hover,
+a.lock:hover, input[type="button"].lock:hover, button.lock:hover,
+a.unlock:hover, input[type="button"].unlock:hover, button.unlock:hover,
+a.build:hover, input[type="button"].build:hover, button.build:hover,
+a.download:hover, input[type="button"].download:hover, button.download:hover,
+a.upload:hover, input[type="button"].upload:hover, button.upload:hover,
+a.code:hover, input[type="button"].code:hover, button.code:hover {
+    opacity: .8;
+    filter: alpha(opacity=80);
+    color: #fff;
+}
+
+/* 按钮大小样式-大 */
+a.btn-big, input[type="button"].btn-big, button.btn-big {
+    height: 38px;
+    line-height: 38px;
+    padding: 0 18px;
+    font-size: 14px;
+}
+
+/* 按钮大小样式-超大 */
+a.btn-huge, input[type="button"].btn-huge, button.btn-huge {
+    height: 44px;
+    line-height: 44px;
+    padding: 0 25px;
+    font-size: 16px;
+}
+
+/* 按钮大小样式-迷你 */
+a.btn-small, input[type="button"].btn-small, button.btn-small {
+    height: 22px;
+    line-height: 22px;
+    padding: 0 5px;
+    font-size: 12px;
+}
+
+/* 新增按钮样式 */
+a.add, input[type="button"].add, button.add {
+	background-color: #009688;
+}
+
+a.add:before, input[type="button"].add:before, button.add:before {
+	content: "\e654";
+	font-size: 16px;
+	margin-right: 3px;
+}
+
+/* 编辑按钮样式 */
+a.edit, input[type="button"].edit, button.edit {
+	background-color: #1E9FFF;
+}
+
+a.edit:before, input[type="button"].delete, button.edit:before {
+	content: "\e604";
+	font-size: 16px;
+	margin-right: 3px;
+	font-family: iconfont;
+	-webkit-font-smoothing: antialiased;
+  	-moz-osx-font-smoothing: grayscale;
+}
+
+/* 删除按钮样式 */
+a.delete, input[type="button"].delete, button.delete {
+	background-color: #FF5722;
+}
+
+a.delete:before, input[type="button"].delete:before, button.delete:before {
+	content: "\e640";
+	font-size: 16px;
+	margin-right: 3px;
+}
+
+/* 查看按钮样式 */
+a.view, input[type="button"].view, button.view {
+	background-color: #669933;
+}
+
+a.view:before, input[type="button"].view:before, button.view:before {
+	content: "\f06e";
+	font-size: 16px;
+	margin-right: 3px;
+	font-family: FontAwesome;
+}
+
+/* 预览按钮样式 */
+a.preview, input[type="button"].preview, button.preview {
+	background-color: #7bcfa6;
+}
+
+a.preview:before, input[type="button"].preview:before, button.preview:before {
+	content: "\e68a";
+	font-size: 16px;
+	margin-right: 3px;
+	font-family: iconfont;
+	-webkit-font-smoothing: antialiased;
+  	-moz-osx-font-smoothing: grayscale;
+}
+
+/* 搜索按钮样式 */
+a.search, input[type="button"].search, button.search {
+    background-color: #66CCCC;
+}
+
+a.search:before, input[type="button"].search:before, button.search:before {
+	content: "\e615";
+	font-size: 14px;
+	margin-right: 3px;
+}
+
+/* 导入按钮样式 */
+a.import, input[type="button"].import, button.import {
+	background-color: #1685a9;
+}
+
+a.import:before, input[type="button"].import:before, button.import:before {
+	content: "\e697";
+	font-size: 16px;
+	margin-right: 3px;
+	font-family: iconfont;
+	-webkit-font-smoothing: antialiased;
+  	-moz-osx-font-smoothing: grayscale;
+}
+
+/* 导出按钮样式 */
+a.export, input[type="button"].export, button.export {
+	background-color: #c9dd22;
+}
+
+a.export:before, input[type="button"].export:before, button.export:before {
+	content: "\e6df";
+	font-size: 16px;
+	margin-right: 3px;
+	font-family: iconfont;
+	-webkit-font-smoothing: antialiased;
+  	-moz-osx-font-smoothing: grayscale;
+}
+
+/* 批量删除按钮样式 */
+a.deleteList, input[type="button"].deleteList, button.deleteList {
+	background-color: #990033;
+}
+
+a.deleteList:before, input[type="button"].deleteList:before, button.deleteList:before {
+	content: "\e634";
+	font-size: 18px;
+	margin-right: 3px;
+	font-family: iconfont;
+	-webkit-font-smoothing: antialiased;
+  	-moz-osx-font-smoothing: grayscale;
+}
+
+/* 退回按钮 */
+a.sendback, input[type="button"].sendback, button.sendback {
+	background-color: #CC0033;
+}
+
+a.sendback:before, input[type="button"].sendback:before, button.sendback:before {
+	content: "\e600";
+	font-size: 16px;
+	margin-right: 3px;
+	font-family: iconfont;
+	-webkit-font-smoothing: antialiased;
+  	-moz-osx-font-smoothing: grayscale;
+}
+
+/* 批准按钮样式 */
+a.approve, input[type="button"].approve, button.approve {
+	background-color: #0066FF;
+}
+
+a.approve:before, input[type="button"].approve:before, button.approve:before {
+	content: "\e603";
+	font-size: 16px;
+	margin-right: 3px;
+	font-family: iconfont;
+	-webkit-font-smoothing: antialiased;
+  	-moz-osx-font-smoothing: grayscale;
+}
+
+/* 发放按钮样式 */
+a.grant, input[type="button"].grant, button.grant {
+	background-color: #66CC00;
+}
+
+a.grant:before, input[type="button"].grant:before, button.grant:before {
+	content: "\e61d";
+	font-size: 16px;
+	margin-right: 3px;
+	font-family: iconfont;
+	-webkit-font-smoothing: antialiased;
+  	-moz-osx-font-smoothing: grayscale;
+}
+
+/* 确认按钮样式 */
+a.confirm, input[type="button"].confirm, button.confirm {
+	background-color: #009966;
+}
+
+a.confirm:before, input[type="button"].confirm:before, button.confirm:before {
+	content: "\e613";
+	font-size: 16px;
+	margin-right: 3px;
+	font-family: iconfont;
+	-webkit-font-smoothing: antialiased;
+  	-moz-osx-font-smoothing: grayscale;
+}
+
+/* 取消确认按钮样式 */
+a.cancelConfirm, input[type="button"].cancelConfirm, button.cancelConfirm {
+	background-color: #FF9900;
+}
+
+a.cancelConfirm:before, input[type="button"].cancelConfirm:before, button.cancelConfirm:before {
+	content: "\e700";
+	font-size: 16px;
+	margin-right: 3px;
+	font-family: iconfont;
+	-webkit-font-smoothing: antialiased;
+  	-moz-osx-font-smoothing: grayscale;
+}
+
+/* 打印按钮 */
+a.print, input[type="button"].print, button.print {
+	background-color: #00CC00;
+}
+
+a.print:before, input[type="button"].print:before, button.print:before {
+	content: "\e650";
+	font-size: 16px;
+	margin-right: 3px;
+	font-family: iconfont;
+	-webkit-font-smoothing: antialiased;
+  	-moz-osx-font-smoothing: grayscale;
+}
+
+/* 挑选/选择按钮样式 */
+a.choose, input[type="button"].choose, button.choose {
+	background-color: #CC6600;
+}
+
+a.choose:before, input[type="button"].choose:before, button.choose:before {
+	content: "\e606";
+	font-size: 16px;
+	margin-right: 3px;
+	font-family: iconfont;
+	-webkit-font-smoothing: antialiased;
+  	-moz-osx-font-smoothing: grayscale;
+}
+
+/* 报表按钮样式 */
+a.report, input[type="button"].report, button.report {
+	background-color: #669966;
+}
+
+a.report:before, input[type="button"].report:before, button.report:before {
+	content: "\e601";
+	font-size: 16px;
+	margin-right: 3px;
+	font-family: iconfont;
+	-webkit-font-smoothing: antialiased;
+  	-moz-osx-font-smoothing: grayscale;
+}
+
+/* 配送按钮样式 */
+a.delivery, input[type="button"].delivery, button.delivery {
+	background-color: #336699;
+}
+
+a.delivery:before, input[type="button"].delivery:before, button.delivery:before {
+	content: "\e61a";
+	font-size: 16px;
+	margin-right: 3px;
+	font-family: iconfont;
+	-webkit-font-smoothing: antialiased;
+  	-moz-osx-font-smoothing: grayscale;
+}
+
+/* 取消配送按钮样式 */
+a.cancelDelivery, input[type="button"].cancelDelivery, button.cancelDelivery {
+	background-color: #3399cc;
+}
+
+a.cancelDelivery:before, input[type="button"].cancelDelivery:before, button.cancelDelivery:before {
+	content: "\e602";
+	font-size: 16px;
+	margin-right: 3px;
+	font-family: iconfont;
+	-webkit-font-smoothing: antialiased;
+  	-moz-osx-font-smoothing: grayscale;
+}
+
+/* 结束按钮样式 */
+a.end, input[type="button"].end, button.end {
+	background-color: #FF0033;
+}
+
+a.end:before, input[type="button"].end:before, button.end:before {
+	content: "\e605";
+	font-size: 16px;
+	margin-right: 3px;
+	font-family: iconfont;
+	-webkit-font-smoothing: antialiased;
+  	-moz-osx-font-smoothing: grayscale;
+}
+
+/* 数据库按钮 */
+a.database, input[type="button"].database, button.database {
+	background-color: #1296db;
+}
+
+a.database:before, input[type="button"].database:before, button.database:before {
+	content: "\e670";
+	font-size: 16px;
+	margin-right: 3px;
+	font-family: iconfont;
+	-webkit-font-smoothing: antialiased;
+  	-moz-osx-font-smoothing: grayscale;
+}
+
+/* 锁定 */
+a.lock, input[type="button"].lock, button.lock {
+	background-color: #FF6666;
+}
+
+a.lock:before, input[type="button"].lock:before, button.lock:before {
+	content: "\e635";
+	font-size: 16px;
+	margin-right: 3px;
+	font-family: iconfont;
+	-webkit-font-smoothing: antialiased;
+  	-moz-osx-font-smoothing: grayscale;
+}
+
+a.unlock, input[type="button"].unlock, button.unlock {
+	background-color: #33CC99;
+}
+
+a.unlock:before, input[type="button"].unlock:before, button.unlock:before {
+	content: "\e608";
+	font-size: 16px;
+	margin-right: 3px;
+	font-family: iconfont;
+	-webkit-font-smoothing: antialiased;
+  	-moz-osx-font-smoothing: grayscale;
+}
+
+/* 生成 */
+a.build, input[type="button"].build, button.build {
+	background-color: #0099CC;	
+}
+
+a.build:before, input[type="button"].build:before, button.build:before {
+	content: "\ea08";
+	font-size: 16px;
+	margin-right: 3px;
+	font-family: iconfont;
+	-webkit-font-smoothing: antialiased;
+  	-moz-osx-font-smoothing: grayscale;
+}
+
+/* 下载 */
+a.download, input[type="button"].download, button.download {
+	background-color: #006699;	
+}
+
+a.download:before, input[type="button"].download:before, button.download:before {
+	content: "\e738";
+	font-size: 16px;
+	margin-right: 3px;
+	font-family: iconfont;
+	-webkit-font-smoothing: antialiased;
+  	-moz-osx-font-smoothing: grayscale;
+}
+
+/* 上传 */
+a.upload, input[type="button"].upload, button.upload {
+	background-color: #009999;	
+}
+
+a.upload:before, input[type="button"].upload:before, button.upload:before {
+	content: "\e618";
+	font-size: 16px;
+	margin-right: 3px;
+	font-family: iconfont;
+	-webkit-font-smoothing: antialiased;
+  	-moz-osx-font-smoothing: grayscale;
+}
+
+/* 代码 */
+a.code, input[type="button"].code, button.code {
+	background-color: #006600;	
+}
+
+a.code:before, input[type="button"].code:before, button.code:before {
+	content: "\e816";
+	font-size: 16px;
+	margin-right: 3px;
+	font-family: iconfont;
+	-webkit-font-smoothing: antialiased;
+  	-moz-osx-font-smoothing: grayscale;
+}
+

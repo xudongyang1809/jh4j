@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+     @desc “此代码是自动生成，请继续优化注释”
+	 @author 王梦奇 022347
+	 @version 1.0.0
+	 @date 2019-04-29 16:17:55
+	 @Copyright: 江苏金恒信息科技股份有限公司
+ -->
+<mapper namespace="MpPonoPayDao">
+	<!-- 查询所有记录 过滤公司别 -->
+	<select id="findAll" parameterType="map" resultType="MpPonoPayEntity">
+		select 
+			*
+		from mp_pono_pay
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+  			<if test="ihId != null ">
+				and ihId = #{ihId}
+			</if>
+		</where>
+   		order by createDateTime desc
+	</select>
+	
+	<!-- 查询所有记录 过滤公司别 -->
+	<select id="getCount" resultType="int" parameterType="map">
+		select count(id) from mp_pono_pay
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+			<if test="ihId != null ">
+				and ihId = #{ihId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 根据ID查询记录 -->
+	<select id="findOneById" parameterType="String" resultType="MpPonoPayEntity">
+		select 
+			*
+		from mp_pono_pay
+		where id = #{id}
+	</select>
+	
+	<!-- 添加记录 -->
+	<insert id="create" parameterType="MpPonoPayEntity">
+		insert into mp_pono_pay
+		(id, intIsActive, intIsDelete, createUserId, createDateTime, companyId, ihId, strPoNo, strPayItem, strPayStale, strPayment, strPrePayAmt, strRealPayAmt, strPrePayDate, strBillDate, strBillNo, strMemo, strStatue)
+		values(#{id}, #{intIsActive}, #{intIsDelete}, #{createUser.id}, #{createDateTime}, #{company.id}, #{ihId}, #{strPoNo}, #{strPayItem}, #{strPayStale}, #{strPayment}, #{strPrePayAmt}, #{strRealPayAmt}, #{strPrePayDate}, #{strBillDate}, #{strBillNo}, #{strMemo}, #{strStatue})
+	</insert>
+	
+	<!-- 修改记录 -->
+	<update id="update" parameterType="MpPonoPayEntity">
+		update mp_pono_pay
+		<set>
+			<if test="ihId != null and ihId != ''">
+				ihId = #{ihId},
+			</if>
+			<if test="strPoNo != null and strPoNo != ''">
+				strPoNo = #{strPoNo},
+			</if>
+			<if test="strPayItem != null and strPayItem != ''">
+				strPayItem = #{strPayItem},
+			</if>
+			<if test="strPayStale != null and strPayStale != ''">
+				strPayStale = #{strPayStale},
+			</if>
+			<if test="strPayment != null and strPayment != ''">
+				strPayment = #{strPayment},
+			</if>
+			<if test="strPrePayAmt != null">
+				strPrePayAmt = #{strPrePayAmt},
+			</if>
+			<if test="strRealPayAmt != null and strRealPayAmt!='' ">
+				strRealPayAmt = #{strRealPayAmt},
+			</if>
+			<if test="strPrePayDate != null and strPrePayDate != ''">
+				strPrePayDate = #{strPrePayDate},
+			</if>
+			<if test="strBillDate != null and strBillDate != ''">
+				strBillDate = #{strBillDate},
+			</if>
+			<if test="strBillNo != null and strBillNo != ''">
+				strBillNo = #{strBillNo},
+			</if>
+			<if test="strMemo != null and strMemo != ''">
+				strMemo = #{strMemo},
+			</if>
+			<if test="strStatue != null and strStatue != ''">
+				strStatue = #{strStatue},
+			</if>
+			<if test="updateUser != null">
+				updateUserId = #{updateUser.id},
+			</if>
+			<if test="updateDateTime != null and updateDateTime != ''">
+				updateDateTime = #{updateDateTime},
+			</if>
+			<if test="intIsActive != null and intIsActive != ''">
+				intIsActive = #{intIsActive},
+			</if>
+			<if test="intIsDelete != null and intIsDelete != ''">
+				intIsDelete = #{intIsDelete}
+			</if>
+		</set>
+		<where>
+			id = #{id}
+		</where>
+	</update>
+	
+	<!-- 删除记录 -->
+	<delete id="delete" parameterType="String">
+		delete from mp_pono_pay where id = #{id}
+	</delete>
+
+	<!--根据合同号查询记录-->
+	<select id="fingMaxSeqNoByPono" parameterType="String" resultType="String">
+		select max(strPayItem) as strPayItem from mp_pono_pay  a where a.strPoNo=#{strPoNo}
+	</select>
+
+	<select id="findOneByihId" parameterType="String" resultType="MpPonoPayEntity">
+		select *
+			from mp_pono_pay
+		where ihId = #{ihId}
+	</select>
+
+
+
+
+	<!--采购报账   预付款报账中 每一单合同额预付款的总金额 -->
+	<select id="BringPreMoney" parameterType="String" resultType="BigDecimal">
+		select SUM(a.strPrePayAmt)
+		  from mp_pono_pay a where a.ihId= #{id}
+			and a.strPayStale='预付款'
+	</select>
+
+	<!--预付款报账明细 预付款的总金额 -->
+	<select id="selectCountPay" parameterType="String" resultType="BigDecimal">
+		select SUM(a.bdPayAmt)
+		  from mp_pay_d a where a.strPayNoID =#{ihid}
+	</select>
+	<!--预付款报账明细 预付款的总金额 -->
+	<select id="selectMpPoNoStrPayment" parameterType="String" resultType="BigDecimal">
+		  select SUM(a.strPayment)
+			  from mp_pono_pay a where a.ihId =#{ihid}
+	</select>
+</mapper>

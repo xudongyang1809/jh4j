@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- Hints:
+     1. The code was automatic created;
+     2. Any other questions can ask the software engineer for help.
+	 @author sysadmin
+	 @date 2014-03-25
+ -->
+<mapper namespace="CmStoreLocationDao">
+	
+	<!--查询所有记录 过滤公司别-->
+	<select id="findAll" resultType="map"  parameterType="map">
+		select id,strSn,strName,(select count(strPath) from nj_attach n where n.relativedId=a.id) attachNum  ,(select strValue from dc_sys_dictionary_dtl d where d.id=a.storeType) storeType,intIsActive   from mf_store_location a
+	<where>
+	<if test="strSn!=null and strSn!=''">
+	and a.strSn like '%${strSn}%'
+	</if>
+	<if test="strName!=null and strName!=''">
+	and a.strName like '%${strName}%'
+	</if>
+	<if test="storeType!=null and storeType!=''">
+	and a.storeType = #{storeType}
+	</if>
+
+	</where>
+	   order by strSn asc
+	</select>
+	
+	<!--根据ID查询记录-->
+	<select id="findOneById" parameterType="String" resultType="Map">
+		select * from mf_store_location a where id=#{id}
+	</select>
+	
+	<!--根据储位类型查询该分类下的所有储位-->
+	<select id="findDtlByStoreType" parameterType="String" resultType="Map">
+		select * from mf_store_location a where storeType=#{storeType}
+	</select>
+	
+	<!--添加记录-->
+	<insert id="create" parameterType="CmStoreLocation">
+		insert into mf_store_location(id,strSn,strName,storeType,intIsActive,intIsDelete,companyId,createUserId,createDateTime,updateUserId,updateDateTime) values(#{id},#{strSn},#{strName},#{storeType},#{intIsActive},#{intIsDelete},#{company.id},#{createUser.id},#{createDateTime},#{updateUser.id},#{updateDateTime})
+	</insert>
+	
+	<!--修改记录-->
+	<update id="update" parameterType="CmStoreLocation">
+		update mf_store_location
+		<set>
+			<if test="strSn!=null and strSn!=''">
+				strSn=#{strSn},
+			</if>
+			<if test="strName!=null and strName!=''">
+				strName=#{strName},
+			</if>
+			<if test="storeType!=null and storeType!=''">
+				storeType=#{storeType},
+			</if>
+			<if test="intIsActive!=null">
+				intIsActive=#{intIsActive},
+			</if>
+			<if test="intIsDelete!=null and intIsDelete!=''">
+				intIsDelete=#{intIsDelete},
+			</if>
+			<if test="updateUser!=null">
+				updateUserId=#{updateUser.id},
+			</if>
+			<if test="updateDateTime!=null and updateDateTime!=''">
+				updateDateTime=#{updateDateTime}
+			</if>
+		</set>
+		<where>
+			id=#{id}
+		</where>
+	</update>
+	
+	<!--删除记录-->
+	<delete id="delete" parameterType="String">
+		delete from mf_store_location where id=#{id}
+	</delete>
+</mapper>

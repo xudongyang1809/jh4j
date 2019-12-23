@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="DictionaryDao">
+	<!-- 列表、查询、模糊查询、高级查询公用sql -->
+	<resultMap type="com.nisco.dms.entity.Dictionary" id="findAllMap">
+		<id property="id" column="id" />
+  		<association property="createUser" column="createUserId" select="UserDao.findByUserNo" javaType="com.nisco.dms.entity.User"></association>
+  		<collection property="dictDtlList" ofType="com.nisco.dms.entity.DictionaryDtl" column="id" select="DictionaryDtlDao.findByDictId"></collection>
+	</resultMap>
+	<select id="findAll" parameterType="map" resultMap="findAllMap">
+		select * from dc_sys_dictionary 
+		<where>
+			<if test="keywords != null and keywords != ''">
+				strSn like '%${keywords}%' or strName like '%${keywords}%' or strDesc like '%${keywords}%' 
+			</if>
+		</where>
+		order by createDateTime desc
+	</select>
+	
+	<select id="findAllNum" parameterType="map" resultType="int">
+		select count(id) from dc_sys_dictionary 
+		<where>
+			<if test="keywords != null and keywords != ''">
+				strSn like '%${keywords}%' or strName like '%${keywords}%' or strDesc like '%${keywords}%' 
+			</if>
+		</where>
+	</select>
+	
+	<!-- 创建公司信息 -->
+	<insert id="create" parameterType="com.nisco.dms.entity.Dictionary">
+		insert into dc_sys_dictionary(id, strSn, strName, strDesc, createUserId, createDateTime)
+		values(#{id}, #{strSn}, #{strName}, #{strDesc}, #{createUser.strAccount}, #{createDateTime})
+	</insert>
+	
+	<!-- 根据ID查询一条公司信息 -->
+	<resultMap type="com.nisco.dms.entity.Dictionary" id="findOneByIdMap">
+		<id property="id" column="id" />
+  		<association property="createUser" column="createUserId" select="UserDao.findByUserNo" javaType="com.nisco.dms.entity.User"></association>
+  		<collection property="dictDtlList" ofType="com.nisco.dms.entity.DictionaryDtl" column="id" select="DictionaryDtlDao.findByDictId"></collection>
+	</resultMap>
+	<select id="findOneById" parameterType="String" resultMap="findOneByIdMap">
+		select * from dc_sys_dictionary where id = #{id}
+	</select>
+	
+	<resultMap type="com.nisco.dms.entity.Dictionary" id="findByStrSnMap">
+		<id property="id" column="id" />
+  		<association property="createUser" column="createUserId" select="UserDao.findByUserNo" javaType="com.nisco.dms.entity.User"></association>
+  		<collection property="dictDtlList" ofType="com.nisco.dms.entity.DictionaryDtl" column="id" select="DictionaryDtlDao.findByDictId"></collection>
+	</resultMap>
+	<select id="findByStrSn" parameterType="String" resultMap="findByStrSnMap">
+		select * from dc_sys_dictionary where strSn = #{strSn}
+	</select>
+	
+	<!-- 编辑公司信息 -->
+	<update id="update" parameterType="com.nisco.dms.entity.Dictionary">
+		update dc_sys_dictionary
+		<set>
+			<if test="strSn != null and strSn != ''">
+				strSn = #{strSn},
+			</if>
+			<if test="strName != null and strName != ''">
+				strName = #{strName},
+			</if>
+			strDesc = #{strDesc},
+			<if test="updateUser != null">
+				updateUserId = #{updateUser.id},
+			</if>
+			<if test="updateDateTime != null and updateDateTime != ''">
+				updateDateTime = #{updateDateTime}
+			</if>
+		</set>
+		<where>
+			id = #{id}
+		</where>
+	</update>
+	
+	<!-- 根据主键Id删除一条公司信息 -->
+	<delete id="delete" parameterType="String">
+		delete from dc_sys_dictionary where id = #{id}
+	</delete>
+</mapper>

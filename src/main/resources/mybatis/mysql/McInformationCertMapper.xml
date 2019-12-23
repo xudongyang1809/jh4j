@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+     @desc “此代码是自动生成，请继续优化注释”
+	 @author 超级管理员 admin
+	 @version 1.0.0
+	 @date 2019-06-10 17:10:46
+	 @Copyright: 江苏金恒信息科技股份有限公司
+ -->
+<mapper namespace="McInformationCertDao">
+	<!-- 查询所有记录 过滤公司别 -->
+	<select id="findAll" parameterType="map" resultType="McInformationCertEntity">
+		select 
+			*
+		from mc_information_cert
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+			
+		</where>
+   		order by createDateTime desc
+	</select>
+	
+	<!-- 查询所有记录 过滤公司别 -->
+	<select id="getCount" resultType="int" parameterType="map">
+		select count(id) from mc_information_cert
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+			
+		</where>
+	</select>
+	
+	<!-- 根据ID查询记录 -->
+	<select id="findOneById" parameterType="String" resultType="McInformationCertEntity">
+		select 
+			*
+		from mc_information_cert
+		where id = #{id}
+	</select>
+
+	<!-- 根据主档ID查询记录 -->
+	<select id="findInfoByihId" parameterType="String" resultType="McInformationCertEntity">
+		select
+			*
+		from mc_information_cert
+		where ihId = #{ihId}
+	</select>
+
+	<!-- 根据ihID查询记录 -->
+	<select id="findCertByihId" parameterType="String" resultType="McInformationCertEntity">
+		select
+			*
+		from mc_information_cert
+		where ihId = #{ihId}
+	</select>
+
+	<!-- 添加记录 -->
+	<insert id="create" parameterType="McInformationCertEntity">
+		insert into mc_information_cert
+		(id, companyId, intIsActive, intIsDelete, createUserId, createDateTime, ihId, strVendorNo, strCertificateNo, strCertNo, strCertificateName, strIssueUnit, strIssueDate, strIssueEndDate, strCertificateContent, strRemarkCert)
+		values(#{id}, #{company.id}, #{intIsActive}, #{intIsDelete}, #{createUser.id}, #{createDateTime}, #{ihId}, #{strVendorNo}, #{strCertificateNo}, #{strCertNo}, #{strCertificateName}, #{strIssueUnit}, #{strIssueDate}, #{strIssueEndDate}, #{strCertificateContent}, #{strRemarkCert})
+	</insert>
+	
+	<!-- 修改记录 -->
+	<update id="update" parameterType="McInformationCertEntity">
+		update mc_information_cert
+		<set>
+			<if test="ihId != null and ihId != ''">
+				ihId = #{ihId},
+			</if>
+			<if test="strVendorNo != null and strVendorNo != ''">
+				strVendorNo = #{strVendorNo},
+			</if>
+			<if test="strCertificateNo != null and strCertificateNo != ''">
+				strCertificateNo = #{strCertificateNo},
+			</if>
+			<if test="strCertNo != null and strCertNo != ''">
+				strCertNo = #{strCertNo},
+			</if>
+			<if test="strCertificateName != null and strCertificateName != ''">
+				strCertificateName = #{strCertificateName},
+			</if>
+			<if test="strIssueUnit != null and strIssueUnit != ''">
+				strIssueUnit = #{strIssueUnit},
+			</if>
+			<if test="strIssueDate != null and strIssueDate != ''">
+				strIssueDate = #{strIssueDate},
+			</if>
+			<if test="strIssueEndDate != null and strIssueEndDate != ''">
+				strIssueEndDate = #{strIssueEndDate},
+			</if>
+			<if test="strCertificateContent != null and strCertificateContent != ''">
+				strCertificateContent = #{strCertificateContent},
+			</if>
+			<if test="strRemarkCert != null and strRemarkCert != ''">
+				strRemarkCert = #{strRemarkCert},
+			</if>
+			<if test="updateUser != null">
+				updateUserId = #{updateUser.id},
+			</if>
+			<if test="updateDateTime != null and updateDateTime != ''">
+				updateDateTime = #{updateDateTime},
+			</if>
+			<if test="intIsActive != null and intIsActive != ''">
+				intIsActive = #{intIsActive},
+			</if>
+			<if test="intIsDelete != null and intIsDelete != ''">
+				intIsDelete = #{intIsDelete}
+			</if>
+		</set>
+		<where>
+			id = #{id}
+		</where>
+	</update>
+
+	<!-- 根据主档id修改记录 -->
+	<update id="updateByihId" parameterType="McInformationCertEntity">
+		update mc_information_cert
+		<set>
+			<if test="strVendorNo != null and strVendorNo != ''">
+				strVendorNo = #{strVendorNo},
+			</if>
+			<if test="strCertificateNo != null and strCertificateNo != ''">
+				strCertificateNo = #{strCertificateNo},
+			</if>
+			<if test="strCertNo != null and strCertNo != ''">
+				strCertNo = #{strCertNo},
+			</if>
+			<if test="strCertificateName != null and strCertificateName != ''">
+				strCertificateName = #{strCertificateName},
+			</if>
+			<if test="strIssueUnit != null and strIssueUnit != ''">
+				strIssueUnit = #{strIssueUnit},
+			</if>
+			<if test="strIssueDate != null and strIssueDate != ''">
+				strIssueDate = #{strIssueDate},
+			</if>
+			<if test="strIssueEndDate != null and strIssueEndDate != ''">
+				strIssueEndDate = #{strIssueEndDate},
+			</if>
+			<if test="strCertificateContent != null and strCertificateContent != ''">
+				strCertificateContent = #{strCertificateContent},
+			</if>
+			<if test="strRemarkCert != null and strRemarkCert != ''">
+				strRemarkCert = #{strRemarkCert},
+			</if>
+			<if test="updateUser != null">
+				updateUserId = #{updateUser.id},
+			</if>
+			<if test="updateDateTime != null and updateDateTime != ''">
+				updateDateTime = #{updateDateTime},
+			</if>
+			<if test="intIsActive != null and intIsActive != ''">
+				intIsActive = #{intIsActive},
+			</if>
+			<if test="intIsDelete != null and intIsDelete != ''">
+				intIsDelete = #{intIsDelete}
+			</if>
+		</set>
+		<where>
+			ihId = #{ihId}
+		</where>
+	</update>
+
+	<!-- 删除记录 -->
+	<delete id="delete" parameterType="String">
+		delete from mc_information_cert where id = #{id}
+	</delete>
+
+	<!-- 根据主档id删除记录 -->
+	<delete id="deleteByihId" parameterType="String">
+		delete from mc_information_cert where ihId = #{ihId}
+	</delete>
+</mapper>

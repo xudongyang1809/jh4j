@@ -1,0 +1,44 @@
+/**
+ * genSurvey.css 1.0
+ */
+@CHARSET "UTF-8";
+
+body {
+	background: #f1f1f1;
+}
+
+.container {
+	margin-top: 10px;
+	background: white;
+}
+
+.title {
+	text-align: center;
+}
+
+.navigation {
+	margin-left: 10%;
+	margin-right: 10%;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.navigation>p {
+	text-indent: 2em;
+}
+
+.mainContent {
+	min-height: 400px;
+	/* 添加底层隔离,便于拖动到最后 */
+	padding-bottom: 15%;
+}
+
+.option {
+	margin-left: 5%;
+	margin-right: 5%;
+}
+
+.submitBtn {
+	text-align: center;
+	margin-bottom: 20px;
+}

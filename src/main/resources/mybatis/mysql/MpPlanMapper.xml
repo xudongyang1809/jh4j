@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+     @desc “此代码是自动生成，请继续优化注释”
+	 @author 王梦奇 022347
+	 @version 1.0.0
+	 @date 2019-04-28 15:49:51
+	 @Copyright: 江苏金恒信息科技股份有限公司
+ -->
+<mapper namespace="MpPlanDao">
+	<!-- 查询所有记录 过滤公司别 -->
+	<select id="findAll" parameterType="map" resultType="MpPlanEntity">
+		select 
+			*
+		from mp_plan
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+			<if test="strPlanNo != null and strPlanNo != ''">
+				and strPlanNo like '%${strPlanNo}%'
+			</if>
+			<if test="strBuyerId != null and strBuyerId != ''">
+				and strBuyerId like '%${strBuyerId}%'
+			</if>
+			<if test="strApplyNo != null and strApplyNo != ''">
+				and strApplyNo like '%${strApplyNo}%'
+			</if>
+		</where>
+   		order by strPlanNo desc  ,createDateTime desc
+	</select>
+
+
+	<!-- 查询所有记录 过滤公司别 -->
+	<select id="findAllMap" parameterType="map" resultType="map">
+		select p.*,
+		(select a.strName FROM du_user a where a.id = p.strBuyerId ) strBuyerName,
+		(select a.strName FROM du_user a where a.id = p.strReqEmpNo ) strReqEmpName
+		from mp_plan p
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and p.companyId = #{currentCompany}
+			</if>
+			<if test="strPlanNo != null and strPlanNo != ''">
+				and p.strPlanNo like '%${strPlanNo}%'
+			</if>
+			<if test="strBuyerId != null and strBuyerId != ''">
+				and p.strBuyerId like '%${strBuyerId}%'
+			</if>
+			<if test="strApplyNo != null and strApplyNo != ''">
+				and p.strApplyNo like '%${strApplyNo}%'
+			</if>
+		</where>
+		order by strPlanNo desc  ,createDateTime desc
+	</select>
+	
+	<!-- 查询所有记录 过滤公司别 -->
+	<select id="getCount" resultType="int" parameterType="map">
+		select count(id) from mp_plan
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+			<if test="strPlanNo != null and strPlanNo != ''">
+				and strPlanNo like '%${strPlanNo}%'
+			</if>
+			<if test="strBuyerId != null and strBuyerId != ''">
+				and strBuyerId like '%${strBuyerId}%'
+			</if>
+			<if test="strApplyNo != null and strApplyNo != ''">
+				and strApplyNo like '%${strApplyNo}%'
+			</if>
+		</where>
+	</select>
+	
+	<!-- 根据ID查询记录 -->
+	<select id="findOneById" parameterType="String" resultType="MpPlanEntity">
+		select
+			*
+		from mp_plan
+		where id = #{id}
+	</select>
+	<!-- 根据ID查询记录  返回 Map-->
+
+	<select id="findOneByIdMap" parameterType="String" resultType="map">
+		select p.*,
+		(select a.strName FROM du_user a where a.id = p.strBuyerId ) strBuyerName,
+		(select a.strName FROM du_user a where a.id = p.strReqEmpNo ) strReqEmpName
+		from mp_plan p
+		where p.id = #{id}
+	</select>
+	
+	<!-- 添加记录 -->
+	<insert id="create" parameterType="MpPlanEntity">
+		insert into mp_plan
+		(id, intIsActive, intIsDelete, createUserId, createDateTime, companyId, strPlanNo, strPlanDate, strBuyerId, strBuyerDeptId, strStatusId, strRemark, strVendorNo, strVendorName, strApplyNo, strApplyItem, strMatrlNo, strMatrlName, strPlanUseDate, strReqEmpNo, strReqDept, strOrderNo, strOrderItem, bdPlanPrice, bdQty, bdPurchasesQty)
+		values(#{id}, #{intIsActive}, #{intIsDelete}, #{createUser.id}, #{createDateTime}, #{company.id}, #{strPlanNo}, #{strPlanDate}, #{strBuyerId}, #{strBuyerDeptId}, #{strStatusId}, #{strRemark}, #{strVendorNo}, #{strVendorName}, #{strApplyNo}, #{strApplyItem}, #{strMatrlNo}, #{strMatrlName}, #{strPlanUseDate}, #{strReqEmpNo}, #{strReqDept}, #{strOrderNo}, #{strOrderItem}, #{bdPlanPrice}, #{bdQty}, #{bdPurchasesQty})
+	</insert>
+	
+	<!-- 修改记录 -->
+	<update id="update" parameterType="MpPlanEntity">
+		update mp_plan
+		<set>
+			<if test="strPlanNo != null and strPlanNo != ''">
+				strPlanNo = #{strPlanNo},
+			</if>
+			<if test="strPlanDate != null and strPlanDate != ''">
+				strPlanDate = #{strPlanDate},
+			</if>
+			<if test="strBuyerId != null and strBuyerId != ''">
+				strBuyerId = #{strBuyerId},
+			</if>
+			<if test="strBuyerDeptId != null and strBuyerDeptId != ''">
+				strBuyerDeptId = #{strBuyerDeptId},
+			</if>
+			<if test="strStatusId != null and strStatusId != ''">
+				strStatusId = #{strStatusId},
+			</if>
+			<if test="strRemark != null and strRemark != ''">
+				strRemark = #{strRemark},
+			</if>
+			<if test="strVendorNo != null and strVendorNo != ''">
+				strVendorNo = #{strVendorNo},
+			</if>
+			<if test="strVendorName != null and strVendorName != ''">
+				strVendorName = #{strVendorName},
+			</if>
+			<if test="strApplyNo != null and strApplyNo != ''">
+				strApplyNo = #{strApplyNo},
+			</if>
+			<if test="strApplyItem != null and strApplyItem != ''">
+				strApplyItem = #{strApplyItem},
+			</if>
+			<if test="strMatrlNo != null and strMatrlNo != ''">
+				strMatrlNo = #{strMatrlNo},
+			</if>
+			<if test="strMatrlName != null and strMatrlName != ''">
+				strMatrlName = #{strMatrlName},
+			</if>
+			<if test="strPlanUseDate != null and strPlanUseDate != ''">
+				strPlanUseDate = #{strPlanUseDate},
+			</if>
+			<if test="strReqEmpNo != null and strReqEmpNo != ''">
+				strReqEmpNo = #{strReqEmpNo},
+			</if>
+			<if test="strReqDept != null and strReqDept != ''">
+				strReqDept = #{strReqDept},
+			</if>
+			<if test="strOrderNo != null and strOrderNo != ''">
+				strOrderNo = #{strOrderNo},
+			</if>
+			<if test="strOrderItem != null and strOrderItem != ''">
+				strOrderItem = #{strOrderItem},
+			</if>
+			<if test="bdPlanPrice != null ">
+				bdPlanPrice = #{bdPlanPrice},
+			</if>
+			<if test="bdQty != null ">
+				bdQty = #{bdQty},
+			</if>
+			<if test="bdPurchasesQty != null ">
+				bdPurchasesQty = #{bdPurchasesQty},
+			</if>
+			<if test="updateUser != null">
+				updateUserId = #{updateUser.id},
+			</if>
+			<if test="updateDateTime != null and updateDateTime != ''">
+				updateDateTime = #{updateDateTime},
+			</if>
+			<if test="intIsActive != null and intIsActive != ''">
+				intIsActive = #{intIsActive},
+			</if>
+			<if test="intIsDelete != null and intIsDelete != ''">
+				intIsDelete = #{intIsDelete}
+			</if>
+		</set>
+		<where>
+			id = #{id}
+		</where>
+	</update>
+	
+	<!-- 删除记录 -->
+	<delete id="delete" parameterType="String">
+		delete from mp_plan where id = #{id}
+	</delete>
+
+	<!--采购合同挑选采购计划-->
+
+	<select id="selectMpPonoSelect" parameterType="map" resultType="map">
+		select b.* ,
+		(select a.strName FROM du_user a where a.id =b.strBuyerId ) strBuyerName ,
+		(select a.strName FROM du_user a where a.id =b.strReqEmpNo ) strReqEmpName
+		from mp_plan b
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and b.companyId = #{currentCompany}
+			</if>
+			<if test="strVendorNo != null and strVendorNo != ''">
+				and b.strVendorNo = #{strVendorNo}
+			</if>
+  				and b.strStatusId = "S" and   b.bdPurchasesQty >0
+
+		</where>
+		order by b.createDateTime desc
+	</select>
+
+	<!-- 采购合同挑选采购计划分页数量 -->
+	<select id="getCountSelect" resultType="int" parameterType="map">
+		select count(id) from mp_plan
+
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+			<if test="strVendorNo != null and strVendorNo != ''">
+				and strVendorNo = #{strVendorNo}
+			</if><if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+			<if test="strVendorNo != null and strVendorNo != ''">
+				and strVendorNo = #{strVendorNo}
+			</if>
+			and strStatusId = "S"
+		</where>
+	</select>
+
+</mapper>

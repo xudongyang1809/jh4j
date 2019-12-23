@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+     @desc “此代码是自动生成，请继续优化注释”
+	 @author 王梦奇 022347
+	 @version 1.0.0
+	 @date 2019-05-08 18:55:30
+	 @Copyright: 江苏金恒信息科技股份有限公司
+ -->
+<mapper namespace="MpArrivalDDao">
+	<!-- 查询所有记录 过滤公司别 -->
+	<select id="findAll" parameterType="map" resultType="MpArrivalDEntity">
+		select *
+		from mp_arrival_d
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+			<if test="ihId != null ">
+				and ihId = #{ihId}
+			</if>
+			<if test="strPoNo != null and strPoNo != ''">
+				and strPoNo = #{strPoNo}
+			</if>
+  		</where>
+   		order by createDateTime desc
+	</select>
+	
+	<!-- 查询所有记录 过滤公司别 -->
+	<select id="getCount" resultType="int" parameterType="map">
+		select count(id) from mp_arrival_d
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+			<if test="ihId != null ">
+				and ihId = #{ihId}
+			</if>
+			<if test="strPoNo != null and strPoNo != ''">
+				and strPoNo = #{strPoNo}
+			</if>
+		</where>
+	</select>
+	
+
+	<select id="findOneById" parameterType="String" resultType="MpArrivalDEntity">
+		select 
+			*
+		from mp_arrival_d
+		where id = #{id}
+	</select>
+	<!-- 根据主档ID查询记录 -->
+	<select id="findOneByIhid" parameterType="String" resultType="MpArrivalDEntity">
+		select
+			*
+		from mp_arrival_d
+		where ihId = #{ihId}
+	</select>
+	
+	<!-- 添加记录 -->
+	<insert id="create" parameterType="MpArrivalDEntity">
+		insert into mp_arrival_d
+		(id, intIsActive, intIsDelete, createUserId, createDateTime, companyId,
+		 ihId,strArrItemNo, strPoNo, strPoItemNo, strApplyDateTime, strMatrlNo, strMatrlName, strBrand, strSpecMark, bdRealPrice, bdQty, bdPoNoQty, bdAmt, strRespEmpNo,strPoNoId,strVendorNod)
+		values(#{id}, #{intIsActive}, #{intIsDelete}, #{createUser.id}, #{createDateTime}, #{company.id},
+		#{ihId},#{strArrItemNo}, #{strPoNo}, #{strPoItemNo}, #{strApplyDateTime}, #{strMatrlNo}, #{strMatrlName}, #{strBrand}, #{strSpecMark}, #{bdRealPrice}, #{bdQty}, #{bdPoNoQty}, #{bdAmt}, #{strRespEmpNo},#{strPoNoId},#{strVendorNod})
+	</insert>
+	
+	<!-- 修改记录 -->
+	<update id="update" parameterType="MpArrivalDEntity">
+		update mp_arrival_d
+		<set>
+			<if test="ihId != null and ihId != ''">
+				ihId = #{ihId},
+			</if>
+
+			<if test="strArrItemNo != null and strArrItemNo != ''">
+				strArrItemNo = #{strArrItemNo},
+			</if>
+			<if test="strPoNo != null and strPoNo != ''">
+				strPoNo = #{strPoNo},
+			</if>
+			<if test="strPoItemNo != null and strPoItemNo != ''">
+				strPoItemNo = #{strPoItemNo},
+			</if>
+			<if test="strApplyDateTime != null and strApplyDateTime != ''">
+				strApplyDateTime = #{strApplyDateTime},
+			</if>
+			<if test="strMatrlNo != null and strMatrlNo != ''">
+				strMatrlNo = #{strMatrlNo},
+			</if>
+			<if test="strMatrlName != null and strMatrlName != ''">
+				strMatrlName = #{strMatrlName},
+			</if>
+			<if test="strBrand != null and strBrand != ''">
+				strBrand = #{strBrand},
+			</if>
+			<if test="strSpecMark != null and strSpecMark != ''">
+				strSpecMark = #{strSpecMark},
+			</if>
+			<if test="bdRealPrice != null">
+				bdRealPrice = #{bdRealPrice},
+			</if>
+			<if test="bdQty != null">
+				bdQty = #{bdQty},
+			</if>
+			<if test="bdPoNoQty != null">
+				bdPoNoQty = #{bdPoNoQty},
+			</if>
+			<if test="bdAmt != null">
+				bdAmt = #{bdAmt},
+			</if>
+			<if test="strRespEmpNo != null and strRespEmpNo != ''">
+				strRespEmpNo = #{strRespEmpNo},
+			</if>
+			<if test="updateUser != null">
+				updateUserId = #{updateUser.id},
+			</if>
+			<if test="updateDateTime != null and updateDateTime != ''">
+				updateDateTime = #{updateDateTime},
+			</if>
+			<if test="intIsActive != null and intIsActive != ''">
+				intIsActive = #{intIsActive},
+			</if>
+			<if test="intIsDelete != null and intIsDelete != ''">
+				intIsDelete = #{intIsDelete}
+			</if>
+			<if test="strPoNoId != null and strPoNoId != ''">
+				strPoNoId = #{strPoNoId}
+			</if>
+			<if test="strVendorNod != null and strVendorNod != ''">
+                strVendorNod = #{strVendorNod}
+			</if>
+		</set>
+		<where>
+			id = #{id}
+		</where>
+	</update>
+	
+	<!-- 删除记录 -->
+	<delete id="delete" parameterType="String">
+		delete from mp_arrival_d where id = #{id}
+	</delete>
+
+	<!--查询挑选到货申请的明细-->
+	<select id="selectArrivalDtl" parameterType="map" resultType="map">
+		select a.* ,b.id ,b.strVendorNo,b.strVendorName from mp_pono_d a
+			LEFT JOIN mp_pono_m  b
+			on a.ihId= b.id
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and a.companyId = #{currentCompany}
+			</if>
+			<if test="strPoNo != null and strPoNo != ''">
+				and  a.strPoNo = #{strPoNo}
+			</if>
+			<if test="strVendorNo != null and strVendorNo != ''">
+				and b.strVendorNo = #{strVendorNo}
+			</if>
+			  and   b.strIsActiveCont ='Y'
+			  and a.strUnSelectQty >0
+
+	  	</where>
+	</select>
+
+	<!--挑选合同中数量-->
+	<select id="getCountArrivalDtl" resultType="int" parameterType="map">
+		select count(a.id) from mp_pono_d a
+		LEFT JOIN mp_pono_m  b
+		on a.ihId= b.id
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and a.companyId = #{currentCompany}
+			</if>
+			<if test="strPoNo != null and strPoNo != ''">
+				and  a.strPoNo = #{strPoNo}
+			</if>
+			<if test="strVendorNo != null and strVendorNo != ''">
+				and b.strVendorNo = #{strVendorNo}
+			</if>
+			and   b.strIsActiveCont ='Y'
+			and a.strUnSelectQty >0
+		</where>
+	</select>
+
+	<!--到货申请明细号 按照指定规则流水号依次递增-->
+	<select id="findMaxLabelId" parameterType="map" resultType="String">
+		select max(a.strArrItemNo) as strArrItemNo
+		 from mp_arrival_d a
+		  where a.ihId  = #{ihId}
+	</select>
+
+
+
+</mapper>

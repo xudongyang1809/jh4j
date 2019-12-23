@@ -1,0 +1,14 @@
+@CHARSET "UTF-8";
+.layui-input[readonly]:not(.layui-unselect) {
+    background-color: #eee;
+    opacity: 1;
+}
+
+input[type="text"][lay-verify*="required"],
+input[type="password"][lay-verify*="required"],
+textarea[lay-verify*="required"],
+select[lay-verify*="required"] + div.layui-unselect .layui-select-title input.layui-unselect {
+	background: url(../image/input_bg.png) no-repeat scroll;
+	background-position: 100% 0;
+}
+

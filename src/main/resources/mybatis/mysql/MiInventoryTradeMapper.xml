@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+     @desc “此代码是自动生成，请继续优化注释”
+	 @author 超级管理员 admin
+	 @version 1.0.0
+	 @date 2019-05-27 10:14:46
+	 @Copyright: 江苏金恒信息科技股份有限公司
+ -->
+<mapper namespace="MiInventoryTradeDao">
+	<!-- 查询所有记录 过滤公司别 -->
+	<select id="findAll" parameterType="map" resultType="MiInventoryTradeEntity">
+		select
+		id,
+		intIsActive,
+		intIsDelete,
+		createUserId,
+		createDateTime,
+		updateUserId,
+		updateDateTime,
+		updateUserNo,
+		companyId,
+		strTradeNo,
+		strTradeItem,
+		strAcctNo,
+		strAcctDate,
+		strActionStyle,
+		strBatchNo,
+		strIssueItem,
+		strMemoNo,
+		strMemoItem,
+		(select strName from mf_store_location d where d.id=a.strAreaId) strAreaId,
+		strMatrlNo,
+		bdQty,
+		bdAmt
+		from mi_inventory_trade a
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+			<if test="strTradeNo != null and strTradeNo != ''">
+				and strTradeNo like '%${strTradeNo}%'
+		</if>
+			<if test="strAreaId != null and strAreaId != ''">
+				and strAreaId = #{strAreaId}
+			</if>
+			<if test="strMatrlNo != null and strMatrlNo != ''">
+				and strMatrlNo like '%${strMatrlNo}%'
+			</if>
+		</where>
+   		order by createDateTime desc
+	</select>
+	
+	<!-- 查询所有记录 过滤公司别 -->
+	<select id="getCount" resultType="int" parameterType="map">
+		select count(id) from mi_inventory_trade
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+			<if test="strTradeNo != null and strTradeNo != ''">
+				and strTradeNo like '%${strTradeNo}%'
+			</if>
+			<if test="strAreaId != null and strAreaId != ''">
+				and strAreaId = #{strAreaId}
+			</if>
+			<if test="strMatrlNo != null and strMatrlNo != ''">
+				and strMatrlNo like '%${strMatrlNo}%'
+			</if>
+		</where>
+		order by createDateTime desc
+	</select>
+	
+	<!-- 根据ID查询记录 -->
+	<select id="findOneById" parameterType="String" resultType="MiInventoryTradeEntity">
+		select 
+			*
+		from mi_inventory_trade
+		where id = #{id}
+	</select>
+	
+	<!-- 添加记录 -->
+	<insert id="create" parameterType="MiInventoryTradeEntity">
+		insert into mi_inventory_trade
+		(id, intIsActive, intIsDelete, createUserId, createDateTime, updateUserNo, companyId, strTradeNo, strTradeItem, strAcctNo, strAcctDate, strActionStyle, strBatchNo, strIssueItem, strMemoNo, strMemoItem, strAreaId, strMatrlNo, bdQty, bdAmt)
+		values(#{id}, #{intIsActive}, #{intIsDelete}, #{createUser.id}, #{createDateTime}, #{updateUserNo}, #{company.id}, #{strTradeNo}, #{strTradeItem}, #{strAcctNo}, #{strAcctDate}, #{strActionStyle}, #{strBatchNo}, #{strIssueItem}, #{strMemoNo}, #{strMemoItem}, #{strAreaId}, #{strMatrlNo}, #{bdQty}, #{bdAmt})
+	</insert>
+	
+	<!-- 修改记录 -->
+	<update id="update" parameterType="MiInventoryTradeEntity">
+		update mi_inventory_trade
+		<set>
+			<if test="updateUserNo != null and updateUserNo != ''">
+				updateUserNo = #{updateUserNo},
+			</if>
+			<if test="strTradeNo != null and strTradeNo != ''">
+				strTradeNo = #{strTradeNo},
+			</if>
+			<if test="strTradeItem != null and strTradeItem != ''">
+				strTradeItem = #{strTradeItem},
+			</if>
+			<if test="strAcctNo != null and strAcctNo != ''">
+				strAcctNo = #{strAcctNo},
+			</if>
+			<if test="strAcctDate != null and strAcctDate != ''">
+				strAcctDate = #{strAcctDate},
+			</if>
+			<if test="strActionStyle != null and strActionStyle != ''">
+				strActionStyle = #{strActionStyle},
+			</if>
+			<if test="strBatchNo != null and strBatchNo != ''">
+				strBatchNo = #{strBatchNo},
+			</if>
+			<if test="strIssueItem != null and strIssueItem != ''">
+				strIssueItem = #{strIssueItem},
+			</if>
+			<if test="strMemoNo != null and strMemoNo != ''">
+				strMemoNo = #{strMemoNo},
+			</if>
+			<if test="strMemoItem != null and strMemoItem != ''">
+				strMemoItem = #{strMemoItem},
+			</if>
+			<if test="strAreaId != null and strAreaId != ''">
+				strAreaId = #{strAreaId},
+			</if>
+			<if test="strMatrlNo != null and strMatrlNo != ''">
+				strMatrlNo = #{strMatrlNo},
+			</if>
+			<if test="bdQty != null">
+				bdQty = #{bdQty},
+			</if>
+			<if test="bdAmt != null">
+				bdAmt = #{bdAmt},
+			</if>
+			<if test="updateUser != null">
+				updateUserId = #{updateUser.id},
+			</if>
+			<if test="updateDateTime != null and updateDateTime != ''">
+				updateDateTime = #{updateDateTime},
+			</if>
+			<if test="intIsActive != null and intIsActive != ''">
+				intIsActive = #{intIsActive},
+			</if>
+			<if test="intIsDelete != null and intIsDelete != ''">
+				intIsDelete = #{intIsDelete}
+			</if>
+		</set>
+		<where>
+			id = #{id}
+		</where>
+	</update>
+	
+	<!-- 删除记录 -->
+	<delete id="delete" parameterType="String">
+		delete from mi_inventory_trade where id = #{id}
+	</delete>
+</mapper>

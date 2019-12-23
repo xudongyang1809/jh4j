@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="CompanyDao">
+	<cache></cache>
+	<!-- 列表、查询、模糊查询、高级查询公用sql -->
+	<resultMap type="Company" id="findAllMap">
+		<id property="id" column="id" />
+  		<association property="createUser" column="createUserId" select="UserDao.findByUserNo" javaType="com.nisco.dms.entity.User"></association>
+	</resultMap>
+	<select id="findAll" parameterType="map" resultMap="findAllMap">
+		select * from do_company 
+		<where>
+			<if test="keywords != ''">
+				strSn like '%${keywords}%' or strName like '%${keywords}%' or strDesc like '%${keywords}%' 
+			</if>
+		</where>
+		order by createDateTime asc
+	</select>
+	
+	<select id="findAllNum" parameterType="map" resultType="int">
+		select count(id) from do_company 
+		<where>
+			<if test="keywords != ''">
+				strSn like '%${keywords}%' or strName like '%${keywords}%' or strDesc like '%${keywords}%' 
+			</if>
+		</where>
+	</select>
+	
+	<!-- 创建公司信息 -->
+	<insert id="create" parameterType="com.nisco.dms.entity.Company" flushCache="true">
+		insert into do_company(id, strSn, strName, strNCSn, strDesc, createUserId, createDateTime)
+		values(#{id}, #{strSn}, #{strName},#{strNCSn}, #{strDesc}, #{createUser.strAccount}, #{createDateTime})
+	</insert>
+	
+	<!-- 根据ID查询一条公司信息 -->
+	<select id="findOneById" parameterType="String" resultType="com.nisco.dms.entity.Company">
+		select * from do_company where id = #{companyId}
+	</select>
+	
+	<select id="findByStrSn" parameterType="String" resultType="com.nisco.dms.entity.Company">
+		select * from do_company where strSn = #{strSn}
+	</select>
+	
+	<!-- 编辑公司信息 -->
+	<update id="update" parameterType="com.nisco.dms.entity.Company" flushCache="true">
+		update do_company
+		<set>
+			<if test="strSn != null and strSn != ''">
+				strSn = #{strSn},
+			</if>
+			<if test="strName != null and strName != ''">
+				strName = #{strName},
+			</if>
+			<if test="strNCSn != null and strNCSn != ''">
+				strNCSn = #{strNCSn},
+			</if>
+			strDesc = #{strDesc},
+			<if test="updateUser != null">
+				updateUserId = #{updateUser.id},
+			</if>
+			<if test="updateDateTime != null and updateDateTime != ''">
+				updateDateTime = #{updateDateTime}
+			</if>
+		</set>
+		<where>
+			id = #{id}
+		</where>
+	</update>
+	
+	<!-- 根据主键Id删除一条公司信息 -->
+	<delete id="delete" parameterType="String" flushCache="true">
+		delete from do_company where id = #{id}
+	</delete>
+</mapper>

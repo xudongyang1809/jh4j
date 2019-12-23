@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+     @desc “此代码是自动生成，请继续优化注释”
+	 @author 毛敏 022325
+	 @version 1.0.0
+	 @date 2019-05-29 13:54:19
+	 @Copyright: 江苏金恒信息科技股份有限公司
+ -->
+<mapper namespace="MsSettlementDDao">
+	<!-- 查询所有记录 过滤公司别 -->
+	<select id="findAll" parameterType="map" resultType="map">
+		select 
+			*,
+			case strStus when 'N' then '新增' when 'C' then '开票确认' else '' end as strStusZH
+		from ms_settlement_d
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+			<if test="strSettleNumber != null and strSettleNumber != ''">
+				and strSettleNumber = #{strSettleNumber}
+			</if>
+			
+		</where>
+   		order by createDateTime desc
+	</select>
+
+	<!-- 查询销账记录 过滤公司别 -->
+	<select id="findAllmiIssueD" parameterType="map" resultType="map">
+		select
+		a.id,a.strSaleNo,a.strOrderNo,a.strOrderItem,a.strReqNo,a.strReqItem,a.strMatrlNo,a.strMatrlName,
+		a.strSpec,a.strUnit,a.strBrand,a.bdRealPrice,a.bdSaleQty,a.bdAmt,a.strB,a.strPoNo,
+		(SELECT p.strRate FROM mp_pono_m p WHERE p.strPoNo = a.strPoNo and p.strIsActiveCont = "Y") AS strRateZH
+		from mi_issue_d a
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and a.companyId = #{currentCompany}
+			</if>
+			<if test="strSaleNo != null and strSaleNo != ''">
+				and a.strSaleNo like '%${strSaleNo}%'
+			</if>
+			<if test="strApplyNo != null and strApplyNo != ''">
+				and a.strApplyNo like '%${strApplyNo}%'
+			</if>
+			<if test="strStus != null and strStus != ''">
+				and a.strStus like '%${strStus}%'
+			</if>
+			<if test="strReqNo != null and strReqNo != ''">
+				and a.strReqNo like '%${strReqNo}%'
+			</if>
+			<if test="strB != null and strB != ''">
+				and a.strB = #{strB}
+			</if>
+		</where>
+		order by a.createDateTime desc
+	</select>
+
+	<!-- 查询所有记录 过滤公司别 -->
+	<select id="getCount" resultType="int" parameterType="map">
+		select count(id) from ms_settlement_d
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+			
+		</where>
+	</select>
+	
+	<!-- 根据ID查询记录 -->
+	<select id="findOneById" parameterType="String" resultType="MsSettlementDEntity">
+		select 
+			*
+		from ms_settlement_d
+		where id = #{id}
+	</select>
+
+	<!--根据结算单号查询明细-->
+	<select id="findBySettleNo" parameterType="String" resultType="map">
+		select
+			*
+		from ms_settlement_d
+		where strSettleNumber = #{strSettleNumber}
+	</select>
+
+	<!-- 添加记录 -->
+	<insert id="create" parameterType="MsSettlementDEntity">
+		insert into ms_settlement_d
+		(id, strSettleNumber, strOrderNo, strOrderItem, strSaleNo, strApplyNo, strApplyItem, strMatrlNo, strMatrlName, strBrand, strUnit, strSpec, bdPurchasePrice, bdPurchaseCount, bdSalePrice, bdSaleCount, bdItemAmt, bdTaxRate, bdAmt, bdTotaAmt, bdExcludSumAmt, bdExcludAmt, bdTaxAmt, strStus, strRemark, companyId, intIsActive, intIsDelete, createUserId, createDateTime)
+		values(#{id}, #{strSettleNumber}, #{strOrderNo}, #{strOrderItem}, #{strSaleNo}, #{strApplyNo}, #{strApplyItem}, #{strMatrlNo}, #{strMatrlName}, #{strBrand}, #{strUnit}, #{strSpec}, #{bdPurchasePrice}, #{bdPurchaseCount}, #{bdSalePrice}, #{bdSaleCount}, #{bdItemAmt}, #{bdTaxRate}, #{bdAmt}, #{bdTotaAmt}, #{bdExcludSumAmt}, #{bdExcludAmt}, #{bdTaxAmt}, #{strStus}, #{strRemark}, #{company.id}, #{intIsActive}, #{intIsDelete}, #{createUser.id}, #{createDateTime})
+	</insert>
+	
+	<!-- 修改记录 -->
+	<update id="update" parameterType="MsSettlementDEntity">
+		update ms_settlement_d
+		<set>
+			<if test="strSettleNumber != null and strSettleNumber != ''">
+				strSettleNumber = #{strSettleNumber},
+			</if>
+			<if test="strOrderNo != null and strOrderNo != ''">
+				strOrderNo = #{strOrderNo},
+			</if>
+			<if test="strOrderItem != null and strOrderItem != ''">
+				strOrderItem = #{strOrderItem},
+			</if>
+			<if test="strSaleNo != null and strSaleNo != ''">
+				strSaleNo = #{strSaleNo},
+			</if>
+			<if test="strApplyNo != null and strApplyNo != ''">
+				strApplyNo = #{strApplyNo},
+			</if>
+			<if test="strApplyItem != null and strApplyItem != ''">
+				strApplyItem = #{strApplyItem},
+			</if>
+			<if test="strMatrlNo != null and strMatrlNo != ''">
+				strMatrlNo = #{strMatrlNo},
+			</if>
+			<if test="strMatrlName != null and strMatrlName != ''">
+				strMatrlName = #{strMatrlName},
+			</if>
+			<if test="strBrand != null and strBrand != ''">
+				strBrand = #{strBrand},
+			</if>
+			<if test="strUnit != null and strUnit != ''">
+				strUnit = #{strUnit},
+			</if>
+			<if test="strSpec != null and strSpec != ''">
+				strSpec = #{strSpec},
+			</if>
+			<if test="bdPurchasePrice != null">
+				bdPurchasePrice = #{bdPurchasePrice},
+			</if>
+			<if test="bdPurchaseCount != null">
+				bdPurchaseCount = #{bdPurchaseCount},
+			</if>
+			<if test="bdSalePrice != null">
+				bdSalePrice = #{bdSalePrice},
+			</if>
+			<if test="bdSaleCount != null">
+				bdSaleCount = #{bdSaleCount},
+			</if>
+			<if test="bdItemAmt != null">
+				bdItemAmt = #{bdItemAmt},
+			</if>
+			<if test="bdTaxRate != null">
+				bdTaxRate = #{bdTaxRate},
+			</if>
+			<if test="bdAmt != null">
+				bdAmt = #{bdAmt},
+			</if>
+			<if test="bdTotaAmt != null">
+				bdTotaAmt = #{bdTotaAmt},
+			</if>
+			<if test="bdExcludSumAmt != null">
+				bdExcludSumAmt = #{bdExcludSumAmt},
+			</if>
+			<if test="bdExcludAmt != null">
+				bdExcludAmt = #{bdExcludAmt},
+			</if>
+			<if test="bdTaxAmt != null">
+				bdTaxAmt = #{bdTaxAmt},
+			</if>
+			<if test="strStus != null and strStus != ''">
+				strStus = #{strStus},
+			</if>
+			<if test="strRemark != null and strRemark != ''">
+				strRemark = #{strRemark},
+			</if>
+			<if test="updateUser != null">
+				updateUserId = #{updateUser.id},
+			</if>
+			<if test="updateDateTime != null and updateDateTime != ''">
+				updateDateTime = #{updateDateTime},
+			</if>
+			<if test="intIsActive != null and intIsActive != ''">
+				intIsActive = #{intIsActive},
+			</if>
+			<if test="intIsDelete != null and intIsDelete != ''">
+				intIsDelete = #{intIsDelete}
+			</if>
+		</set>
+		<where>
+			id = #{id}
+		</where>
+	</update>
+	
+	<!-- 删除记录 -->
+	<delete id="delete" parameterType="String">
+		delete from ms_settlement_d where id = #{id}
+	</delete>
+</mapper>

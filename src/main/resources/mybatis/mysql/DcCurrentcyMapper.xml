@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- Hints:
+     1. The code was automatic created;
+     2. Any other questions can ask the software engineer for help.
+	 @author sysadmin
+	 @date 2018-10-20
+	 @Copyright:江苏金恒信息科技股份有限公司
+ -->
+<mapper namespace="DcCurrentcyDao">
+		
+	<!--查询所有记录 过滤公司别-->
+	<select id="findAll" resultType="map"  parameterType="map">
+		SELECT * from dc_currency A
+	<where>
+	<if test="companyId!=null and companyId!=''">
+		AND A.COMPANYID = #{companyId}
+	</if>
+	<if test="strSn!=null and strSn!=''">
+	and A.strSn like '%${strSn}%'
+	</if>
+	<if test="strName!=null and strName!=''">
+	and A.strName like '%${strName}%'
+	</if>
+	<if test="strSymbol!=null and strSymbol!=''">
+	and A.strSymbol like '%${strSymbol}%'
+	</if>
+	<if test="locCurrency!=null and locCurrency!=''">
+	and A.locCurrency like '%${locCurrency}%'
+	</if>
+	<if test="bdRate!=null and bdRate!=''">
+	and A.bdRate like '%{bdRate}%'
+	</if>
+	</where>
+	</select>
+	<select id="findByStrSnContainingOrStrNameContaining" resultType="map"  parameterType="map">
+		SELECT * from dc_currency A	where strSn like '%${strSn}%'  or strName like '%${strName}%'
+	</select>
+	
+	<select id="findAllNum" parameterType="map" resultType="int">
+		select count(id) from dc_currency A
+	<where>
+	<if test="companyId!=null and companyId!=''">
+		AND A.COMPANYID = #{companyId}
+	</if>	
+	<if test="strName!=null and strName!=''">
+	and A.strName like '%${strName}%'
+	</if>	
+	<if test="strSymbol!=null and strSymbol!=''">
+	and A.strSymbol like '%${strSymbol}%'
+	</if>
+	<if test="groupType!=null and groupType!=''">
+	and A.groupType like '%${groupType}%'
+	</if>
+	<if test="isBasic!=null and isBasic!=''">
+	and A.isBasic like '%${isBasic}%'
+	</if>
+	<if test="bdScale!=null and bdScale!=''">
+	and A.bdScale like #{bdScale}
+	</if>
+	</where>
+	</select>
+	
+	<!--查询所有记录 过滤公司别-->
+	<select id="getCount" resultType="int"  parameterType="map">
+		SELECT COUNT(ID) from dc_currency A
+	<where>
+	<if test="companyId!=null and companyId!=''">
+		AND A.COMPANYID = #{companyId}
+	</if>	
+	<if test="strName!=null and strName!=''">
+	and A.strName like '%${strName}%'
+	</if>	
+	<if test="strSymbol!=null and strSymbol!=''">
+	and A.strSymbol like '%${strSymbol}%'
+	</if>
+	<if test="groupType!=null and groupType!=''">
+	and A.groupType like '%${groupType}%'
+	</if>
+	<if test="isBasic!=null and isBasic!=''">
+	and A.isBasic like '%${isBasic}%'
+	</if>
+	<if test="bdScale!=null and bdScale!=''">
+	and A.bdScale like #{bdScale}
+	</if>
+	</where>
+	</select>
+	
+	<!--查询所有记录 过滤公司别-->
+	<!-- <resultMap type="com.nisco.dms.entity.DcMetrologyDM" id="widthParentResult">
+		<id property="id" column="id" />
+  		<association property="dictdtl" column="groupType" select="DictionaryDtlDao.findOneDictionaryDtlById" javaType="com.nisco.dms.entity.DictionaryDtl"></association>
+	</resultMap> -->
+	<select id="findByDictionaryDtlAndIsBasic" resultType="map"  parameterType="map">
+		SELECT * from dc_currency A		    
+	<where>
+	<if test="isBasic!=null and isBasic!=''">
+	and A.isBasic like '%${isBasic}%'
+	</if>
+	</where>
+	   ORDER BY A.CREATEDATETIME DESC
+	</select>
+	
+	<!--根据ID查询记录-->
+	<select id="findOneById" parameterType="String" resultType="Map">
+		SELECT * FROM dc_currency A WHERE ID=#{id}
+	</select>
+	
+	<!--根据ID查询记录-->
+	<select id="findByLocCurrency" parameterType="String" resultType="Map">
+		SELECT * FROM dc_currency A WHERE locCurrency like '%${locCurrency}%'
+	</select>
+	
+	<select id="findDcCurrencyBystrName" parameterType="String" resultType="Map">
+		SELECT * FROM dc_currency A WHERE strName like '%${strName}%'
+	</select>
+	
+	<!--添加记录-->
+	<insert id="create" parameterType="DcMetrologyDM">
+		INSERT INTO dc_currency(id,strName,strSymbol,groupType,isBasic,bdScale,intIsActive,intIsDelete,companyId,createUserId,createDateTime,updateUserId,updateDateTime) VALUES(#{id},#{strName},#{strSymbol},#{groupType},#{isBasic},#{bdScale},#{intIsActive},#{intIsDelete},#{company.id},#{createUser.id},#{createDateTime},#{updateUser.id},#{updateDateTime})
+	</insert>
+	
+	<!--修改记录-->
+	<update id="update" parameterType="DcMetrologyDM">
+	UPDATE dc_currency 
+	<set>
+	<if test="strName!=null and strName!=''">
+	strName=#{strName},
+	</if>
+	<if test="strSymbol!=null and strSymbol!=''">
+	strSymbol=#{strSymbol},
+	</if>
+	<if test="groupType!=null and groupType!=''">
+	groupType=#{groupType},
+	</if>
+	<if test="isBasic!=null and isBasic!=''">
+	isBasic=#{isBasic},
+	</if>
+	<if test="bdScale!=null and bdScale!=''">
+	bdScale=#{bdScale},
+	</if>
+	<if test="updateUser!=null">
+	UPDATEUSERID=#{updateUser.id},
+	</if>
+	<!-- <if test="updateUser!=null">
+	UPDATEUSERNO=#{updateUserNo},
+	</if> -->
+	<if test="updateDateTime!=null and updateDateTime!=''">
+	UPDATEDATETIME=#{updateDateTime},
+	</if>
+	<if test="intIsActive!=null and intIsActive!=''">
+	INTISACTIVE=#{intIsActive},
+	</if>
+	<if test="intIsDelete!=null and intIsDelete!=''">
+	INTISDELETE=#{intIsDelete}
+	</if>
+	</set>
+	<where>
+		id=#{id}
+	</where>
+	</update>
+	
+	<!--删除记录-->
+	<delete id="delete" parameterType="String">
+		DELETE FROM dc_currency WHERE ID=#{id}
+	</delete>
+</mapper>

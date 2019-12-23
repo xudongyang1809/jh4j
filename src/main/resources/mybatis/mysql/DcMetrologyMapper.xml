@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- Hints: 1. The code was automatic created; 2. Any other questions can 
+	ask the software engineer for help. @author sysadmin @date 2018-10-20 @Copyright:江苏金恒信息科技股份有限公司 -->
+<mapper namespace="DcMetrologyDao">
+
+	<!--查询所有记录 过滤公司别 -->
+	<resultMap type="com.nisco.dms.entity.DcMetrologyDM" id="widthParentResult">
+		<id property="id" column="id" />
+		<association property="dictionaryDtl" column="groupType" select="DictionaryDtlDao.findOneById" javaType="com.nisco.dms.entity.DictionaryDtl"></association>
+	</resultMap>
+	<!-- <association property="dictionaryDtl" column="groupType" select="DictionaryDtlDao.findOneDictionaryDtlById" 
+		javaType="com.nisco.dms.entity.DictionaryDtl"></association> -->
+	<select id="findAll" resultMap="widthParentResult" parameterType="map">
+		SELECT A.* from dc_metrology A
+		LEFT JOIN dc_sys_dictionary_dtl d
+		on A. GROUPTYPE = d.id
+		<where>
+			<if test="companyId!=null and companyId!=''">
+				AND A.COMPANYID = #{companyId}
+			</if>
+			<if test="strName!=null and strName!=''">
+				and A.strName like '%${strName}%'
+			</if>
+			<if test="strSymbol!=null and strSymbol!=''">
+				and A.strSymbol like '%${strSymbol}%'
+			</if>
+			<if test="groupType!=null and groupType!=''">
+				and A.groupType like '%${groupType}%'
+			</if>
+			<if test="isBasic!=null and isBasic!=''">
+				and A.isBasic like '%${isBasic}%'
+			</if>
+			<if test="bdScale!=null and bdScale!=''">
+				and A.bdScale like #{bdScale}
+			</if>
+		</where>
+		ORDER BY A.CREATEDATETIME DESC
+	</select>
+
+	<select id="findAllNum" parameterType="map" resultType="int">
+		select count(id) from dc_metrology A
+		<where>
+			<if test="companyId!=null and companyId!=''">
+				AND A.COMPANYID = #{companyId}
+			</if>
+			<if test="strName!=null and strName!=''">
+				and A.strName like '%${strName}%'
+			</if>
+			<if test="strSymbol!=null and strSymbol!=''">
+				and A.strSymbol like '%${strSymbol}%'
+			</if>
+			<if test="groupType!=null and groupType!=''">
+				and A.groupType like '%${groupType}%'
+			</if>
+			<if test="isBasic!=null and isBasic!=''">
+				and A.isBasic like '%${isBasic}%'
+			</if>
+			<if test="bdScale!=null and bdScale!=''">
+				and A.bdScale like #{bdScale}
+			</if>
+		</where>
+	</select>
+
+	<!--查询所有记录 过滤公司别 -->
+	<select id="getCount" resultType="int" parameterType="map">
+		SELECT COUNT(ID) from dc_metrology A
+		<where>
+			<if test="companyId!=null and companyId!=''">
+				AND A.COMPANYID = #{companyId}
+			</if>
+			<if test="strName!=null and strName!=''">
+				and A.strName like '%${strName}%'
+			</if>
+			<if test="strSymbol!=null and strSymbol!=''">
+				and A.strSymbol like '%${strSymbol}%'
+			</if>
+			<if test="groupType!=null and groupType!=''">
+				and A.groupType like '%${groupType}%'
+			</if>
+			<if test="isBasic!=null and isBasic!=''">
+				and A.isBasic like '%${isBasic}%'
+			</if>
+			<if test="bdScale!=null and bdScale!=''">
+				and A.bdScale like #{bdScale}
+			</if>
+		</where>
+	</select>
+
+	<!--查询所有记录 过滤公司别 -->
+	<resultMap type="com.nisco.dms.entity.DcMetrologyDM"
+		id="findByDictionaryDtlAndIsBasicMap">
+		<id property="id" column="id" />
+	</resultMap>
+	<!-- <association property="dictionaryDtl" column="groupType" select="DictionaryDtlDao.findOneDictionaryDtlById" 
+		javaType="com.nisco.dms.entity.DictionaryDtl"></association> -->
+	<select id="findByDictionaryDtlAndIsBasic"
+		resultMap="findByDictionaryDtlAndIsBasicMap" parameterType="map">
+		SELECT * from dc_metrology A
+		LEFT JOIN dc_sys_dictionary_dtl d
+		on A. GROUPTYPE = d.id
+		<where>
+			<if test="isBasic!=null and isBasic!=''">
+				and A.isBasic like '%${isBasic}%'
+			</if>
+		</where>
+		ORDER BY A.CREATEDATETIME DESC
+	</select>
+
+	<!--根据ID查询记录 -->
+	<select id="findOneById" parameterType="String" resultType="Map">
+		SELECT * FROM dc_metrology A WHERE ID=#{id}
+	</select>
+
+	<!--根据ID查询记录 -->
+	<select id="findById" parameterType="String"
+		resultType="DcMetrologyDM">
+		SELECT * FROM dc_metrology A WHERE ID=#{id}
+	</select>
+
+	<!--根据ID查询记录 -->
+	<select id="findDcMetrologyDMBystrName" parameterType="String"
+		resultType="DcMetrologyDM">
+		SELECT * FROM dc_metrology A WHERE strName = #{strName}
+	</select>
+
+	<!--添加记录 -->
+	<insert id="create" parameterType="DcMetrologyDM">
+		INSERT INTO
+		dc_metrology(id,strName,strSymbol,groupType,isBasic,bdScale,intIsActive,intIsDelete,companyId,createUserId,createDateTime)
+		VALUES(#{id},#{strName},#{strSymbol},#{dictionaryDtl.id},#{isBasic},#{bdScale},#{intIsActive},#{intIsDelete},#{company.id},#{createUser.id},#{createDateTime})
+	</insert>
+
+	<!--修改记录 -->
+	<update id="update" parameterType="DcMetrologyDM">
+		UPDATE dc_metrology
+		<set>
+			<if test="strName!=null and strName!=''">
+				strName=#{strName},
+			</if>
+			<if test="strSymbol!=null and strSymbol!=''">
+				strSymbol=#{strSymbol},
+			</if>
+			<if test="dictionaryDtl.id !=null and dictionaryDtl.id != ''">
+				groupType=#{dictionaryDtl.id},
+			</if>
+			<if test="isBasic!=null and isBasic!=''">
+				isBasic=#{isBasic},
+			</if>
+			<if test="bdScale!=null and bdScale!=''">
+				bdScale=#{bdScale},
+			</if>
+			<if test="updateUser!=null">
+				UPDATEUSERID=#{updateUser.id},
+			</if>
+			<if test="updateDateTime!=null and updateDateTime!=''">
+				UPDATEDATETIME=#{updateDateTime},
+			</if>
+			<if test="intIsActive!=null and intIsActive!=''">
+				INTISACTIVE=#{intIsActive},
+			</if>
+			<if test="intIsDelete!=null and intIsDelete!=''">
+				INTISDELETE=#{intIsDelete}
+			</if>
+		</set>
+		<where>
+			id=#{id}
+		</where>
+	</update>
+
+	<!--删除记录 -->
+	<delete id="delete" parameterType="String">
+		DELETE FROM dc_metrology WHERE
+		ID=#{id}
+	</delete>
+	
+	<select id="findAllMetrology" resultType="Map">
+		select * from dc_metrology
+	</select>
+</mapper>

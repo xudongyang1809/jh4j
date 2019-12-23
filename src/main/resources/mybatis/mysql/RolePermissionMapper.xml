@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+	角色权限管理 mapper文件
+	@author WangWeiWei_020463
+ -->
+<mapper namespace="RolePermissionDao">
+	<!-- 
+		根据条件查询角色权限列表
+		@author WangWeiWei_020463
+	 -->
+	<select id="findAll" parameterType="map" resultType="map">
+		select 
+			*
+		from ds_role_permission a
+		<where>
+			<if test="roleId != null and roleId != ''">
+				and a.roleId = #{roleId}
+			</if>
+			<if test="strPermission != null and strPermission != ''">
+				and a.strPermission = #{strPermission}
+			</if>
+		</where>
+		order by a.createDateTime desc
+	</select>
+	
+	<!-- 
+		创建角色权限
+		@author WangWeiWei_020463
+	-->
+	<insert id="create" parameterType="com.nisco.dms.entity.RolePermission">
+		insert into ds_role_permission
+			(id, roleId, strPermission, companyId, createUserId, createDateTime)
+		values(#{id}, #{roleId}, #{strPermission}, #{company.id}, #{createUser.id}, #{createDateTime})
+	</insert>
+	
+	<!-- 根据id查询出一条角色权限信息 -->
+	<select id="findOneById" parameterType="String" resultType="com.nisco.dms.entity.RolePermission">
+		select * from ds_role_permission where id = #{id}
+	</select>
+	
+	<!-- 根据菜单或者入口程序的编码来查询权限信息 -->
+	<select id="findByStrSn" parameterType="String" resultType="com.nisco.dms.entity.RolePermission">
+		select * from ds_role_permission where strPermission like concat(#{strSn}, ':%')
+	</select>
+	
+	<!-- 根据角色Id获取角色权限对应关系数据 -->
+	<select id="getRolePermissionByRoleId" parameterType="String" resultType="com.nisco.dms.entity.RolePermission">
+		select * from ds_role_permission where roleId = #{roleId}	
+	</select>
+	
+	<!-- 
+		根据Id删除一条角色权限 
+		@author WangWeiWei_020463
+	-->
+	<delete id="delete" parameterType="String">
+		delete from ds_role_permission where id = #{id}
+	</delete>
+	
+	<!-- 根据角色Id删除角色权限信息 -->
+	<delete id="deleteByRoleId" parameterType="String">
+		delete from ds_role_permission where roleId = #{roleId}
+	</delete>
+	
+	<!-- 根据程序或者菜单编号来删除赋予的权限信息 -->
+	<delete id="deleteByStrSn" parameterType="String">
+		delete from ds_role_permission where strPermission like concat(#{strSn}, ':%')
+	</delete>
+	
+	<!-- 根据授权信息删除所有拥有该权限的用户的授权信息 -->
+	<delete id="deleteByStrPermission" parameterType="String">
+		delete from ds_role_permission where strPermission = #{strPermission}
+	</delete>
+</mapper>

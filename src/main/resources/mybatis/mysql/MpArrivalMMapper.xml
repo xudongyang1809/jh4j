@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+     @desc “此代码是自动生成，请继续优化注释”
+	 @author 王梦奇 022347
+	 @version 1.0.0
+	 @date 2019-05-08 18:55:38
+	 @Copyright: 江苏金恒信息科技股份有限公司
+ -->
+<mapper namespace="MpArrivalMDao">
+	<!-- 查询所有记录 过滤公司别 -->
+	<select id="findAll" parameterType="map" resultType="MpArrivalMEntity">
+		select 
+			*
+		from mp_arrival_m
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+			<if test="strInspNo != null and strInspNo != ''">
+				and strInspNo like '%${strInspNo}%'
+			</if>
+			<if test="strPoNo != null and strPoNo != ''">
+				and strPoNo like '%${strPoNo}%'
+			</if>
+			<if test="strVendorNo != null and strVendorNo != ''">
+				and strVendorNo like '%${strVendorNo}%'
+			</if>
+			<if test="strApplyUserId != null and strApplyUserId != ''">
+				and strApplyUserId like '%${strApplyUserId}%'
+			</if>
+		</where>
+   		order by createDateTime desc
+	</select>
+
+
+	<select id="findAllMap" parameterType="map" resultType="map">
+		 	select
+		 	     m.*,
+		  		(select a.strName FROM du_user a where a.id = m.strCfmEmpNo ) strCfmEmpName
+			from mp_arrival_m  m
+	  			LEFT JOIN du_user d
+  		  	on d.id = m.strCfmEmpNo
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and m.companyId = #{currentCompany}
+			</if>
+			<if test="strInspNo != null and strInspNo != ''">
+				and m.strInspNo like '%${strInspNo}%'
+			</if>
+			<if test="strPoNo != null and strPoNo != ''">
+				and m.strPoNo like '%${strPoNo}%'
+			</if>
+			<if test="strVendorNo != null and strVendorNo != ''">
+				and m.strVendorNo like '%${strVendorNo}%'
+			</if>
+			<if test="strApplyUserId != null and strApplyUserId != ''">
+				and m.strApplyUserId like '%${strApplyUserId}%'
+			</if>
+		</where>
+   		order by createDateTime desc
+	</select>
+	
+	<!-- 查询所有记录 过滤公司别 -->
+	<select id="getCount" resultType="int" parameterType="map">
+		select count(id) from mp_arrival_m
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+			<if test="strInspNo != null and strInspNo != ''">
+				and strInspNo like '%${strInspNo}%'
+			</if>
+			<if test="strPoNo != null and strPoNo != ''">
+				and strPoNo like '%${strPoNo}%'
+			</if>
+			<if test="strVendorNo != null and strVendorNo != ''">
+				and strVendorNo like '%${strVendorNo}%'
+			</if>
+			<if test="strApplyUserId != null and strApplyUserId != ''">
+				and strApplyUserId like '%${strApplyUserId}%'
+			</if>
+		</where>
+	</select>
+	
+	<!-- 根据ID查询记录 -->
+	<select id="findOneById" parameterType="String" resultType="MpArrivalMEntity">
+		select 
+			*
+		from mp_arrival_m
+		where id = #{id}
+	</select>
+
+	<select id="findOneByIdMap" parameterType="String" resultType="map">
+  		select m.*,
+		(select a.strName FROM du_user a where a.id = m.strCfmEmpNo) as strCfmEmpName
+		from mp_arrival_m  m
+		LEFT JOIN  du_user d
+  		on  d.id = m.strCfmEmpNo
+	  	where  m.id = #{id}
+	</select>
+	
+	<!-- 添加记录 -->
+	<insert id="create" parameterType="MpArrivalMEntity">
+		insert into mp_arrival_m
+		(id, intIsActive, intIsDelete, createUserId, createDateTime, companyId, strInspNo, strPoNo, strVendorNo, strApplyUserId, strStus, strMemova, strCfmEmpNo, strCfmDateTime)
+		values(#{id}, #{intIsActive}, #{intIsDelete}, #{createUser.id}, #{createDateTime}, #{company.id}, #{strInspNo}, #{strPoNo}, #{strVendorNo}, #{strApplyUserId}, #{strStus}, #{strMemova}, #{strCfmEmpNo}, #{strCfmDateTime})
+	</insert>
+	
+	<!-- 修改记录 -->
+	<update id="update" parameterType="MpArrivalMEntity">
+		update mp_arrival_m
+		<set>
+			<if test="strInspNo != null and strInspNo != ''">
+				strInspNo = #{strInspNo},
+			</if>
+			<if test="strPoNo != null and strPoNo != ''">
+				strPoNo = #{strPoNo},
+			</if>
+			<if test="strVendorNo != null and strVendorNo != ''">
+				strVendorNo = #{strVendorNo},
+			</if>
+			<if test="strApplyUserId != null and strApplyUserId != ''">
+				strApplyUserId = #{strApplyUserId},
+			</if>
+			<if test="strStus != null and strStus != ''">
+				strStus = #{strStus},
+			</if>
+			<if test="strMemova != null and strMemova != ''">
+				strMemova = #{strMemova},
+			</if>
+			<if test="strCfmEmpNo != null ">
+				strCfmEmpNo = #{strCfmEmpNo},
+			</if>
+			<if test="strCfmDateTime != null ">
+				strCfmDateTime = #{strCfmDateTime},
+			</if>
+			<if test="updateUser != null">
+				updateUserId = #{updateUser.id},
+			</if>
+			<if test="updateDateTime != null and updateDateTime != ''">
+				updateDateTime = #{updateDateTime},
+			</if>
+			<if test="intIsActive != null and intIsActive != ''">
+				intIsActive = #{intIsActive},
+			</if>
+			<if test="intIsDelete != null and intIsDelete != ''">
+				intIsDelete = #{intIsDelete}
+			</if>
+		</set>
+		<where>
+			id = #{id}
+		</where>
+	</update>
+	
+	<!-- 删除记录 -->
+	<delete id="delete" parameterType="String">
+		delete from mp_arrival_m where id = #{id}
+	</delete>
+
+	<!--生成合同号-->
+	<select id="findMaxCode" parameterType="String" resultType="String">
+		select max(strInspNo)from  mp_arrival_m
+			where strInspNo like #{strInspNo}
+		</select>
+</mapper>

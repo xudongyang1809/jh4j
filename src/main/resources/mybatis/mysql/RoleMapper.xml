@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+	角色管理 mapper文件
+	@author WangWeiWei_020463
+ -->
+<mapper namespace="RoleDao">
+	<!-- 
+		根据条件查询角色列表
+		@author WangWeiWei_020463
+	 -->
+	<resultMap type="com.nisco.dms.entity.Role" id="findAllMap">
+		<id column="id" property="id" />
+		<association property="createUser" column="createUserId" select="UserDao.findByUserNo" javaType="com.nisco.dms.entity.User"></association>
+		<collection property="userList" ofType="com.nisco.dms.entity.User" column="id" select="UserRoleDao.findUserByRoleId"></collection>
+	</resultMap>
+	<select id="findAll" parameterType="map" resultMap="findAllMap">
+		select 
+			*
+		from ds_role a
+		<where>
+			<if test="strName != null and strName != ''">
+				and a.strName = #{strName}
+			</if>
+			<if test="companyId != null and companyId != ''">
+				and a.companyId = #{companyId}
+			</if>
+		</where>
+		order by a.createDateTime desc
+	</select>
+	
+	<select id="findAllNum" parameterType="map" resultType="int">
+		select 
+			count(id)
+		from ds_role a
+		<where>
+			<if test="strName != null and strName != ''">
+				and a.strName = #{strName}
+			</if>
+			<if test="companyId != null and companyId != ''">
+				and a.companyId = #{companyId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 
+		创建角色
+		@author WangWeiWei_020463
+	-->
+	<insert id="create" parameterType="com.nisco.dms.entity.Role">
+		insert into ds_role
+			(id, strName, companyId, createUserId, createDateTime)
+		values(#{id}, #{strName}, #{company.id}, #{createUser.id}, #{createDateTime})
+	</insert>
+	
+	<!-- 
+		更新角色
+		@author WangWeiWei_020463
+	-->
+	<update id="update" parameterType="com.nisco.dms.entity.Role">
+		update ds_role
+		<set>
+			<if test="strName != null and strName != ''">
+				strName = #{strName},
+			</if>
+			<if test="updateUser != null">
+				updateUserId = #{updateUser.id},
+			</if>
+			<if test="updateDateTime != null and updateDateTime != ''">
+				updateDateTime = #{updateDateTime}
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<!-- 根据id查询出一条角色信息 -->
+	<resultMap type="com.nisco.dms.entity.Role" id="findOneByIdMap">
+		<id column="id" property="id" />
+		<collection property="permissionList" ofType="com.nisco.dms.entity.RolePermission" column="id" select="RolePermissionDao.getRolePermissionByRoleId"></collection>
+		<collection property="userRoles" ofType="com.nisco.dms.entity.UserRole" column="id" select="UserRoleDao.findByRoleId"></collection>
+		<collection property="userList" ofType="com.nisco.dms.entity.User" column="id" select="UserRoleDao.findUserByRoleId"></collection>
+	</resultMap>
+	<select id="findOneById" parameterType="String" resultMap="findOneByIdMap">
+		select * from ds_role where id = #{id}
+	</select>
+	
+	<!-- 根据角色名称查询角色 -->
+	<resultMap type="com.nisco.dms.entity.Role" id="findByStrNameMap">
+		<id column="id" property="id" />
+		<collection property="permissionList" ofType="com.nisco.dms.entity.RolePermission" column="id" select="RolePermissionDao.getRolePermissionByRoleId"></collection>
+	</resultMap>
+	<select id="findByStrName" parameterType="String" resultMap="findByStrNameMap">
+		select * from ds_role where strName = #{strName}
+	</select>
+	
+	<select id="findAllNoSelectedRoles" parameterType="String" resultType="map">
+		select a.* from ds_role a 
+		left join ds_user_role b on a.id = b.roleId and b.userAccount = #{userAccount}
+		where b.id is null
+		order by a.createDateTime desc
+	</select>
+	
+	<!-- 
+		根据Id删除一条角色 
+		@author WangWeiWei_020463
+	-->
+	<delete id="delete" parameterType="String">
+		delete from ds_role where id = #{id}
+	</delete>
+</mapper>

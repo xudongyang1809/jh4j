@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="SqlTableDao">
+	<!-- 列表、查询、模糊查询、高级查询公用sql -->
+	<resultMap type="com.nisco.dms.entity.SqlTable" id="findAllMap">
+		<id property="id" column="id" />
+  		<association property="createUser" column="createUserId" select="UserDao.findByUserNo" javaType="com.nisco.dms.entity.User"></association>
+	</resultMap>
+	<select id="findAll" parameterType="map" resultMap="findAllMap">
+		select * from sm_sql_table 
+		<where>
+			<if test="keywords != ''">
+				strName like '%${keywords}%' or strDesc like '%${keywords}%' 
+			</if>
+		</where>
+		order by createDateTime desc
+	</select>
+	
+	<select id="findByStrName" parameterType="String" resultType="com.nisco.dms.entity.SqlTable">
+		select * from sm_sql_table where strName = #{_parameter}
+	</select>
+	
+	<select id="findAllNum" parameterType="map" resultType="int">
+		select count(id) from sm_sql_table 
+		<where>
+			<if test="keywords != ''">
+				strName like '%${keywords}%' or strDesc like '%${keywords}%' 
+			</if>
+		</where>
+	</select>
+	
+	<!-- 创建公司信息 -->
+	<insert id="create" parameterType="com.nisco.dms.entity.SqlTable">
+		insert into sm_sql_table(id, strName, strDesc, status, createUserId, createDateTime)
+		values(#{id}, #{strName}, #{strDesc}, #{status}, #{createUser.strAccount}, #{createDateTime})
+	</insert>
+	
+	<!-- 根据ID查询一条公司信息 -->
+	<resultMap type="com.nisco.dms.entity.SqlTable" id="findOneByIdMap">
+		<id property="id" column="id" />
+		<association property="createUser" column="createUserId" select="UserDao.findByUserNo" javaType="com.nisco.dms.entity.User"></association>
+  		<collection property="sqlColumns" ofType="com.nisco.dms.entity.SqlColumn" column="id" select="SqlColumnDao.findBySqlTableId"></collection>
+	</resultMap>
+	<select id="findOneById" parameterType="String" resultMap="findOneByIdMap">
+		select * from sm_sql_table where id = #{id}
+	</select>
+	
+	<!-- 编辑公司信息 -->
+	<update id="update" parameterType="com.nisco.dms.entity.SqlTable">
+		update sm_sql_table
+		<set>
+			<if test="strName != null and strName != ''">
+				strName = #{strName},
+			</if>
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+			strDesc = #{strDesc},
+			<if test="updateUser != null">
+				updateUserId = #{updateUser.id},
+			</if>
+			<if test="updateDateTime != null and updateDateTime != ''">
+				updateDateTime = #{updateDateTime}
+			</if>
+		</set>
+		<where>
+			id = #{id}
+		</where>
+	</update>
+	
+	<!-- 根据主键Id删除一条公司信息 -->
+	<delete id="delete" parameterType="String">
+		delete from sm_sql_table where id = #{id}
+	</delete>
+</mapper>

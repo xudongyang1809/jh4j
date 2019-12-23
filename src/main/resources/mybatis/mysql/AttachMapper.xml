@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+	学院 mapper文件
+	@author WangWeiWei_020463
+ -->
+<mapper namespace="AttachDao">
+	<!-- 
+		根据条件查询入口程序列表
+		@author WangWeiWei_020463
+	-->
+	<resultMap type="com.nisco.dms.entity.NjAttach" id="findAllMap">
+		<id property="id" column="id" />
+  		<association property="createUser" column="createUserId" select="UserDao.findByUserNo" javaType="com.nisco.dms.entity.User"></association>
+	</resultMap>
+	<select id="findAll" parameterType="map" resultMap="findAllMap">
+		select 
+			*
+		from nj_attach
+		<where>
+			<if test="strName != null and strName != ''">
+				and (strName like '%${strName}%' or strName like '%${strName}%')
+			</if>
+		</where>
+		order by createDateTime desc
+	</select>
+	
+	<select id="findNumByParams" parameterType="map" resultType="int">
+		select 
+			count(id)
+		from nj_attach
+		<where>
+			<if test="strName != null and strName != ''">
+				and (strName like '%${strName}%' or strName like '%${strName}%')
+			</if>
+		</where>
+		order by createDateTime desc
+	</select>
+	
+	<!-- 
+		创建入口程序
+		@author WangWeiWei_020463
+	-->
+	<insert id="create" parameterType="com.nisco.dms.entity.NjAttach">
+		insert into nj_attach
+			(id, strSn, strName, strPath, doubleSize, strDocType, strDesc, strRelativedType, relativedId, createUserId, createDateTime)
+		values(#{id}, #{strSn}, #{strName}, #{strPath}, #{doubleSize}, #{strDocType}, #{strDesc}, #{strRelativedType}, #{relativedId}, #{createUser.id}, #{createDateTime})
+	</insert>
+	
+	<!-- 
+		更新入口程序 
+		@author WangWeiWei_020463
+	-->
+	<update id="update" parameterType="com.nisco.dms.entity.NjAttach">
+		update nj_attach
+		<set>
+			<if test="strName != null and strName != ''">
+				strName = #{strName},
+			</if>
+			<if test="strDesc != null and strDesc != ''">
+				strDesc = #{strDesc},
+			</if>
+			<if test="updateUser != null">
+				updateUserId = #{updateUser.id},
+			</if>
+			<if test="updateDateTime != null and updateDateTime != ''">
+				updateDateTime = #{updateDateTime}
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<!-- 根据id查询出一条入口程序信息 -->
+	<select id="findOneById" parameterType="String" resultType="com.nisco.dms.entity.NjAttach">
+		select * from nj_attach where id = #{id}
+	</select>
+	
+	<!-- 根据id查询出一条入口程序信息 -->
+	<select id="findByRelativedId" parameterType="String" resultType="com.nisco.dms.entity.NjAttach">
+		select * from nj_attach where relativedId = #{relativedId}
+	</select>
+	
+	<!-- 
+		根据Id删除一条入口程序信息 
+		@author WangWeiWei_020463
+	-->
+	<delete id="delete" parameterType="String">
+		delete from nj_attach where id = #{id}
+	</delete>
+	
+	<delete id="deleteByRelativedId" parameterType="String">
+		delete from nj_attach where relativedId = #{relativedId}
+	</delete>
+</mapper>

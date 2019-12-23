@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CommonDao">
+	<select id="findAttachByCondition" resultType="com.nisco.dms.entity.NjAttach" parameterType="map">
+		select * from nj_attach
+		<where>
+			<if test="id!=null and id!=''">
+				id = #{id}
+			</if>
+			<if test="relativedId!=null and relativedId!=''">
+				relativedId = #{relativedId}
+			</if>
+			<if test="strRelativedType!=null and strRelativedType!=''">
+				and strRelativedType = #{strRelativedType}
+			</if>
+		</where>
+	</select>
+	
+	<insert id="addAttach" parameterType="com.nisco.dms.entity.NjAttach">
+		insert into nj_attach
+			(strSn, strName,strPath,doubleSize,strDocType,strDesc,strRelativedType, relativedId, id, companyId, createUserId, updateUserId,createDateTime, updateDateTime, intIsDelete, intIsActive)
+		values(#{strSn}, #{strName}, #{strPath}, #{doubleSize}, #{strDocType}, #{strDesc}, #{strRelativedType}, #{relativedId}, #{id}, #{company.id}, #{createUser.id}, #{updateUser.id}, #{createDateTime}, #{updateDateTime}, #{intIsDelete}, #{intIsActive})
+	</insert>
+	
+	<delete id="deleAttachByIdOrBusinessId" parameterType="map">
+		delete from nj_attach
+		<where>
+			<if test="id != null and id != ''">
+				id = #{id}
+			</if>
+			<if test="relativedId != null and relativedId != ''">
+				relativedid = #{relativedid}
+			</if>
+			<if test="strRelativedType != null and strRelativedType != ''">
+				strRelativedType = #{strRelativedType}
+			</if>
+		</where>
+	</delete>
+
+	<select id="findAttachByCondition_1" resultType="map" parameterType="map">
+		select * from nj_attach
+		<where>
+			<if test="id != null and id != ''">
+				id = #{id}
+			</if>
+			<if test="relativedId != null and relativedId != ''">
+				relativedId = #{relativedId}
+			</if>
+			<if test="strRelativedType != null and strRelativedType != ''">
+				and strRelativedType = #{strRelativedType}
+			</if>
+		</where>
+	</select>
+	
+	<select id="getColumnValue" resultType="String" parameterType="map">
+		SELECT ${columnName} FROM ${tableName}
+		<where>
+			<if test="id != null and id != ''">
+				id = #{id}
+			</if>
+		</where>
+	</select>
+	
+	<select id="getColumnValues" resultType="String" parameterType="map">
+		SELECT ${columnName} FROM ${tableName} WHERE ${columnName} LIKE
+		'%${columnValue}%'
+	</select>
+
+	<!-- 用id删除文件 -->
+	<delete id="deleteFile" parameterType="String">
+		delete from nj_attach
+		where id = #{id}
+	</delete>
+</mapper>

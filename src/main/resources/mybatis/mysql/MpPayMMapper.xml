@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="MpPayMDao">
+	<!-- 查询所有记录 过滤公司别 -->
+	<select id="findAll" parameterType="map" resultType="MpPayMEntity">
+		select
+			*
+		from mp_pay_m
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+			<if test="strPayNo != null and strPayNo != ''">
+				and strPayNo = #{strPayNo}
+			</if>
+			<if test="strBillDate != null and strBillDate != ''">
+				and strBillDate like  '%${strBillDate}%'
+			</if>
+			<if test="strVendorNo != null and strVendorNo != ''">
+				and strVendorNo = #{strVendorNo}
+			</if>
+			<if test="strPayStus != null and strPayStus != ''">
+				and strPayStus = #{strPayStus}
+			</if>
+			
+		</where>
+   		order by createDateTime desc
+	</select>
+	<!-- 查询所有记录 过滤公司别 返回值map -->
+	<select id="findAllMap" parameterType="map" resultType="map">
+		select 	m.*,
+		(select a.strName FROM du_user a where a.id = m.strEmplNo ) strEmplName,
+		(select a.strName FROM du_user a where a.id = m.strBillEmplNo ) strBillEmplName
+		from mp_pay_m m
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and m.companyId = #{currentCompany}
+			</if>
+			<if test="strPayNo != null and strPayNo != ''">
+				and m.strPayNo  like  '%${strPayNo}%'
+			</if>
+			<if test="strBillDate != null and strBillDate != ''">
+				and m.strBillDate like  '%${strBillDate}%'
+			</if>
+			<if test="strVendorNo != null and strVendorNo != ''">
+				and m.strVendorNo like  '%${strVendorNo}%'
+			</if>
+			<if test="strPayStus != null and strPayStus != ''">
+				and m.strPayStus = #{strPayStus}
+			</if>
+			  and  m.strBillType="YS"
+
+		</where>
+		order by m.createDateTime desc
+
+	</select>
+	<!-- 查询所有预付款报账记录 返回值map -->
+	<select id="findAllYFMap" parameterType="map" resultType="map">
+		select 	m.*,
+		(select a.strName FROM du_user a where a.id = m.strEmplNo ) strEmplName,
+		(select a.strName FROM du_user a where a.id = m.strBillEmplNo ) strBillEmplName
+		from mp_pay_m m
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and m.companyId = #{currentCompany}
+			</if>
+			<if test="strPayNo != null and strPayNo != ''">
+				and m.strPayNo  like '%${strPayNo}%'
+			</if>
+			<if test="strBillDate != null and strBillDate != ''">
+				and m.strBillDate like  '%${strBillDate}%'
+			</if>
+			<if test="strVendorNo != null and strVendorNo != ''">
+				and m.strVendorNo  like '%${strVendorNo}%'
+			</if>
+			<if test="strPayStus != null and strPayStus != ''">
+				and m.strPayStus = #{strPayStus}
+			</if>
+			  and m.strBillType !="YS"
+
+  		</where>
+		order by  m.strPayNo desc ,m.createDateTime desc
+
+	</select>
+	<!-- 查询所有记录 过滤公司别 -->
+	<select id="getCount" resultType="int" parameterType="map">
+		select count(id) from mp_pay_m
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+			<if test="strPayNo != null and strPayNo != ''">
+				and strPayNo like '%${strPayNo}%'
+			</if>
+			<if test="strBillDate != null and strBillDate != ''">
+				and strBillDate = #{strBillDate}
+			</if>
+			<if test="strVendorNo != null and strVendorNo != ''">
+				and strVendorNo = like  '%${strVendorNo}%'
+			</if>
+			<if test="strPayStus != null and strPayStus != ''">
+				and strPayStus = #{strPayStus}
+			</if>
+				and strBillType="YS"
+  		</where>
+	</select>
+	<!-- 查询所有记录预付款报账 -->
+	<select id="getCountYF" resultType="int" parameterType="map">
+		select count(id) from mp_pay_m
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+			<if test="strPayNo != null and strPayNo != ''">
+				and strPayNo     like  '%${strPayNo}%'
+			</if>
+			<if test="strBillDate != null and strBillDate != ''">
+				and strBillDate  like  '%${strBillDate}%'
+			</if>
+			<if test="strVendorNo != null and strVendorNo != ''">
+				and strVendorNo  like  '%${strVendorNo}%'
+			</if>
+			<if test="strPayStus != null and strPayStus != ''">
+				and strPayStus = #{strPayStus}
+			</if>
+			and strBillType !="YS"
+
+		</where>
+	</select>
+	
+	<!-- 根据ID查询记录 -->
+	<select id="findOneById" parameterType="String" resultType="MpPayMEntity">
+		select 
+			*
+		from mp_pay_m
+		where id = #{id}
+	</select>
+	<!-- 根据ID查询记录 返回值map -->
+	<select id="findOneByIdMap" parameterType="String" resultType="map">
+		select 	m.*,
+		(select a.strName FROM du_user a where a.id = m.strEmplNo ) strEmplName,
+		(select a.strName FROM du_user a where a.id = m.strBillEmplNo ) strBillEmplName
+		from mp_pay_m m
+		where m.id = #{id}
+	</select>
+	
+	<!-- 添加记录 -->
+	<insert id="create" parameterType="MpPayMEntity">
+		insert into mp_pay_m
+		(id, intIsActive, intIsDelete, createUserId, createDateTime, companyId, strPayNo, strBillNo, strBillDate, strVendorNo, strBillEmplNo, strCloseDate, strCheckDate, strEmplNo, strBillType, strPayType, strPayStus, strMemo, strPlanCode, bdTotalAmt, bdTotalTaxAmt, bdTotalAfterAmt, bdTotalWriteOffAmt)
+		values(#{id}, #{intIsActive}, #{intIsDelete}, #{createUser.id}, #{createDateTime}, #{company.id}, #{strPayNo}, #{strBillNo}, #{strBillDate}, #{strVendorNo}, #{strBillEmplNo}, #{strCloseDate}, #{strCheckDate}, #{strEmplNo}, #{strBillType}, #{strPayType}, #{strPayStus}, #{strMemo}, #{strPlanCode}, #{bdTotalAmt}, #{bdTotalTaxAmt}, #{bdTotalAfterAmt}, #{bdTotalWriteOffAmt})
+	</insert>
+	
+	<!-- 修改记录 -->
+	<update id="update" parameterType="MpPayMEntity">
+		update mp_pay_m
+		<set>
+			<if test="strPayNo != null and strPayNo != ''">
+				strPayNo = #{strPayNo},
+			</if>
+			<if test="strBillNo != null">
+				strBillNo = #{strBillNo},
+			</if>
+			<if test="strBillDate != null and strBillDate != ''">
+				strBillDate = #{strBillDate},
+			</if>
+			<if test="strVendorNo != null and strVendorNo != ''">
+				strVendorNo = #{strVendorNo},
+			</if>
+			<if test="strBillEmplNo != null ">
+				strBillEmplNo = #{strBillEmplNo},
+			</if>
+			<if test="strCloseDate != null and strCloseDate != ''">
+				strCloseDate = #{strCloseDate},
+			</if>
+			<if test="strCheckDate != null and strCheckDate != ''">
+				strCheckDate = #{strCheckDate},
+			</if>
+			<if test="strEmplNo != null and strEmplNo != ''">
+				strEmplNo = #{strEmplNo},
+			</if>
+			<if test="strBillType != null and strBillType != ''">
+				strBillType = #{strBillType},
+			</if>
+			<if test="strPayType != null and strPayType != ''">
+				strPayType = #{strPayType},
+			</if>
+			<if test="strPayStus != null and strPayStus != ''">
+				strPayStus = #{strPayStus},
+			</if>
+			<if test="strMemo != null and strMemo != ''">
+				strMemo = #{strMemo},
+			</if>
+			<if test="strPlanCode != null and strPlanCode != ''">
+				strPlanCode = #{strPlanCode},
+			</if>
+			<if test="bdTotalAmt != null">
+				bdTotalAmt = #{bdTotalAmt},
+			</if>
+			<if test="bdTotalTaxAmt != null">
+				bdTotalTaxAmt = #{bdTotalTaxAmt},
+			</if>
+			<if test="bdTotalAfterAmt != null">
+				bdTotalAfterAmt = #{bdTotalAfterAmt},
+			</if>
+			<if test="bdTotalWriteOffAmt != null">
+				bdTotalWriteOffAmt = #{bdTotalWriteOffAmt},
+			</if>
+			<if test="updateUser != null">
+				updateUserId = #{updateUser.id},
+			</if>
+			<if test="updateDateTime != null and updateDateTime != ''">
+				updateDateTime = #{updateDateTime},
+			</if>
+			<if test="intIsActive != null and intIsActive != ''">
+				intIsActive = #{intIsActive},
+			</if>
+			<if test="intIsDelete != null and intIsDelete != ''">
+				intIsDelete = #{intIsDelete}
+			</if>
+		</set>
+		<where>
+			id = #{id}
+		</where>
+	</update>
+	
+	<!-- 删除记录 -->
+	<delete id="delete" parameterType="String">
+		delete from mp_pay_m where id = #{id}
+	</delete>
+
+	<select id="findMaxCodestrPayNo" parameterType="String" resultType="String">
+	  	select MAX(strPayNo) from mp_pay_m a where strPayNo like  #{code}
+	</select>
+
+	<select id="findMaxCodestrBillNo" parameterType="String" resultType="String">
+	  	select MAX(strBillNo) from mp_pay_m a where strBillNo like #{code}
+	</select>
+
+</mapper>

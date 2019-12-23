@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+     @desc “此代码是自动生成，请继续优化注释”
+	 @author 超级管理员 admin
+	 @version 1.0.0
+	 @date 2019-04-29 11:10:46
+	 @Copyright: 江苏金恒信息科技股份有限公司
+ -->
+<mapper namespace="MfBomDao">
+	<!-- 查询所有记录 过滤公司别 -->
+	<select id="findAll" parameterType="map" resultType="MfBomEntity">
+		select 
+			*
+		from mf_bom
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+			<if test="strProdMatrlNo != null and strProdMatrlNo != ''">
+				and strProdMatrlNo like '%${strProdMatrlNo}%'
+			</if>
+			<if test="strMaterialName != null and strMaterialName != ''">
+				and strMaterialName like '%${strMaterialName}%'
+			</if>
+			<if test="strMatrlNo != null and strMatrlNo != ''">
+				and strMatrlNo like '%${strMatrlNo}%'
+			</if>
+			<if test="strMatrlName != null and strMatrlName != ''">
+				and strMatrlName like '%${strMatrlName}%'
+			</if>
+		</where>
+   		order by createDateTime asc
+	</select>
+	
+	<!-- 查询所有记录 过滤公司别 -->
+	<select id="getCount" resultType="int" parameterType="map">
+		select count(id) from mf_bom
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+			<if test="strProdMatrlNo != null and strProdMatrlNo != ''">
+				and strProdMatrlNo like '%${strProdMatrlNo}%'
+			</if>
+			<if test="strMaterialName != null and strMaterialName != ''">
+				and strMaterialName like '%${strMaterialName}%'
+			</if>
+			<if test="strMatrlNo != null and strMatrlNo != ''">
+				and strMatrlNo like '%${strMatrlNo}%'
+			</if>
+			<if test="strMatrlName != null and strMatrlName != ''">
+				and strMatrlName like '%${strMatrlName}%'
+			</if>
+		</where>
+	</select>
+	
+	<!-- 根据ID查询记录 -->
+	<select id="findOneById" parameterType="String" resultType="MfBomEntity">
+		select 
+			*
+		from mf_bom
+		where id = #{id}
+	</select>
+
+	<!--根据原料号查询-->
+	<select id="findOneByMatrlNo" parameterType="String" resultType="map">
+		select
+			*
+		from mf_bom
+		where strMatrlNo = #{strMatrlNo}
+	</select>
+
+
+	<select id="findOneBystrProdMatrlNo" parameterType="String" resultType="map">
+		select
+			*
+		from mf_bom
+		where strProdMatrlNo = #{strProdMatrlNo}
+	</select>
+
+
+
+	<!-- 添加记录 -->
+	<insert id="create" parameterType="MfBomEntity">
+		insert into mf_bom
+		(id, strProdMatrlNo, strMaterialName, strItemNo, strMatrlNo, strMatrlName, strBrand, strUnit, strSpec, bdMatrlQty, bdItemPurPrice, strSaleVendor, bdItemSumPrice, companyId, intIsActive, intIsDelete, createUserId, createDateTime, strRemark,strStus)
+		values(#{id}, #{strProdMatrlNo}, #{strMaterialName}, #{strItemNo}, #{strMatrlNo}, #{strMatrlName}, #{strBrand}, #{strUnit}, #{strSpec}, #{bdMatrlQty}, #{bdItemPurPrice}, #{strSaleVendor}, #{bdItemSumPrice}, #{company.id}, #{intIsActive}, #{intIsDelete}, #{createUser.id}, #{createDateTime}, #{strRemark}, #{strStus})
+	</insert>
+	
+	<!-- 修改记录 -->
+	<update id="update" parameterType="MfBomEntity">
+		update mf_bom
+		<set>
+			<if test="strProdMatrlNo != null and strProdMatrlNo != ''">
+				strProdMatrlNo = #{strProdMatrlNo},
+			</if>
+			<if test="strMaterialName != null and strMaterialName != ''">
+				strMaterialName = #{strMaterialName},
+			</if>
+			<if test="strItemNo != null and strItemNo != ''">
+				strItemNo = #{strItemNo},
+			</if>
+			<if test="strMatrlNo != null and strMatrlNo != ''">
+				strMatrlNo = #{strMatrlNo},
+			</if>
+			<if test="strMatrlName != null and strMatrlName != ''">
+				strMatrlName = #{strMatrlName},
+			</if>
+			<if test="strBrand != null and strBrand != ''">
+				strBrand = #{strBrand},
+			</if>
+			<if test="strUnit != null and strUnit != ''">
+				strUnit = #{strUnit},
+			</if>
+			<if test="strSpec != null and strSpec != ''">
+				strSpec = #{strSpec},
+			</if>
+			<if test="bdMatrlQty != null">
+				bdMatrlQty = #{bdMatrlQty},
+			</if>
+			<if test="bdItemPurPrice != null">
+				bdItemPurPrice = #{bdItemPurPrice},
+			</if>
+			<if test="strSaleVendor != null and strSaleVendor != ''">
+				strSaleVendor = #{strSaleVendor},
+			</if>
+			<if test="bdItemSumPrice != null">
+				bdItemSumPrice = #{bdItemSumPrice},
+			</if>
+			<if test="strRemark != null and strRemark != ''">
+				strRemark = #{strRemark},
+			</if>
+			<if test="updateUser != null">
+				updateUserId = #{updateUser.id},
+			</if>
+			<if test="updateDateTime != null and updateDateTime != ''">
+				updateDateTime = #{updateDateTime},
+			</if>
+			<if test="intIsActive != null and intIsActive != ''">
+				intIsActive = #{intIsActive},
+			</if>
+			<if test="intIsDelete != null and intIsDelete != ''">
+				intIsDelete = #{intIsDelete}
+			</if>
+			<if test="strStus != null and strStus != ''">
+				strStus = #{strStus}
+			</if>
+		</set>
+		<where>
+			id = #{id}
+		</where>
+	</update>
+	
+	<!-- 删除记录 -->
+	<delete id="delete" parameterType="String">
+		delete from mf_bom where id = #{id}
+	</delete>
+</mapper>

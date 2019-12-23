@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="DepartmentDao">
+	<cache></cache>
+	<!-- 列表、查询、模糊查询、高级查询公用sql -->
+	<select id="findAll" parameterType="map" resultMap="findByFatherIdMap">
+		select * from do_department 
+		<where>
+			<if test="keywords != null and keywords != ''">
+				and (strName like '%${keywords}%' or strSn like '%${keywords}%') 
+			</if>
+			<if test="fatherId != null and fatherId != ''">
+				and fatherId = #{fatherId} 
+			</if>
+		</where>
+	</select>
+	
+	<select id="findAllNum" parameterType="map" resultType="int">
+		select count(id) from do_department 
+		<where>
+			<if test="keywords != null and keywords != ''">
+				and (strName like '%${keywords}%' or strSn like '%${keywords}%') 
+			</if>
+			<if test="fatherId != null and fatherId != ''">
+				and fatherId = #{fatherId} 
+			</if>
+		</where>
+	</select>
+	
+	<resultMap type="com.nisco.dms.entity.Department" id="findDeptsByCompanyIdMap">
+		<id property="id" column="id" />
+  		<association property="parent" column="fatherId" select="findOneById" javaType="com.nisco.dms.entity.Department"></association>
+  		<association property="createUser" column="createUserId" select="UserDao.findByUserNo" javaType="com.nisco.dms.entity.User"></association>
+  		<collection property="children" ofType="com.nisco.dms.entity.Department" column="id" select="findByFatherId"></collection>
+  		<collection property="users" ofType="com.nisco.dms.entity.User" column="id" select="UserDao.findByDeptId"></collection>
+	</resultMap>
+	<select id="findDeptsByCompanyId" parameterType="String" resultMap="findDeptsByCompanyIdMap">
+		select * from do_department
+		where fatherId = #{companyId}
+	</select>
+	
+	<resultMap type="com.nisco.dms.entity.Department" id="findByFatherIdMap">
+		<id property="id" column="id" />
+		<association property="createUser" column="createUserId" select="UserDao.findByUserNo" javaType="com.nisco.dms.entity.User"></association>
+		<association property="parent" column="fatherId" select="findOneById" javaType="com.nisco.dms.entity.Department"></association>
+		<association property="company" column="fatherId" select="CompanyDao.findOneById" javaType="com.nisco.dms.entity.Company"></association>
+		<collection property="children" ofType="com.nisco.dms.entity.Department" column="id" select="findByFatherId"></collection>
+		<collection property="users" ofType="com.nisco.dms.entity.User" column="id" select="UserDao.findByDeptId"></collection>
+	</resultMap>
+	<select id="findByFatherId" parameterType="String" resultMap="findByFatherIdMap">
+		select * from do_department
+		where fatherId = #{fatherId}
+	</select>
+	
+	<!-- 创建部门信息 -->
+	<insert id="create" parameterType="com.nisco.dms.entity.Department" flushCache="true">
+		insert into do_department(id, strSn, strName, strDesc, fatherId, createUserId, createDateTime)
+		values(#{id}, #{strSn}, #{strName}, #{strDesc}, #{parent.id}, #{createUser.strAccount}, #{createDateTime})
+	</insert>
+	
+	<!-- 根据ID查询一条部门信息 -->
+	<select id="findOneById" parameterType="String" resultMap="findByFatherIdMap">
+		select * from do_department where id = #{id}
+	</select>
+	
+	<select id="findByStrSn" parameterType="String" resultMap="findByFatherIdMap">
+		select * from do_department where strSn = #{strSn}
+	</select>
+	
+	<select id="findByStrName" parameterType="String" resultMap="findByFatherIdMap">
+		select * from do_department where strName = #{strName}
+	</select>
+	
+	<!-- 编辑部门信息 -->
+	<update id="update" parameterType="com.nisco.dms.entity.Department" flushCache="true">
+		update do_department
+		<set>
+			<if test="strSn != null and strSn != ''">
+				strSn = #{strSn},
+			</if>
+			<if test="strName != null and strName != ''">
+				strName = #{strName},
+			</if>
+			<if test="parent != null">
+				fatherId = #{parent.id},
+			</if>
+			strDesc = #{strDesc},
+			<if test="updateUser != null">
+				updateUserId = #{updateUser.id},
+			</if>
+			<if test="updateDateTime != null and updateDateTime != ''">
+				updateDateTime = #{updateDateTime}
+			</if>
+		</set>
+		<where>
+			id = #{id}
+		</where>
+	</update>
+	
+	<!-- 根据主键Id删除一条部门信息 -->
+	<delete id="delete" parameterType="String" flushCache="true">
+		delete from do_department where id = #{id}
+	</delete>
+</mapper>

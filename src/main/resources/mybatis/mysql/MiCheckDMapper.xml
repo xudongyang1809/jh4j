@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+     @desc “此代码是自动生成，请继续优化注释”
+	 @author 超级管理员 admin
+	 @version 1.0.0
+	 @date 2019-05-16 10:47:21
+	 @Copyright: 江苏金恒信息科技股份有限公司
+ -->
+<mapper namespace="MiCheckDDao">
+	<!-- 查询所有记录 过滤公司别 -->
+	<select id="findAll" parameterType="map" resultType="MiCheckDEntity">
+		select 
+			*
+		from mi_check_d
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+			
+		</where>
+   		order by createDateTime desc
+	</select>
+	
+	<!-- 查询所有记录 过滤公司别 -->
+	<select id="getCount" resultType="int" parameterType="map">
+		select count(id) from mi_check_d
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+			
+		</where>
+	</select>
+	
+	<!-- 根据ID查询记录 -->
+	<select id="findOneById" parameterType="String" resultType="MiCheckDEntity">
+		select 
+			*
+		from mi_check_d
+		where id = #{id}
+	</select>
+	
+	<!-- 添加记录 -->
+	<insert id="create" parameterType="MiCheckDEntity">
+		insert into mi_check_d
+		(id, intIsActive, intIsDelete, createUserId, createDateTime, updateUserNo, companyIdva, strMatrlNo, strMatrlName, strUnit, strCostAttribute, bdStockNum, bdCheckNum, bdInventoryLossNum, bdInventoryLossMoney, strA, strB)
+		values(#{id}, #{intIsActive}, #{intIsDelete}, #{createUser.id}, #{createDateTime}, #{updateUserNo}, #{companyIdva}, #{strMatrlNo}, #{strMatrlName}, #{strUnit}, #{strCostAttribute}, #{bdStockNum}, #{bdCheckNum}, #{bdInventoryLossNum}, #{bdInventoryLossMoney}, #{strA}, #{strB})
+	</insert>
+	
+	<!-- 修改记录 -->
+	<update id="update" parameterType="MiCheckDEntity">
+		update mi_check_d
+		<set>
+			<if test="updateUserNo != null and updateUserNo != ''">
+				updateUserNo = #{updateUserNo},
+			</if>
+			<if test="companyIdva != null and companyIdva != ''">
+				companyIdva = #{companyIdva},
+			</if>
+			<if test="strMatrlNo != null and strMatrlNo != ''">
+				strMatrlNo = #{strMatrlNo},
+			</if>
+			<if test="strMatrlName != null and strMatrlName != ''">
+				strMatrlName = #{strMatrlName},
+			</if>
+			<if test="strUnit != null and strUnit != ''">
+				strUnit = #{strUnit},
+			</if>
+			<if test="strCostAttribute != null and strCostAttribute != ''">
+				strCostAttribute = #{strCostAttribute},
+			</if>
+			<if test="bdStockNum != null and bdStockNum != ''">
+				bdStockNum = #{bdStockNum},
+			</if>
+			<if test="bdCheckNum != null and bdCheckNum != ''">
+				bdCheckNum = #{bdCheckNum},
+			</if>
+			<if test="bdInventoryLossNum != null and bdInventoryLossNum != ''">
+				bdInventoryLossNum = #{bdInventoryLossNum},
+			</if>
+			<if test="bdInventoryLossMoney != null and bdInventoryLossMoney != ''">
+				bdInventoryLossMoney = #{bdInventoryLossMoney},
+			</if>
+			<if test="strA != null and strA != ''">
+				strA = #{strA},
+			</if>
+			<if test="strB != null and strB != ''">
+				strB = #{strB},
+			</if>
+			<if test="updateUser != null">
+				updateUserId = #{updateUser.id},
+			</if>
+			<if test="updateDateTime != null and updateDateTime != ''">
+				updateDateTime = #{updateDateTime},
+			</if>
+			<if test="intIsActive != null and intIsActive != ''">
+				intIsActive = #{intIsActive},
+			</if>
+			<if test="intIsDelete != null and intIsDelete != ''">
+				intIsDelete = #{intIsDelete}
+			</if>
+		</set>
+		<where>
+			id = #{id}
+		</where>
+	</update>
+	
+	<!-- 删除记录 -->
+	<delete id="delete" parameterType="String">
+		delete from mi_check_d where id = #{id}
+	</delete>
+</mapper>

@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+     @desc “此代码是自动生成，请继续优化注释”
+	 @author 超级管理员 admin
+	 @version 1.0.0
+	 @date 2019-05-10 11:32:24
+	 @Copyright: 江苏金恒信息科技股份有限公司
+ -->
+<mapper namespace="MdDemandDDao">
+	<!-- 查询所有记录 过滤公司别 -->
+	<select id="findAll" parameterType="map" resultType="map">
+		select 
+			*,strMatrlNo AS strProdMatrlNo,case strStus when 'N' then '新增' when 'S' then '生效' else '' end as strStatuZH
+		from md_demand_d
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+			<if test="strApplyNo != null and strApplyNo !=''">
+				and strApplyNo = #{strApplyNo}
+			</if>
+		</where>
+   		order by strApplyItem asc
+	</select>
+
+	<!--查询产品类型的所有记录-->
+	<select id="findAllProduct" parameterType="map" resultType="map">
+        select
+        d.id,d.strApplyNo,d.strApplyItem,d.strOrderNo,d.strOrderItem,d.bdSalePrice,d.bdPlanQty,
+        case d.strStus when 'N' then '新增' when 'S' then '生效' else '' end as strStatuZH,d.strStus,
+        b.strProdMatrlNo,d.strMatrlName,b.strMatrlNo,b.strMatrlName as strMatrlNameP,b.strBrand,
+        b.strUnit,b.strSpec,b.bdMatrlQty,b.bdItemPurPrice,
+        case b.strStus when 'N' then '新增' when 'S' then '生效' else '' end as strBomStus
+        from md_demand_d d
+        LEFT JOIN mf_bom b
+        ON d.strMatrlNo = b.strProdMatrlNo
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+			<if test="strApplyNo != null and strApplyNo !=''">
+				and strApplyNo = #{strApplyNo}
+			</if>
+			<if test="id != null and id != ''">
+				and d.id = #{id}
+			</if>
+			<if test="strMatrlNo != null and strMatrlNo != ''">
+				and b.strMatrlNo = #{strMatrlNo}
+			</if>
+		</where>
+		order by strApplyItem asc
+	</select>
+
+	<!-- 查询所有记录 过滤公司别 -->
+	<select id="getCount" resultType="int" parameterType="map">
+		select count(id) from md_demand_d
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+			
+		</where>
+	</select>
+
+	<!---->
+	<select id="findMaxItem" resultType="String" parameterType="String">
+		select
+			MAX(strApplyItem)
+		from md_demand_d
+		where strApplyNo = #{strApplyNo}
+	</select>
+
+	<!-- 根据ID查询记录 -->
+	<select id="findOneById" parameterType="String" resultType="map">
+		select 
+			*,case strStus when 'N' then '新增' when 'S' then '生效' else '' end as strStatuZH
+		from md_demand_d
+		where id = #{id}
+	</select>
+
+	<!--根据需求申报便哈查询一条数据-->
+	<select id="findByAppNo" parameterType="String" resultType="map">
+		select
+			*
+		from md_demand_d
+		where strApplyNo = #{strApplyNo}
+	</select>
+
+	<!--挑选存货编号 -->
+	<select id="selectSaleMatrlNo" resultType="Map" parameterType="Map">
+		select
+		a.id, a.strClass, a.strSn, a.strName, a.strBrand, a.strSpec, a.bdPlanPrice, a.strEasyCode,
+		(select b.strName from dc_metrology b where a.strPrickle = b.id) as strPrickleZH
+		from cm_matrinfo_detail a
+		where 1=1
+		<if test="strSn!=null and strSn!=''">
+			and a.strSn like '%${strSn}%'
+		</if>
+		<if test="strName!=null and strName!=''">
+			and a.strName like '%${strName}%'
+		</if>
+		<if test="strBrand!=null and strBrand!=''">
+			and a.strBrand like '%${strBrand}%'
+		</if>
+		<if test="strClass!=null and strClass!=''">
+			and a.strClass like '%${strClass}%'
+		</if>
+	</select>
+
+	<!-- 添加记录 -->
+	<insert id="create" parameterType="MdDemandDEntity">
+		insert into md_demand_d
+		(id, strApplyNo, strApplyItem, strOrderNo, strOrderItem, strMatrlNo, strMatrlName, strBrand, strUnit, strSpec, bdPlanPrice, bdSalePrice, bdPlanQty, bdApplyNumber, bdBalanceQty, strBalanceUserId, strStus, strBalanceStus, strSumStus, strRemark, companyId, intIsActive, intIsDelete, createUserId, createDateTime)
+		values(#{id}, #{strApplyNo}, #{strApplyItem}, #{strOrderNo}, #{strOrderItem}, #{strMatrlNo}, #{strMatrlName}, #{strBrand}, #{strUnit}, #{strSpec}, #{bdPlanPrice}, #{bdSalePrice}, #{bdPlanQty}, #{bdApplyNumber}, #{bdBalanceQty}, #{strBalanceUserId}, #{strStus}, #{strBalanceStus}, #{strSumStus}, #{strRemark}, #{company.id}, #{intIsActive}, #{intIsDelete}, #{createUser.id}, #{createDateTime})
+	</insert>
+	
+	<!-- 修改记录 -->
+	<update id="update" parameterType="MdDemandDEntity">
+		update md_demand_d
+		<set>
+			<if test="strApplyNo != null and strApplyNo != ''">
+				strApplyNo = #{strApplyNo},
+			</if>
+			<if test="strApplyItem != null and strApplyItem != ''">
+				strApplyItem = #{strApplyItem},
+			</if>
+			<if test="strOrderNo != null and strOrderNo != ''">
+				strOrderNo = #{strOrderNo},
+			</if>
+			<if test="strOrderItem != null and strOrderItem != ''">
+				strOrderItem = #{strOrderItem},
+			</if>
+			<if test="strMatrlNo != null and strMatrlNo != ''">
+				strMatrlNo = #{strMatrlNo},
+			</if>
+			<if test="strMatrlName != null and strMatrlName != ''">
+				strMatrlName = #{strMatrlName},
+			</if>
+			<if test="strBrand != null and strBrand != ''">
+				strBrand = #{strBrand},
+			</if>
+			<if test="strUnit != null and strUnit != ''">
+				strUnit = #{strUnit},
+			</if>
+			<if test="strSpec != null and strSpec != ''">
+				strSpec = #{strSpec},
+			</if>
+			<if test="bdPlanPrice != null">
+				bdPlanPrice = #{bdPlanPrice},
+			</if>
+			<if test="bdSalePrice != null">
+				bdSalePrice = #{bdSalePrice},
+			</if>
+			<if test="bdPlanQty != null">
+				bdPlanQty = #{bdPlanQty},
+			</if>
+			<if test="bdApplyNumber != null">
+				bdApplyNumber = #{bdApplyNumber},
+			</if>
+			<if test="bdBalanceQty != null">
+				bdBalanceQty = #{bdBalanceQty},
+			</if>
+			<if test="strBalanceUserId != null and strBalanceUserId != ''">
+				strBalanceUserId = #{strBalanceUserId},
+			</if>
+			<if test="strStus != null and strStus != ''">
+				strStus = #{strStus},
+			</if>
+			<if test="strBalanceStus != null and strBalanceStus != ''">
+				strBalanceStus = #{strBalanceStus},
+			</if>
+			<if test="strSumStus != null and strSumStus != ''">
+				strSumStus = #{strSumStus},
+			</if>
+			<if test="strRemark != null and strRemark != ''">
+				strRemark = #{strRemark},
+			</if>
+			<if test="updateUser != null">
+				updateUserId = #{updateUser.id},
+			</if>
+			<if test="updateDateTime != null and updateDateTime != ''">
+				updateDateTime = #{updateDateTime},
+			</if>
+			<if test="intIsActive != null and intIsActive != ''">
+				intIsActive = #{intIsActive},
+			</if>
+			<if test="intIsDelete != null and intIsDelete != ''">
+				intIsDelete = #{intIsDelete}
+			</if>
+		</set>
+		<where>
+			id = #{id}
+		</where>
+	</update>
+
+	<!-- 修改记录 -->
+	<update id="updateUser" parameterType="MdDemandDEntity">
+		update md_demand_d a
+		LEFT JOIN mf_bom b ON a.strMatrlNo = b.strProdMatrlNo
+		<set>
+			<if test="strApplyNo != null and strApplyNo != ''">
+				strApplyNo = #{strApplyNo},
+			</if>
+			<if test="strApplyItem != null and strApplyItem != ''">
+				strApplyItem = #{strApplyItem},
+			</if>
+			<if test="strOrderNo != null and strOrderNo != ''">
+				strOrderNo = #{strOrderNo},
+			</if>
+			<if test="strOrderItem != null and strOrderItem != ''">
+				strOrderItem = #{strOrderItem},
+			</if>
+			<if test="strMatrlNo != null and strMatrlNo != ''">
+				a.strMatrlNo = #{strMatrlNo},
+			</if>
+			<if test="strMatrlName != null and strMatrlName != ''">
+				a.strMatrlName = #{strMatrlName},
+			</if>
+			<if test="strBrand != null and strBrand != ''">
+				a.strBrand = #{strBrand},
+			</if>
+			<if test="strUnit != null and strUnit != ''">
+				strUnit = #{strUnit},
+			</if>
+			<if test="strSpec != null and strSpec != ''">
+				a.strSpec = #{strSpec},
+			</if>
+			<if test="bdPlanPrice != null">
+				bdPlanPrice = #{bdPlanPrice},
+			</if>
+			<if test="bdSalePrice != null">
+				bdSalePrice = #{bdSalePrice},
+			</if>
+			<if test="bdPlanQty != null">
+				bdPlanQty = #{bdPlanQty},
+			</if>
+			<if test="bdApplyNumber != null">
+				bdApplyNumber = #{bdApplyNumber},
+			</if>
+			<if test="bdBalanceQty != null">
+				bdBalanceQty = #{bdBalanceQty},
+			</if>
+			<if test="strBalanceUserId != null and strBalanceUserId != ''">
+				strBalanceUserId = #{strBalanceUserId},
+			</if>
+			<if test="strStus != null and strStus != ''">
+				strStus = #{strStus},
+			</if>
+			<if test="strBalanceStus != null and strBalanceStus != ''">
+				strBalanceStus = #{strBalanceStus},
+			</if>
+			<if test="strSumStus != null and strSumStus != ''">
+				strSumStus = #{strSumStus},
+			</if>
+			<if test="strRemark != null and strRemark != ''">
+				strRemark = #{strRemark},
+			</if>
+			<if test="updateUser != null">
+				a.updateUserId = #{updateUser.id},
+			</if>
+			<if test="updateDateTime != null and updateDateTime != ''">
+				a.updateDateTime = #{updateDateTime},
+			</if>
+			<if test="intIsActive != null and intIsActive != ''">
+				a.intIsActive = #{intIsActive},
+			</if>
+			<if test="intIsDelete != null and intIsDelete != ''">
+				a.intIsDelete = #{intIsDelete}
+			</if>
+		</set>
+		<where>
+			a.id = #{id} and b.strMatrlNo = #{strMatrlNo}
+		</where>
+	</update>
+	
+	<!-- 删除记录 -->
+	<delete id="delete" parameterType="String">
+		delete from md_demand_d where id = #{id}
+	</delete>
+
+	<!-- 根据需求申报单号删除记录 -->
+	<delete id="deleteByAppNo" parameterType="String">
+		delete from md_demand_d where strApplyNo = #{strApplyNo}
+	</delete>
+</mapper>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- Hints:
+     1. The code was automatic created;
+     2. Any other questions can ask the software engineer for help.
+	 @author sysadmin
+	 @date 2014-03-24
+ -->
+<mapper namespace="CmMatrinfoDao">
+	
+	<!--查询所有记录 过滤公司别-->
+	<select id="findAll" resultType="map" parameterType="map">
+	select
+	id,parentId,strSn,strName,strRmark,intlsDelete,intlsActive,(select
+	count(strPath) from nj_attach n where n.relativedId=a.id) attachNum
+	from cm_matrinfo a
+	<where>
+		<!-- <if test="currentCompany!=null and currentCompany!=''"> and a.companyId 
+			= #{currentCompany} </if> -->
+		<if test="parentId!=null">
+			and a.parentId = #{parentId}
+		</if>
+		<if test="strSn!=null and strSn!=''">
+			and a.strSn = #{strSn}
+		</if>
+		<if test="strName!=null and strName!=''">
+			and a.strName like '%${strName}%'
+		</if>
+	</where>
+	order by a.strSn asc
+</select>
+	
+	<!--根据ID查询记录-->
+	<select id="findOneById" parameterType="String" resultType="Map">
+		select * from cm_matrinfo a where id=#{id}
+	</select>
+	
+	<!--添加记录-->
+	<insert id="create" parameterType="CmMatrinfo">
+		insert into cm_matrinfo(id,parentId,strSn,strName,strRmark,intlsDelete,intlsActive,companyId,createUserId,createDateTime,updateUserId,updateDateTime) values(#{id},#{parentId},#{strSn},#{strName},#{strRmark},#{intlsDelete},#{intlsActive},#{company.id},#{createUser.id},#{createDateTime},#{updateUser.id},#{updateDateTime})
+	</insert>
+	
+	<!--修改记录-->
+	<update id="update" parameterType="CmMatrinfo">
+	update cm_matrinfo 
+	<set>
+	<if test="parentId!=null and parentId!=''">
+	parentId=#{parentId},
+	</if>
+	<if test="strSn!=null and strSn!=''">
+	strSn=#{strSn},
+	</if>
+	<if test="strName!=null and strName!=''">
+	strName=#{strName},
+	</if>
+	<if test="strRmark!=null and strRmark!=''">
+	strRmark=#{strRmark},
+	</if>
+	<if test="intlsDelete!=null and intlsDelete!=''">
+	intlsDelete=#{intlsDelete},
+	</if>
+	<if test="intlsActive!=null and intlsActive!=''">
+	intlsActive=#{intlsActive},
+	</if>
+
+	<if test="updateUser!=null">
+	updateUserId=#{updateUser.id},
+	</if>
+	<if test="updateDateTime!=null and updateDateTime!=''">
+	updateDateTime=#{updateDateTime}
+	</if>
+	</set>
+	<where>
+		id=#{id}
+	</where>
+	</update>
+	
+	<!--删除记录-->
+	<delete id="delete" parameterType="String">
+		delete from cm_matrinfo where id=#{id}
+	</delete>
+	
+	<!--根据父ID删除记录-->
+	<delete id="deletebyParentId" parameterType="String">
+		delete from cm_matrinfo where parentId=#{parentId}
+	</delete>
+	
+	
+	<select id="findCodeAndClass" parameterType="String" resultType="Map">
+		select a.strSn as code2,b.strName as className,b.strSn as code1 from cm_matrinfo a,cm_matrinfo b where a.parentId=b.id and a.parentId=#{parentId}
+	</select>
+	
+	
+	<select id="findByStrSn" parameterType="String" resultType="Map">
+		select a.* from cm_matrinfo a where a.parentId =''  and a.strSn like #{strSn}
+	</select>
+	
+	<select id="findByParentId" parameterType="String" resultType="Map">
+		select a.* from cm_matrinfo a where a.parentId =#{parentId} ORDER BY STRSN
+	</select>
+</mapper>

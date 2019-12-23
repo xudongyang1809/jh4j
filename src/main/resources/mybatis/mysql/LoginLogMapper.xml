@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="LoginLogDao">
+	<resultMap type="com.nisco.dms.entity.LoginLog" id="findAllMap">
+		<id property="id" column="id" />
+  		<association property="user" column="userId" select="UserDao.findByUserNo" javaType="com.nisco.dms.entity.User"></association>
+	</resultMap>
+	<select id="findAll" parameterType="map" resultMap="findAllMap">
+		select * from dc_login_log 
+		<where>
+			<if test="userNo != null and userNo != ''">
+				userId = #{userNo}
+			</if>
+		</where>
+	</select>
+	
+	<select id="findAllNum" parameterType="map" resultType="int">
+		select count(id) from dc_login_log 
+		<where>
+			<if test="userNo != null and userNo!= ''">
+				userId = #{userNo}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 创建公司信息 -->
+	<insert id="create" parameterType="com.nisco.dms.entity.LoginLog">
+		insert into dc_login_log(id, strSn, intIsSuccess, userId, strLoginIP, strMacAddress, intType, strLoginDateTime, strLogoutDateTime, strSessionId, strMemo, createUserId, createDateTime)
+		values(#{id}, #{strSn}, #{intIsSuccess}, #{user.strAccount}, #{strLoginIP}, #{strMacAddress}, #{intType}, #{strLoginDateTime}, #{strLogoutDateTime}, #{strSessionId}, #{strMemo}, #{createUser.strAccount}, #{createDateTime})
+	</insert>
+	
+	<select id="findByStrSn" parameterType="String" resultType="com.nisco.dms.entity.LoginLog">
+		select * from dc_login_log where strSn = #{strSn}
+	</select>
+	
+	<!-- 编辑公司信息 -->
+	<update id="update" parameterType="com.nisco.dms.entity.LoginLog">
+		update dc_login_log
+		<set>
+			<if test="strSn != null and strSn != ''">
+				strSn = #{strSn},
+			</if>
+			<if test="intIsSuccess != null">
+				intIsSuccess = #{intIsSuccess},
+			</if>
+			<if test="user != null and user != ''">
+				userId = #{user.id},
+			</if>
+			<if test="strLoginIP != null and strLoginIP != ''">
+				strLoginIP = #{strLoginIP},
+			</if>
+			<if test="strMacAddress != null and strMacAddress != ''">
+				strMacAddress = #{strMacAddress},
+			</if>
+			<if test="intType != null">
+				intType = #{intType},
+			</if>
+			<if test="strLoginDateTime != null and strLoginDateTime != ''">
+				strLoginDateTime = #{strLoginDateTime},
+			</if>
+			<if test="strLogoutDateTime != null and strLogoutDateTime != ''">
+				strLogoutDateTime = #{strLogoutDateTime},
+			</if>
+			<if test="strSessionId != null and strSessionId != ''">
+				strSessionId = #{strSessionId},
+			</if>
+			strMemo = #{strMemo},
+			<if test="updateUser != null">
+				updateUserId = #{updateUser.id},
+			</if>
+			<if test="updateDateTime != null and updateDateTime != ''">
+				updateDateTime = #{updateDateTime}
+			</if>
+		</set>
+		<where>
+			id = #{id}
+		</where>
+	</update>
+	
+	<!-- 根据主键Id删除一条公司信息 -->
+	<delete id="delete" parameterType="String">
+		delete from dc_login_log where id = #{id}
+	</delete>
+</mapper>

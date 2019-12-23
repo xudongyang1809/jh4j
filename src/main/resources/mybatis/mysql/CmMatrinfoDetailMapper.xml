@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- Hints:
+     1. The code was automatic created;
+     2. Any other questions can ask the software engineer for help.
+	 @author sysadmin
+	 @date 2014-03-24
+ -->
+<mapper namespace="CmMatrinfoDetailDao">
+	
+	<!--查询所有记录 过滤公司别-->
+	<select id="findAll" resultType="map"  parameterType="map">
+		select id,parentId,strSn,strName,strEnName,strClass,strEasyCode,strSpec,strBrand,strQuality,strpicNo,strPicFile,strPrickle,(select strName from dc_metrology z where z.id =a.strPrickle ) as strPrickleZH,bdUnitWgtKg,bdUnitVolumeCc,bdUnitThkMm,bdUnitWthMm,bdUnitLthMm,bdUnitHthMm,bdUnitLth,strabcClass,strCustumalNo,strIssoldInside,strIssoldOutside,strIsOutsource,strIsEntrust,strIsProductUse,strCirculatChk,strHpriceChk,strNationType,strMostlyexpend,strSelfproduce,strIsAccidentSpare,strIsWaitScrap,strIsPerformanceJob,strAgManage,strBuyChk,strDutyPreferential,strProjNo,bdPlanPrice,bdReferCost,intMaxStorage,intMinStorage,intSafeStorage,intlsDelete,intlsActive,(select count(strPath) from nj_attach n where n.relativedId=a.id) attachNum    from cm_matrinfo_detail a
+	<where>
+	<!-- <if test="currentCompany!=null and currentCompany!=''">
+		and a.companyId = #{currentCompany}
+	</if> -->
+	<if test="parentId!=null and parentId!=''">
+	and a.parentId like '%${parentId}%'
+	</if>
+	<if test="strSn!=null and strSn!=''">
+	and a.strSn like '%${strSn}%'
+	</if>
+	<if test="strName!=null and strName!=''">
+	and a.strName like '%${strName}%'
+	</if>
+	<if test="strEnName!=null and strEnName!=''">
+	and a.strEnName like '%${strEnName}%'
+	</if>
+	<if test="strSpec!=null and strSpec!=''">
+	and a.strSpec  like '%${strSpec}%'
+	</if>
+	<if test="strBrand!=null and strBrand!=''">
+	and a.strBrand  like '%${strBrand}%'
+	</if>
+	<if test="strPrickle!=null and strPrickle!=''">
+	and a.strPrickle  = #{strPrickle}
+	</if>
+	<if test="strClass!=null and strClass!=''">
+	and a.strClass  = #{strClass}
+	</if>
+	<if test="strSnfro!=null and strSnfro!=''">
+	and a.strSn between #{strSnfro} and #{strSnto}
+	</if>
+	<if test="strSelfproduce != null and strSelfproduce !=''">
+	and a.strSelfproduce = #{strSelfproduce}
+	</if>
+	</where>
+	   order by a.strSn desc
+	</select>
+	
+	<!--根据ID查询记录-->
+	<select id="findOneById" parameterType="String" resultType="Map">
+		select *,(select strName from dc_metrology z where z.id =a.strPrickle ) as strPrickleZH from cm_matrinfo_detail a where id=#{id}
+	</select>
+	
+	<!--添加记录-->
+	<insert id="create" parameterType="CmMatrinfoDetail">
+		insert into cm_matrinfo_detail(id,parentId,strSn,strName,strEnName,strClass,strEasyCode,strSpec,strBrand,strQuality,strpicNo,strPicFile,strPrickle,bdUnitWgtKg,bdUnitVolumeCc,bdUnitThkMm,bdUnitWthMm,bdUnitLthMm,bdUnitHthMm,bdUnitLth,strabcClass,strCustumalNo,strIssoldInside,strIssoldOutside,strIsOutsource,strIsEntrust,strIsProductUse,strCirculatChk,strHpriceChk,strNationType,strMostlyexpend,strSelfproduce,strIsAccidentSpare,strIsWaitScrap,strIsPerformanceJob,strAgManage,strBuyChk,strDutyPreferential,strProjNo,bdPlanPrice,bdReferCost,intMaxStorage,intMinStorage,intSafeStorage,intlsDelete,intlsActive,companyId,createUserId,createDateTime,updateUserId,updateDateTime) values(#{id},#{parentId},#{strSn},#{strName},#{strEnName},#{strClass},#{strEasyCode},#{strSpec},#{strBrand},#{strQuality},#{strpicNo},#{strPicFile},#{strPrickle},#{bdUnitWgtKg},#{bdUnitVolumeCc},#{bdUnitThkMm},#{bdUnitWthMm},#{bdUnitLthMm},#{bdUnitHthMm},#{bdUnitLth},#{strabcClass},#{strCustumalNo},#{strIssoldInside},#{strIssoldOutside},#{strIsOutsource},#{strIsEntrust},#{strIsProductUse},#{strCirculatChk},#{strHpriceChk},#{strNationType},#{strMostlyexpend},#{strSelfproduce},#{strIsAccidentSpare},#{strIsWaitScrap},#{strIsPerformanceJob},#{strAgManage},#{strBuyChk},#{strDutyPreferential},#{strProjNo},#{bdPlanPrice},#{bdReferCost},#{intMaxStorage},#{intMinStorage},#{intSafeStorage},#{intlsDelete},#{intlsActive},#{company.id},#{createUser.id},#{createDateTime},#{updateUser.id},#{updateDateTime})
+	</insert>
+	
+	<!--修改记录-->
+	<update id="update" parameterType="CmMatrinfoDetail">
+	update cm_matrinfo_detail 
+	<set>
+			<if test="parentId!=null and parentId!=''">
+	parentId=#{parentId},
+	</if>
+	<if test="strSn!=null and strSn!=''">
+	strSn=#{strSn},
+	</if>
+	<if test="strName!=null and strName!=''">
+	strName=#{strName},
+	</if>
+	<if test="strEnName!=null and strEnName!=''">
+	strEnName=#{strEnName},
+	</if>
+	<if test="strClass!=null and strClass!=''">
+	strClass=#{strClass},
+	</if>
+	<if test="strEasyCode!=null and strEasyCode!=''">
+	strEasyCode=#{strEasyCode},
+	</if>
+	<if test="strSpec!=null and strSpec!=''">
+	strSpec=#{strSpec},
+	</if>
+	<if test="strBrand!=null and strBrand!=''">
+	strBrand=#{strBrand},
+	</if>
+	<if test="strQuality!=null and strQuality!=''">
+	strQuality=#{strQuality},
+	</if>
+	<if test="strpicNo!=null and strpicNo!=''">
+	strpicNo=#{strpicNo},
+	</if>
+	<if test="strPicFile!=null and strPicFile!=''">
+	strPicFile=#{strPicFile},
+	</if>
+	<if test="strPrickle!=null and strPrickle!=''">
+	strPrickle=#{strPrickle},
+	</if>
+	<if test="bdUnitWgtKg!=null and bdUnitWgtKg!=''">
+	bdUnitWgtKg=#{bdUnitWgtKg},
+	</if>
+	<if test="bdUnitVolumeCc!=null and bdUnitVolumeCc!=''">
+	bdUnitVolumeCc=#{bdUnitVolumeCc},
+	</if>
+	<if test="bdUnitThkMm!=null and bdUnitThkMm!=''">
+	bdUnitThkMm=#{bdUnitThkMm},
+	</if>
+	<if test="bdUnitWthMm!=null and bdUnitWthMm!=''">
+	bdUnitWthMm=#{bdUnitWthMm},
+	</if>
+	<if test="bdUnitLthMm!=null and bdUnitLthMm!=''">
+	bdUnitLthMm=#{bdUnitLthMm},
+	</if>
+	<if test="bdUnitHthMm!=null and bdUnitHthMm!=''">
+	bdUnitHthMm=#{bdUnitHthMm},
+	</if>
+	<if test="bdUnitLth!=null and bdUnitLth!=''">
+	bdUnitLth=#{bdUnitLth},
+	</if>
+	<if test="strabcClass!=null and strabcClass!=''">
+	strabcClass=#{strabcClass},
+	</if>
+	<if test="strCustumalNo!=null and strCustumalNo!=''">
+	strCustumalNo=#{strCustumalNo},
+	</if>
+	<if test="strIssoldInside!=null and strIssoldInside!=''">
+	strIssoldInside=#{strIssoldInside},
+	</if>
+	<if test="strIssoldOutside!=null and strIssoldOutside!=''">
+	strIssoldOutside=#{strIssoldOutside},
+	</if>
+	<if test="strIsOutsource!=null and strIsOutsource!=''">
+	strIsOutsource=#{strIsOutsource},
+	</if>
+	<if test="strIsEntrust!=null and strIsEntrust!=''">
+	strIsEntrust=#{strIsEntrust},
+	</if>
+	<if test="strIsProductUse!=null and strIsProductUse!=''">
+	strIsProductUse=#{strIsProductUse},
+	</if>
+	<if test="strCirculatChk!=null and strCirculatChk!=''">
+	strCirculatChk=#{strCirculatChk},
+	</if>
+	<if test="strHpriceChk!=null and strHpriceChk!=''">
+	strHpriceChk=#{strHpriceChk},
+	</if>
+	<if test="strNationType!=null and strNationType!=''">
+	strNationType=#{strNationType},
+	</if>
+	<if test="strMostlyexpend!=null and strMostlyexpend!=''">
+	strMostlyexpend=#{strMostlyexpend},
+	</if>
+	<if test="strSelfproduce!=null and strSelfproduce!=''">
+	strSelfproduce=#{strSelfproduce},
+	</if>
+	<if test="strIsAccidentSpare!=null and strIsAccidentSpare!=''">
+	strIsAccidentSpare=#{strIsAccidentSpare},
+	</if>
+	<if test="strIsWaitScrap!=null and strIsWaitScrap!=''">
+	strIsWaitScrap=#{strIsWaitScrap},
+	</if>
+	<if test="strIsPerformanceJob!=null and strIsPerformanceJob!=''">
+	strIsPerformanceJob=#{strIsPerformanceJob},
+	</if>
+	<if test="strAgManage!=null and strAgManage!=''">
+	strAgManage=#{strAgManage},
+	</if>
+	<if test="strBuyChk!=null and strBuyChk!=''">
+	strBuyChk=#{strBuyChk},
+	</if>
+	<if test="strDutyPreferential!=null and strDutyPreferential!=''">
+	strDutyPreferential=#{strDutyPreferential},
+	</if>
+	<if test="strProjNo!=null and strProjNo!=''">
+	strProjNo=#{strProjNo},
+	</if>
+	<if test="bdPlanPrice!=null and bdPlanPrice!=''">
+	bdPlanPrice=#{bdPlanPrice},
+	</if>
+	<if test="bdReferCost!=null and bdReferCost!=''">
+	bdReferCost=#{bdReferCost},
+	</if>
+	<if test="intMaxStorage!=null and intMaxStorage!=''">
+	intMaxStorage=#{intMaxStorage},
+	</if>
+	<if test="intMinStorage!=null and intMinStorage!=''">
+	intMinStorage=#{intMinStorage},
+	</if>
+	<if test="intSafeStorage!=null and intSafeStorage!=''">
+	intSafeStorage=#{intSafeStorage},
+	</if>
+	<if test="intlsDelete!=null and intlsDelete!=''">
+	intlsDelete=#{intlsDelete},
+	</if>
+	<if test="intlsActive!=null and intlsActive!=''">
+	intlsActive=#{intlsActive},
+	</if>
+
+	<if test="updateUser!=null">
+	updateUserId=#{updateUser.id},
+	</if>
+	<if test="updateDateTime!=null and updateDateTime!=''">
+	updateDateTime=#{updateDateTime}
+	</if>
+	</set>
+	<where>
+		id=#{id}
+	</where>
+	</update>
+	
+	<!--删除记录-->
+	<delete id="delete" parameterType="String">
+		delete from cm_matrinfo_detail where id=#{id}
+	</delete>
+	
+	<!--根据父ID查询记录-->
+	<select id="findByClassid" parameterType="String" resultType="Map">
+		select *,(select strName from dc_metrology z where z.id =a.strPrickle ) as strPrickleZH from cm_matrinfo_detail a where parentId=#{parentId}  order by a.strSn desc
+	</select>
+	
+	<!--根据父ID删除记录-->
+	<delete id="deletebyParentId" parameterType="String">
+		delete from cm_matrinfo_detail where parentId=#{parentId}
+	</delete>
+	
+	<!--根据父父ID删除记录-->
+	<delete id="deletebyParentParentId" parameterType="String">
+		delete from cm_matrinfo_detail where parentId in (select w.id from cm_matrinfo w where w.parentId = #{parentId})
+	</delete>
+	
+	
+	<select id="findMaxCode" parameterType="String" resultType="String">
+		select MAX(strSn) from cm_matrinfo_detail a where strSn like #{strSn}
+	</select>
+	
+	<select id="findMaxCodeByParentId" parameterType="String" resultType="String">
+		select Max(strSn) from cm_matrinfo_detail a where a.parentId = #{parentId}
+	</select>
+	
+	<!--根据父ID查找所有明细记录-->
+	<select id="findallDetailByFa" parameterType="String" resultType="map">
+		select *,(select strName from dc_metrology z where z.id =a.strPrickle ) as strPrickleZH from cm_matrinfo_detail a where a.parentId in  (select w.id from cm_matrinfo w where w.parentId = #{parentId})  order by a.strSn desc
+	</select>
+	
+	<!-- 在父节点下模糊查询 -->
+	<select id="findallDetailUnFa" parameterType="map" resultType="map">
+		select *,(select strName from dc_metrology z where z.id =a.strPrickle ) as strPrickleZH from cm_matrinfo_detail a 
+	<where>
+	<!-- <if test="currentCompany!=null and currentCompany!=''">
+		and a.companyId = #{currentCompany}
+	</if> -->
+	 
+	<if test="strSn!=null and strSn!=''">
+	and a.strSn like '%${strSn}%'
+	</if>
+	<if test="strName!=null and strName!=''">
+	and a.strName like '%${strName}%'
+	</if>
+	<if test="strEnName!=null and strEnName!=''">
+	and a.strEnName like '%${strEnName}%'
+	</if>
+	<if test="strSpec!=null and strSpec!=''">
+	and a.strSpec  = #{strSpec}
+	</if>
+	<if test="strBrand!=null and strBrand!=''">
+	and a.strBrand  = #{strBrand}
+	</if>
+	<if test="strPrickle!=null and strPrickle!=''">
+	and a.strPrickle  = #{strPrickle}
+	</if>
+	<if test="strSnfro!=null and strSnfro!=''">
+	and a.strSn between #{strSnfro} and #{strSnto}
+	</if>
+    and  a.parentId in  (select w.id from cm_matrinfo w where w.parentId = #{parentId})
+	</where>
+	 order by a.strSn desc
+	</select>
+	
+	<!--根据存货编号编号查询记录-->
+	<select id="findOneByCode" parameterType="String" resultType="map">
+		select *,(select strName from dc_metrology z where z.id =a.strPrickle ) as strPrickleZH from cm_matrinfo_detail a where a.strSn =#{strCode}
+	</select>
+	
+	<!--根据存货编号编号查询记录-->
+	<select id="findOneByEasyCode" parameterType="String" resultType="map">
+		select *,(select strName from dc_metrology z where z.id =a.strPrickle ) as strPrickleZH from cm_matrinfo_detail a where a.strEasyCode =#{strCode}
+	</select>
+	
+	<!--根据存货编号编号查询记录-->
+	<select id="findOneBySnOrCode" parameterType="map" resultType="map">
+		select *,(select strName from dc_metrology z where z.id =a.strPrickle ) as strPrickleZH from cm_matrinfo_detail a 
+		<where>
+	      <if test="strSn!=null and strSn!=''">
+	       and a.strSn = #{strSn}
+	      </if>
+	      <if test="strEasyCode!=null and strEasyCode!=''">
+	       and a.strEasyCode = #{strEasyCode}
+	      </if>
+	  </where>
+	</select>
+	
+	<!-- 根据名称型号计量单位查询 -->
+	<select id="findByNameSpecPrickle" parameterType="map" resultType="map">
+		select *,(select strName from dc_metrology z where z.id =a.strPrickle ) as strPrickleZH from cm_matrinfo_detail a 
+	  <where>
+	       and a.strName =#{strName} and a.strSpec =#{strSpec} and a.strPrickle =#{strPrickle} and a.strBrand =#{strBrand}
+	      <if test="strSn!=null and strSn!=''">
+	       and strSn  != #{strSn}
+	      </if>
+	      
+	  </where>
+	</select>
+	
+	
+</mapper>

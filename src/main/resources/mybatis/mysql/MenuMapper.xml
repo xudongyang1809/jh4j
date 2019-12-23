@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+	菜单管理 mapper文件
+	@author WangWeiWei_020463
+ -->
+<mapper namespace="MenuDao">
+	<cache></cache>
+	<!-- 
+		根据条件查询入口程序列表
+		@author WangWeiWei_020463
+	 -->
+	<resultMap type="com.nisco.dms.entity.Menu" id="widthParentResult">
+		<id property="id" column="id" />
+  		<association property="parent" column="fatherId" select="findOneById" javaType="com.nisco.dms.entity.Menu"></association>
+  		<association property="createUser" column="createUserId" select="UserDao.findByUserNo" javaType="com.nisco.dms.entity.User"></association>
+  		<association property="program" column="programId" select="ProgramDao.findOneById" javaType="com.nisco.dms.entity.Program"></association>
+  		<collection property="children" ofType="com.nisco.dms.entity.Menu" column="id" select="findByFatherId"></collection>
+	</resultMap>
+	<select id="findAll" parameterType="map" resultMap="widthParentResult">
+		select * from ds_menu
+		<where>
+			<if test="fatherId != null and fatherId != ''">
+				and fatherId = #{fatherId}
+			</if>
+			<if test="strName != null and strName != ''">
+				and strName like '%${strName}%'
+			</if>
+			<if test="programId != null and programId != ''">
+				and programId = #{programId}
+			</if>
+		</where>
+		order by intPriority asc
+	</select>
+	
+	<select id="findAllNum" parameterType="map" resultType="int">
+		select count(id) from ds_menu
+		<where>
+			<if test="fatherId != null and fatherId != ''">
+				and fatherId = #{fatherId}
+			</if>
+			<if test="strName != null and strName != ''">
+				and strName like '%${strName}%'
+			</if>
+			<if test="programId != null and programId != ''">
+				and programId = #{programId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 
+		创建菜单
+		@author WangWeiWei_020463
+	-->
+	<insert id="insert" parameterType="com.nisco.dms.entity.Menu" flushCache="true">
+		insert into ds_menu(id, strSn, strName, strDesc, fatherId, programId, intPriority, createUserId, createDateTime)
+		values(#{id}, #{strSn}, #{strName}, #{strDesc}, #{parent.id}, #{program.id}, #{intPriority}, #{createUser.strAccount}, #{createDateTime})
+	</insert>
+	
+	<!-- 
+		更新入口程序 
+		@author WangWeiWei_020463
+	-->
+	<update id="update" parameterType="com.nisco.dms.entity.Menu" flushCache="true">
+		update ds_menu
+		<set>
+			<if test="strSn != null and strSn != ''">
+				strSn = #{strSn},
+			</if>
+			<if test="strName != null and strName != ''">
+				strName = #{strName},
+			</if>
+			<if test="intPriority != null and intPriority != ''">
+				intPriority = #{intPriority},
+			</if>
+			<if test="strDesc != null and strDesc != ''">
+				strDesc = #{strDesc},
+			</if>
+			<if test="updateUser != null">
+				updateUserId = #{updateUser.id},
+			</if>
+			<if test="updateDateTime != null and updateDateTime != ''">
+				updateDateTime = #{updateDateTime}
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<!-- 
+		入口程序编号查找一条入口程序 
+		@author WangWeiWei_020463
+	-->
+	<resultMap type="com.nisco.dms.entity.Menu" id="findByFatherIdMap">
+		<id property="id" column="id" />
+		<association property="program" column="programId" select="ProgramDao.findOneById" javaType="com.nisco.dms.entity.Program"></association>
+		<association property="createUser" column="createUserId" select="UserDao.findByUserNo" javaType="com.nisco.dms.entity.User"></association>
+		<association property="parent" column="fatherId" select="findOneById" javaType="com.nisco.dms.entity.Menu"></association>
+		<collection property="children" ofType="com.nisco.dms.entity.Menu" column="id" select="findByFatherId"></collection>
+	</resultMap>
+	<select id="findByFatherId" parameterType="String" resultMap="findByFatherIdMap">
+		select * from ds_menu
+		where fatherId = #{fatherId}
+		order by intPriority asc
+	</select>
+	
+	<select id="findNumByFatherId" parameterType="String" resultType="int">
+		select count(id) from ds_menu
+		where fatherId = #{fatherId}
+	</select>
+	
+	<!-- 根据id查询出一条入口程序信息 -->
+	<select id="findOneById" parameterType="String" resultMap="findByFatherIdMap">
+		select * from ds_menu where id = #{id}
+	</select>
+	
+	<!-- 根据Id查找出某菜单节点(快速版) -->
+	<resultMap type="com.nisco.dms.entity.Menu" id="findByFatherIdInShortMap">
+		<id property="id" column="id" />
+		<association property="program" column="programId" select="ProgramDao.findOneById" javaType="com.nisco.dms.entity.Program"></association>
+		<collection property="children" ofType="com.nisco.dms.entity.Menu" column="id" select="findByFatherIdInShort"></collection>
+	</resultMap>
+	<select id="findByFatherIdInShort" parameterType="String" resultMap="findByFatherIdInShortMap">
+		select * from ds_menu
+		where fatherId = #{fatherId}
+		order by intPriority asc
+	</select>
+	<select id="findOneByIdInShort" parameterType="String" resultMap="findByFatherIdInShortMap">
+		select * from ds_menu where id = #{id}
+	</select>
+	
+	<!-- 根据授权编号来查询菜单信息 -->
+	<select id="findByStrSn" parameterType="String" resultMap="findByFatherIdMap">
+		select * from ds_menu where strSn = #{strSn}
+	</select>
+	
+	<select id="findByProgramId" parameterType="String" resultMap="findByFatherIdMap">
+		select * from ds_menu where programId = #{programId}
+	</select>
+	
+	<!-- 
+		查找出根节点
+		@author WangWeiWei_020463
+	-->
+	<resultMap type="com.nisco.dms.entity.Menu" id="findRootMenuMap">
+	 	<id property="id" column="id"  />
+		<collection property="children" ofType="com.nisco.dms.entity.Menu" column="id" select="findByFatherId"></collection>
+	</resultMap>
+	<select id="findRootMenu" resultMap="findRootMenuMap">
+		select * from ds_menu where (fatherId is null or fatherId = '')
+	</select>
+	
+	<select id="findRootMenuInShort" resultType="com.nisco.dms.entity.Menu">
+		select * from ds_menu where (fatherId is null or fatherId = '')
+	</select>
+	
+	<!-- 找出第一层导航栏的菜单列表（为什么不采用findRootMenu，是为了提高进入首页的速度！） -->
+	<select id="findNavigateMenu" resultType="com.nisco.dms.entity.Menu">
+		select * from ds_menu a 
+		left join ds_menu b on a.fatherId = b.id
+		where (b.fatherId is null or b.fatherId = '') and a.fatherId is not null and a.fatherId != ''
+		order by a.intPriority asc
+	</select>
+	
+	<!-- 
+		根据Id删除一条入口程序信息 
+		@author WangWeiWei_020463
+	-->
+	<delete id="delete" parameterType="String" flushCache="true">
+		delete from ds_menu where id = #{id}
+	</delete>
+	
+	<!-- 
+		多个条件来删除菜单信息 
+		@author WangWeiWei_020463
+	-->
+	<delete id="deleteWithParam" parameterType="map" flushCache="true">
+		delete from ds_menu where fatherId = #{fatherId} and programId = #{programId}
+	</delete>
+	
+	<delete id="deleteByProgramId" parameterType="String" flushCache="true">
+		delete from ds_menu where programId = #{programId}
+	</delete>
+</mapper>

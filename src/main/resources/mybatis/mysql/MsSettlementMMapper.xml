@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+     @desc “此代码是自动生成，请继续优化注释”
+	 @author 毛敏 022325
+	 @version 1.0.0
+	 @date 2019-05-29 13:51:09
+	 @Copyright: 江苏金恒信息科技股份有限公司
+ -->
+<mapper namespace="MsSettlementMDao">
+	<!-- 查询所有记录 过滤公司别 -->
+	<select id="findAll" parameterType="map" resultType="map">
+		select
+			*,case strStus when 'N' then '新增' when 'C' then '开票确认' else '' end as strStusZH,
+			(SELECT SUM(b.bdTotaAmt) FROM ms_settlement_d b WHERE a.strSettleNumber = b.strSettleNumber) as bdSettleAmtZH,
+			(SELECT SUM(b.bdTotaAmt) FROM ms_settlement_d b WHERE a.strSettleNumber = b.strSettleNumber) as bdInvoiceSumAmtZH,
+			(SELECT CONCAT(strVendorNo,'-',strVendorName) from mc_infomation_m m WHERE m.strVendorNo = a.strVendorNo) AS strVendorName
+		from ms_settlement_m a
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and a.companyId = #{currentCompany}
+			</if>
+			<if test="strSettleNumber != null and strSettleNumber != ''">
+				and a.strSettleNumber like '%${strSettleNumber}%'
+			</if>
+			<if test="strOrderNo != null and strOrderNo != ''">
+				and a.strOrderNo like '%${strOrderNo}%'
+			</if>
+			<if test="strVendorNo != null and strVendorNo != ''">
+				and a.strVendorNo like '%${strVendorNo}%'
+			</if>
+		</where>
+   		order by a.createDateTime desc
+	</select>
+	
+	<!-- 查询所有记录 过滤公司别 -->
+	<select id="getCount" resultType="int" parameterType="map">
+		select count(id) from ms_settlement_m
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+			<if test="strSettleNumber != null and strSettleNumber != ''">
+				and strSettleNumber like '%${strSettleNumber}%'
+			</if>
+			<if test="strOrderNo != null and strOrderNo != ''">
+				and strOrderNo like '%${strOrderNo}%'
+			</if>
+			<if test="strVendorNo != null and strVendorNo != ''">
+				and strVendorNo like '%${strVendorNo}%'
+			</if>
+		</where>
+	</select>
+	
+	<!-- 根据ID查询记录 -->
+	<select id="findOneById" parameterType="String" resultType="map">
+		select
+			*,
+			case strStus when 'N' then '新增' when 'C' then '开票确认' else '' end as strStusZH,
+			(SELECT SUM(b.bdTotaAmt) FROM ms_settlement_d b WHERE a.strSettleNumber = b.strSettleNumber) as bdSettleAmtZH,
+			(SELECT SUM(b.bdTotaAmt) FROM ms_settlement_d b WHERE a.strSettleNumber = b.strSettleNumber) as bdInvoiceSumAmtZH
+		from ms_settlement_m a
+		where id = #{id}
+	</select>
+
+	<!--根据结算单号查询记录-->
+	<select id="findBySettleNumber" parameterType="String" resultType="map">
+		select
+			*
+		from ms_settlement_m
+		where strSettleNumber = #{strSettleNumber}
+	</select>
+
+	<!--查找最大销售结算单号-->
+	<select id="findMaxCode" parameterType="String" resultType="String">
+		select Max(strSettleNumber) from ms_settlement_m where strSettleNumber like  #{strSettleNumber}
+	</select>
+
+	<!--查询主档的结算金额-->
+	<select id="countSettleAmt" parameterType="String" resultType="String">
+		SELECT
+			SUM(bdTotaAmt)
+		FROM
+			ms_settlement_d
+		WHERE
+			strSettleNumber = #{strSettleNumber}
+	</select>
+
+	<!-- 添加记录 -->
+	<insert id="create" parameterType="MsSettlementMEntity">
+		insert into ms_settlement_m
+		(id, strSettleNumber, strOrderNo, strVendorNo, bdSettleAmt, bdInvoiceSumAmt, strSettleDate, strSettlePeople, strStus, strRemark, strConfirmId, strConfirmDate, strInvConfirmNo, strInvConfirmDate, companyId, intIsActive, intIsDelete, createUserId, createDateTime)
+		values(#{id}, #{strSettleNumber}, #{strOrderNo}, #{strVendorNo}, #{bdSettleAmt}, #{bdInvoiceSumAmt}, #{strSettleDate}, #{strSettlePeople}, #{strStus}, #{strRemark}, #{strConfirmId}, #{strConfirmDate}, #{strInvConfirmNo}, #{strInvConfirmDate}, #{company.id}, #{intIsActive}, #{intIsDelete}, #{createUser.id}, #{createDateTime})
+	</insert>
+	
+	<!-- 修改记录 -->
+	<update id="update" parameterType="MsSettlementMEntity">
+		update ms_settlement_m
+		<set>
+			<if test="strSettleNumber != null and strSettleNumber != ''">
+				strSettleNumber = #{strSettleNumber},
+			</if>
+			<if test="strOrderNo != null and strOrderNo != ''">
+				strOrderNo = #{strOrderNo},
+			</if>
+			<if test="strVendorNo != null and strVendorNo != ''">
+				strVendorNo = #{strVendorNo},
+			</if>
+			<if test="bdSettleAmt != null">
+				bdSettleAmt = #{bdSettleAmt},
+			</if>
+			<if test="bdInvoiceSumAmt != null">
+				bdInvoiceSumAmt = #{bdInvoiceSumAmt},
+			</if>
+			<if test="strSettleDate != null and strSettleDate != ''">
+				strSettleDate = #{strSettleDate},
+			</if>
+			<if test="strSettlePeople != null and strSettlePeople != ''">
+				strSettlePeople = #{strSettlePeople},
+			</if>
+			<if test="strStus != null and strStus != ''">
+				strStus = #{strStus},
+			</if>
+			<if test="strRemark != null and strRemark != ''">
+				strRemark = #{strRemark},
+			</if>
+			<if test="strConfirmId != null and strConfirmId != ''">
+				strConfirmId = #{strConfirmId},
+			</if>
+			<if test="strConfirmDate != null and strConfirmDate != ''">
+				strConfirmDate = #{strConfirmDate},
+			</if>
+			<if test="strInvConfirmNo != null and strInvConfirmNo != ''">
+				strInvConfirmNo = #{strInvConfirmNo},
+			</if>
+			<if test="strInvConfirmDate != null and strInvConfirmDate != ''">
+				strInvConfirmDate = #{strInvConfirmDate},
+			</if>
+			<if test="updateUser != null">
+				updateUserId = #{updateUser.id},
+			</if>
+			<if test="updateDateTime != null and updateDateTime != ''">
+				updateDateTime = #{updateDateTime},
+			</if>
+			<if test="intIsActive != null and intIsActive != ''">
+				intIsActive = #{intIsActive},
+			</if>
+			<if test="intIsDelete != null and intIsDelete != ''">
+				intIsDelete = #{intIsDelete}
+			</if>
+		</set>
+		<where>
+			id = #{id}
+		</where>
+	</update>
+	
+	<!-- 删除记录 -->
+	<delete id="delete" parameterType="String">
+		delete from ms_settlement_m where id = #{id}
+	</delete>
+</mapper>

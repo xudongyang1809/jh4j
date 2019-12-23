@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+     @desc “此代码是自动生成，请继续优化注释”
+	 @author 王梦奇 022347
+	 @version 1.0.0
+	 @date 2019-04-29 16:17:49
+	 @Copyright: 江苏金恒信息科技股份有限公司
+ -->
+<mapper namespace="MpPonoDDao">
+	<!-- 查询所有记录 过滤公司别 -->
+	<select id="findAll" parameterType="map" resultType="MpPonoDEntity">
+		select
+			*
+		from mp_pono_d
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+			<if test="ihId != null ">
+				and ihId = #{ihId}
+			</if>
+
+		</where>
+   		order by createDateTime desc
+	</select>
+	
+	<!-- 查询所有记录 过滤公司别 -->
+	<select id="getCount" resultType="int" parameterType="map">
+		select count(id) from mp_pono_d
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+			<if test="ihId != null ">
+				and ihId = #{ihId}
+			</if>
+			<if test="strPoNo != null and strPoNo != ''">
+				and strPoNo = #{strPoNo}
+			</if>
+
+		</where>
+	</select>
+	
+	<!-- 根据ID查询记录 -->
+	<select id="findOneById" parameterType="String" resultType="MpPonoDEntity">
+		select 
+			*
+		from mp_pono_d
+		where id = #{id}
+	</select>
+	
+	<!-- 添加记录 -->
+	<insert id="create" parameterType="MpPonoDEntity">
+		insert into mp_pono_d
+		(id, intIsActive, intIsDelete, createUserId, createDateTime, companyId, ihId,
+			 strPoNo, strPoItemNo, strMatrlNo, bdQty, bdPlanPrice, bdRealPrice, bdAmt, strPlanUseDate,
+			 strMemo, strApplyNo, strApplyItem, strReqDept, strOrderNo, strOrderItem, strMpPlanDetailId,
+			 strUnSelectQty,strPlanNo,strPlanId ,strStyleShip)
+		values(#{id}, #{intIsActive}, #{intIsDelete}, #{createUser.id},
+				#{createDateTime}, #{company.id}, #{ihId}, #{strPoNo}, #{strPoItemNo},
+				#{strMatrlNo}, #{bdQty}, #{bdPlanPrice}, #{bdRealPrice}, #{bdAmt},
+				#{strPlanUseDate}, #{strMemo}, #{strApplyNo}, #{strApplyItem}, #{strReqDept},
+				#{strOrderNo}, #{strOrderItem}, #{strMpPlanDetailId},
+				#{strUnSelectQty},#{strPlanNo}, #{strPlanId},#{strStyleShip})
+		</insert>
+	
+	<!-- 修改记录 -->
+	<update id="update" parameterType="MpPonoDEntity">
+		update mp_pono_d
+		<set>
+			<if test="ihId != null and ihId != ''">
+				ihId = #{ihId},
+			</if>
+			<if test="strPoNo != null and strPoNo != ''">
+				strPoNo = #{strPoNo},
+			</if>
+			<if test="strPoItemNo != null and strPoItemNo != ''">
+				strPoItemNo = #{strPoItemNo},
+			</if>
+			<if test="strMatrlNo != null and strMatrlNo != ''">
+				strMatrlNo = #{strMatrlNo},
+			</if>
+			<if test="bdQty != null">
+				bdQty = #{bdQty},
+			</if>
+			<if test="bdPlanPrice != null">
+				bdPlanPrice = #{bdPlanPrice},
+			</if>
+			<if test="bdRealPrice != null">
+				bdRealPrice = #{bdRealPrice},
+			</if>
+			<if test="bdAmt != null">
+				bdAmt = #{bdAmt},
+			</if>
+			<if test="strPlanUseDate != null and strPlanUseDate != ''">
+				strPlanUseDate = #{strPlanUseDate},
+			</if>
+			<if test="strMemo != null and strMemo != ''">
+				strMemo = #{strMemo},
+			</if>
+			<if test="strApplyNo != null and strApplyNo != ''">
+				strApplyNo = #{strApplyNo},
+			</if>
+			<if test="strApplyItem != null and strApplyItem != ''">
+				strApplyItem = #{strApplyItem},
+			</if>
+			<if test="strReqDept != null and strReqDept != ''">
+				strReqDept = #{strReqDept},
+			</if>
+			<if test="strOrderNo != null and strOrderNo != ''">
+				strOrderNo = #{strOrderNo},
+			</if>
+			<if test="strOrderItem != null and strOrderItem != ''">
+				strOrderItem = #{strOrderItem},
+			</if>
+			<if test="strMpPlanDetailId != null and strMpPlanDetailId != ''">
+				strMpPlanDetailId = #{strMpPlanDetailId},
+			</if>
+			<if test="strUnSelectQty != null">
+				strUnSelectQty = #{strUnSelectQty},
+			</if>
+			<if test="updateUser != null">
+				updateUserId = #{updateUser.id},
+			</if>
+			<if test="updateDateTime != null and updateDateTime != ''">
+				updateDateTime = #{updateDateTime},
+			</if>
+			<if test="intIsActive != null and intIsActive != ''">
+				intIsActive = #{intIsActive},
+			</if>
+			<if test="intIsDelete != null and intIsDelete != ''">
+				intIsDelete = #{intIsDelete},
+  			</if>
+			<if test="strStyleShip != null and strStyleShip != ''">
+				strStyleShip = #{strStyleShip}
+  			</if>
+		</set>
+		<where>
+			id = #{id}
+		</where>
+	</update>
+	
+	<!-- 删除记录 -->
+	<delete id="delete" parameterType="String">
+		delete from mp_pono_d where id = #{id}
+	</delete>
+
+	<!--合同号新增 按照指定规则流水号依次递增-->
+	<select id="findMaxLabelId" parameterType="map" resultType="String">
+		select max(a.strPoItemNo) as strShipItem from mp_pono_d a where a.ihId=#{ihid}
+	</select>
+
+	<!--查询采购合同主档总总金额-->
+	<select id="findTotalAmt" parameterType="map" resultType="BigDecimal">
+		select sum(a.bdAmt) as bdAmt
+			from mp_pono_d a
+		<where>
+			<if test="strPoNo != null and strPoNo != ''">
+				and a.strPoNo = #{strPoNo}
+			</if>
+			<if test="ihId != null">
+				 and a.ihId = #{ihId}
+			</if>
+  		</where>
+	</select>
+	<!--查询采购合同主档总数量-->
+	<select id="findTotalQty" parameterType="map" resultType="BigDecimal">
+		select sum(a.bdQty) as bdQtyTotal
+				from mp_pono_d a where
+				a.strPoNo =#{strPoNo}
+				and a.ihId=#{ihId}
+	</select>
+
+	<select id="findOneByIhid" parameterType="String" resultType="MpPonoDEntity">
+		select
+			*
+		from mp_pono_d where ihId = #{idId}
+
+	</select>
+
+	<select id="findOneByStrPoNoAndItem" parameterType="map" resultType="MpPonoDEntity">
+		select a.*   from mp_pono_d a
+		LEFT JOIN mp_pono_m  b
+			on a.ihId = b.id
+		<where>
+			<if test="strPoNo != null and strPoNo != ''">
+			  and 	a.strPoNo = #{strPoNo}
+			</if>
+			<if test="strPoItemNo != null and strPoItemNo != ''">
+			and 	a.strPoItemNo = #{strPoItemNo}
+			</if>
+			<if test="ihId !=null and ihId !='' ">
+			 and	 a.ihId=#{ihId}
+			</if>
+			and b.strIsActiveCont ='Y'
+		</where>
+	</select>
+</mapper>

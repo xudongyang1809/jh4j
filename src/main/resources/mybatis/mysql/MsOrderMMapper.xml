@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+     @desc “此代码是自动生成，请继续优化注释”
+	 @author 超级管理员 admin
+	 @version 1.0.0
+	 @date 2019-04-29 17:54:51
+	 @Copyright: 江苏金恒信息科技股份有限公司
+ -->
+<mapper namespace="MsOrderMDao">
+	<!-- 查询所有记录 过滤公司别 -->
+	<select id="findAll" parameterType="map" resultType="map">
+		select
+			*,
+			(SELECT u.strName from du_user u WHERE u.id = a.strOperator) as strOperatorZH,
+			(SELECT u.strName from du_user u WHERE u.id = a.strApplyUserId) as strApplyUserIdZH,
+			case strStus when 'N' then '新增' when 'S' then '生效' when 'X' then '结案' else '' end as strStatuZH,case strOrderStyle when '1' then '生产型原料' when '2' then '贸易型商品' else '' end as strOrderStyle1
+		from ms_order_m a
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+			<if test="strOrderNo != null and strOrderNo != ''">
+				and strOrderNo like '%${strOrderNo}%'
+			</if>
+			<if test="strOrderStyle != null and strOrderStyle != ''">
+				and strOrderStyle like '%${strOrderStyle}%'
+			</if>
+			<if test="strOrderName != null and strOrderName != ''">
+				and strOrderName like '%${strOrderName}%'
+			</if>
+			<if test="strVendorNo != null and strVendorNo != ''">
+				and strVendorNo like '%${strVendorNo}%'
+			</if>
+			<if test="strStus != null and strStus != ''">
+				and strStus like '%${strStus}%'
+			</if>
+		</where>
+   		order by createDateTime desc
+	</select>
+	
+	<!-- 查询所有记录 过滤公司别 -->
+	<select id="getCount" resultType="int" parameterType="map">
+		select count(id) from ms_order_m
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+			<if test="strOrderNo != null and strOrderNo != ''">
+				and strOrderNo like '%${strOrderNo}%'
+			</if>
+			<if test="strOrderStyle != null and strOrderStyle != ''">
+				and strOrderStyle like '%${strOrderStyle}%'
+			</if>
+			<if test="strOrderName != null and strOrderName != ''">
+				and strOrderName like '%${strOrderName}%'
+			</if>
+			<if test="strVendorNo != null and strVendorNo != ''">
+				and strVendorNo like '%${strVendorNo}%'
+			</if>
+			<if test="strStus != null and strStus != ''">
+				and strStus like '%${strStus}%'
+			</if>
+		</where>
+	</select>
+	
+	<!-- 根据ID查询记录 -->
+	<select id="findOneById" parameterType="String" resultType="map">
+		select 
+			*,
+			(SELECT u.strName from du_user u WHERE u.id = a.strOperator) as strOperatorZH,
+			(SELECT u.strName from du_user u WHERE u.id = a.strApplyUserId) as strApplyUserIdZH,
+			case strStus when 'N' then '新增' when 'S' then '生效' when 'X' then '结案' else '' end as strStatuZH
+		from ms_order_m a
+		where id = #{id}
+	</select>
+
+    <!--根据销售合同编号查询一条数据-->
+    <select id="findOneByOrdNo" parameterType="String" resultType="MsOrderMEntity">
+        select
+            *
+        from ms_order_m
+        where strOrderNo = #{strOrderNo}
+    </select>
+
+	<!--在code的前提下获得当前最大销售点单编号-->
+	<select id="findMaxCode" parameterType="String" resultType="String">
+		select MAX(strOrderNo) from ms_order_m a where strOrderNo like #{strOrderNo}
+	</select>
+
+	<!-- 添加记录 -->
+	<insert id="create" parameterType="MsOrderMEntity">
+		insert into ms_order_m
+		(id, strOrderNo, strOrderStyle, strOrderName, strVendorNo, strOperator, strDateFrom, strDateTo, strApplyUserId, bdPlanAmt, strDeliveryDate, strStus, strRemark, strEmpNo, strDateTime, strCloseUserId, strCloseDateTime, bdTaxRate, companyId, intIsActive, intIsDelete, createUserId, createDateTime)
+		values(#{id}, #{strOrderNo}, #{strOrderStyle}, #{strOrderName}, #{strVendorNo}, #{strOperator}, #{strDateFrom}, #{strDateTo}, #{strApplyUserId}, #{bdPlanAmt}, #{strDeliveryDate}, #{strStus}, #{strRemark}, #{strEmpNo}, #{strDateTime}, #{strCloseUserId}, #{strCloseDateTime}, #{bdTaxRate}, #{company.id}, #{intIsActive}, #{intIsDelete}, #{createUser.id}, #{createDateTime})
+	</insert>
+	
+	<!-- 修改记录 -->
+	<update id="update" parameterType="MsOrderMEntity">
+		update ms_order_m
+		<set>
+			<if test="strOrderNo != null and strOrderNo != ''">
+				strOrderNo = #{strOrderNo},
+			</if>
+			<if test="strOrderStyle != null and strOrderStyle != ''">
+				strOrderStyle = #{strOrderStyle},
+			</if>
+			<if test="strOrderName != null and strOrderName != ''">
+				strOrderName = #{strOrderName},
+			</if>
+			<if test="strVendorNo != null and strVendorNo != ''">
+				strVendorNo = #{strVendorNo},
+			</if>
+			<if test="strOperator != null and strOperator != ''">
+				strOperator = #{strOperator},
+			</if>
+			<if test="strDateFrom != null and strDateFrom != ''">
+				strDateFrom = #{strDateFrom},
+			</if>
+			<if test="strDateTo != null and strDateTo != ''">
+				strDateTo = #{strDateTo},
+			</if>
+			<if test="strApplyUserId != null and strApplyUserId != ''">
+				strApplyUserId = #{strApplyUserId},
+			</if>
+			<if test="bdPlanAmt != null">
+				bdPlanAmt = #{bdPlanAmt},
+			</if>
+			<if test="strDeliveryDate != null and strDeliveryDate != ''">
+				strDeliveryDate = #{strDeliveryDate},
+			</if>
+			<if test="strStus != null and strStus != ''">
+				strStus = #{strStus},
+			</if>
+			<if test="strRemark != null and strRemark != ''">
+				strRemark = #{strRemark},
+			</if>
+			<if test="strEmpNo != null and strEmpNo != ''">
+				strEmpNo = #{strEmpNo},
+			</if>
+			<if test="strDateTime != null and strDateTime != ''">
+				strDateTime = #{strDateTime},
+			</if>
+			<if test="strCloseUserId != null and strCloseUserId != ''">
+				strCloseUserId = #{strCloseUserId},
+			</if>
+			<if test="strCloseDateTime != null and strCloseDateTime != ''">
+				strCloseDateTime = #{strCloseDateTime},
+			</if>
+			<if test="bdTaxRate != null">
+				bdTaxRate = #{bdTaxRate},
+			</if>
+			<if test="updateUser != null">
+				updateUserId = #{updateUser.id},
+			</if>
+			<if test="updateDateTime != null and updateDateTime != ''">
+				updateDateTime = #{updateDateTime},
+			</if>
+			<if test="intIsActive != null and intIsActive != ''">
+				intIsActive = #{intIsActive},
+			</if>
+			<if test="intIsDelete != null and intIsDelete != ''">
+				intIsDelete = #{intIsDelete}
+			</if>
+		</set>
+		<where>
+			id = #{id}
+		</where>
+	</update>
+	
+	<!-- 删除记录 -->
+	<delete id="delete" parameterType="String">
+		delete from ms_order_m where id = #{id}
+	</delete>
+</mapper>

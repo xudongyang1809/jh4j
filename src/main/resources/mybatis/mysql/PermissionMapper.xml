@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+	动作清单管理 mapper文件
+	@author WangWeiWei_020463
+ -->
+<mapper namespace="PermissionDao">
+	<!-- 
+		根据条件查询入口程序列表
+		@author WangWeiWei_020463
+	 -->
+	<resultMap type="com.nisco.dms.entity.Permission" id="findAllMap">
+		<id column="id" property="id" />
+		<association property="createUser" column="createUserId" select="UserDao.findByUserNo" javaType="com.nisco.dms.entity.User"></association>
+	</resultMap>
+	<select id="findAll" parameterType="map" resultMap="findAllMap">
+		select 
+			*
+		from ds_permission a
+		<where>
+			<if test="moduleId != null and moduleId != ''">
+				and a.moduleId = #{moduleId}
+			</if>
+			<if test="strName != null and strName != ''">
+				and a.strName = #{strName}
+			</if>
+		</where>
+		order by a.createDateTime desc
+	</select>
+	
+	<select id="findAllNum" parameterType="map" resultType="int">
+		select 
+			count(id)
+		from ds_permission a
+		<where>
+			<if test="moduleId != null and moduleId != ''">
+				and a.moduleId = #{moduleId}
+			</if>
+			<if test="strName != null and strName != ''">
+				and a.strName = #{strName}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 
+		创建程序动作
+		@author WangWeiWei_020463
+	-->
+	<insert id="create" parameterType="com.nisco.dms.entity.Permission">
+		insert into ds_permission
+			(id, strName, strDesc, moduleId, companyId, createUserId, createDateTime)
+		values(#{id}, #{strName}, #{strDesc}, #{program.id}, #{company.id}, #{createUser.strAccount}, #{createDateTime})
+	</insert>
+	
+	<!-- 
+		更新程序动作
+		@author WangWeiWei_020463
+	-->
+	<update id="update" parameterType="com.nisco.dms.entity.Permission">
+		update ds_permission
+		<set>
+			<if test="strName != null and strName != ''">
+				strName = #{strName},
+			</if>
+			strDesc = #{strDesc},
+			<if test="program != null">
+				moduleId = #{program.id},
+			</if>
+			<if test="updateUser != null">
+				updateUserId = #{updateUser.id},
+			</if>
+			<if test="updateDateTime != null and updateDateTime != ''">
+				updateDateTime = #{updateDateTime}
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<!-- 根据id查询出一条程序动作信息 -->
+	<resultMap type="com.nisco.dms.entity.Permission" id="widthProgramResult">
+		<id property="id" column="id" />
+  		<association property="createUser" column="createUserId" select="UserDao.findByUserNo" javaType="com.nisco.dms.entity.User"></association>
+  		<association property="program" column="moduleId" select="ProgramDao.findOneById" javaType="com.nisco.dms.entity.Program"></association>
+	</resultMap>
+	<select id="findOneById" parameterType="String" resultMap="widthProgramResult">
+		select * from ds_permission where id = #{id}
+	</select>
+	
+	<!-- 根据功能模块Id查找出动作清单信息 -->
+	<select id="getPermissionByModuleId" parameterType="String" resultType="map">
+		select * from ds_permission where moduleId = #{moduleId}
+	</select>
+	
+	<!-- 根据角色Id获取功能权限列表 -->
+	<select id="getPermissionByRoleId" parameterType="String" resultType="map">
+		select * from ds_permission b where b.id in (select permissionId from ds_role_permission a where a.roleId = #{roleId}) 
+	</select>
+	
+	<!-- 根据条件查找出动作清单信息 -->
+	<select id="getPermissionByParams" parameterType="map" resultType="map">
+		select 
+			a.*,
+			(select strSn from ds_program b where b.id = a.moduleId) as programCode,
+			if((select count(id) from ds_role_permission m where m.roleId = #{roleId} and m.strPermission = concat(#{strSn}, ':', a.strName)) > 1, 1, 0) as isRepeat,
+			if((select count(id) from ds_role_permission m where m.roleId = #{roleId} and m.strPermission = concat(#{strSn}, ':', a.strName)) = 1, 
+			(select id from ds_role_permission m where m.roleId = #{roleId} and m.strPermission = concat(#{strSn}, ':', a.strName)), null) as rolePermissionId,
+			if((select count(id) from ds_role_permission m where m.roleId = #{roleId} and m.strPermission = concat(#{strSn}, ':', a.strName)) = 1, 1, 0) as isSelected
+		from ds_permission a where moduleId = #{programId}
+	</select>
+	
+	<!-- 
+		根据Id删除一条程序动作 
+		@author WangWeiWei_020463
+	-->
+	<delete id="delete" parameterType="String">
+		delete from ds_permission where id = #{id}
+	</delete>
+	
+	<!-- 根据程序模块Id删除权限信息 -->
+	<delete id="deleteByModuleId" parameterType="String">
+		delete from ds_permission where moduleId = #{moduleId}
+	</delete>
+</mapper>

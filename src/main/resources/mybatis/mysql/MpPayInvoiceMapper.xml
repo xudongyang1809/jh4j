@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+     @desc “此代码是自动生成，请继续优化注释”
+	 @author 王梦奇 022347
+	 @version 1.0.0
+	 @date 2019-05-28 08:50:27
+	 @Copyright: 江苏金恒信息科技股份有限公司
+ -->
+<mapper namespace="MpPayInvoiceDao">
+	<!-- 查询所有记录 过滤公司别 -->
+	<select id="findAll" parameterType="map" resultType="MpPayInvoiceEntity">
+		select * from mp_pay_invoice
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and  companyId = #{currentCompany}
+			</if>
+			<if test="ihId != null ">
+				and	 ihId = #{ihId}
+			</if>
+			<if test="strPayNo != null ">
+				and strPayNo = #{strPayNo}
+			</if>
+
+		</where>
+   		order by createDateTime desc
+	</select>
+	
+	<!-- 查询所有记录 过滤公司别 -->
+	<select id="getCount" resultType="int" parameterType="map">
+		select count(id) from mp_pay_invoice
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+			<if test="ihId != null ">
+				and ihId = #{ihId}
+			</if>
+			<if test="strPayNo != null ">
+				and strPayNo = #{strPayNo}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 根据ID查询记录 -->
+	<select id="findOneById" parameterType="String" resultType="MpPayInvoiceEntity">
+		select 
+			*
+		from mp_pay_invoice
+		where id = #{id}
+	</select>
+	
+	<!-- 添加记录 -->
+	<insert id="create" parameterType="MpPayInvoiceEntity">
+		insert into mp_pay_invoice
+		(id, intIsActive, intIsDelete, createUserId, createDateTime, companyId, strPayNo, strSupplierId, strInvoiceNo, strInvoiceIndex, strBillDocType, strInvoiceDate, strRateType, strMemo, bdAmt, bdTaxRate, bdTaxAmt, bdTotalAmt,ihId)
+		values(#{id}, #{intIsActive}, #{intIsDelete}, #{createUser.id}, #{createDateTime}, #{company.id}, #{strPayNo}, #{strSupplierId}, #{strInvoiceNo}, #{strInvoiceIndex}, #{strBillDocType}, #{strInvoiceDate}, #{strRateType}, #{strMemo}, #{bdAmt}, #{bdTaxRate}, #{bdTaxAmt}, #{bdTotalAmt},#{ihId})
+	</insert>
+	
+	<!-- 修改记录 -->
+	<update id="update" parameterType="MpPayInvoiceEntity">
+		update mp_pay_invoice
+		<set>
+			<if test="strPayNo != null and strPayNo != ''">
+				strPayNo = #{strPayNo},
+			</if>
+			<if test="strSupplierId != null and strSupplierId != ''">
+				strSupplierId = #{strSupplierId},
+			</if>
+			<if test="strInvoiceNo != null and strInvoiceNo != ''">
+				strInvoiceNo = #{strInvoiceNo},
+			</if>
+			<if test="strInvoiceIndex != null and strInvoiceIndex != ''">
+				strInvoiceIndex = #{strInvoiceIndex},
+			</if>
+			<if test="strBillDocType != null and strBillDocType != ''">
+				strBillDocType = #{strBillDocType},
+			</if>
+			<if test="strInvoiceDate != null and strInvoiceDate != ''">
+				strInvoiceDate = #{strInvoiceDate},
+			</if>
+			<if test="strRateType != null and strRateType != ''">
+				strRateType = #{strRateType},
+			</if>
+			<if test="strMemo != null and strMemo != ''">
+				strMemo = #{strMemo},
+			</if>
+			<if test="bdAmt != null">
+				bdAmt = #{bdAmt},
+			</if>
+			<if test="bdTaxRate != null">
+				bdTaxRate = #{bdTaxRate},
+			</if>
+			<if test="bdTaxAmt != null">
+				bdTaxAmt = #{bdTaxAmt},
+			</if>
+			<if test="bdTotalAmt != null">
+				bdTotalAmt = #{bdTotalAmt},
+			</if>
+			<if test="updateUser != null">
+				updateUserId = #{updateUser.id},
+			</if>
+			<if test="updateDateTime != null and updateDateTime != ''">
+				updateDateTime = #{updateDateTime},
+			</if>
+			<if test="intIsActive != null and intIsActive != ''">
+				intIsActive = #{intIsActive},
+			</if>
+			<if test="intIsDelete != null and intIsDelete != ''">
+				intIsDelete = #{intIsDelete}
+			</if>
+			<if test="ihId != null and ihId != ''">
+				ihId = #{ihId}
+			</if>
+		</set>
+		<where>
+			id = #{id}
+		</where>
+	</update>
+	
+	<!-- 删除记录 -->
+	<delete id="delete" parameterType="String">
+		delete from mp_pay_invoice where id = #{id}
+	</delete>
+
+	<!-- 据报账单号查询计算所有发票记录的交税总计  采购合同发票档 总税额 -->
+	<select id="findTotalAmt" parameterType="String" resultType="BigDecimal">
+		select sum(a.bdTaxAmt) as bdTaxAmt from mp_pay_invoice a where a.strPayNo =#{strPayNo}
+	</select>
+
+	</mapper>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<properties>
+		<!-- 配置数据库方言 目前只有mysql和oracle两种 -->
+		<property name="dialect" value="mysql" />
+		<property name="cacheEnabled" value="true" />
+	</properties>
+	
+	<settings>
+        <!-- 打印查询语句 -->
+        <setting name="logImpl" value="STDOUT_LOGGING" />
+        <!-- 设置在查询返回值为null也返回字段，这样前端就不需要做null处理了 -->
+        <setting name="callSettersOnNulls" value="true"/>
+    </settings>
+    
+	<typeAliases>
+		<typeAlias alias="Integer" type="java.lang.Integer" />
+		<typeAlias alias="Long" type="java.lang.Long" />
+		<typeAlias alias="HashMap" type="java.util.HashMap" />
+		<typeAlias alias="LinkedHashMap" type="java.util.LinkedHashMap" />
+		<typeAlias alias="ArrayList" type="java.util.ArrayList" />
+		<typeAlias alias="LinkedList" type="java.util.LinkedList" />
+	</typeAliases>
+</configuration>

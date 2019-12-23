@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="UserDao">
+	<cache></cache>
+	<resultMap type="com.nisco.dms.entity.User" id="findAllMap">
+		<id property="id" column="id" />
+  		<association property="createUser" column="createUserId" select="findByUserNo" javaType="com.nisco.dms.entity.User"></association>
+  		<association property="dept" column="deptId" select="DepartmentDao.findOneById" javaType="com.nisco.dms.entity.Department"></association>
+	</resultMap>
+	<select id="findAll" parameterType="map" resultMap="findAllMap">
+		select * from du_user
+		<where>
+			<if test="strNameOrAccount!=null and strNameOrAccount!=''">
+				and (strAccount like '%${strNameOrAccount}%' or strName like '%${strNameOrAccount}%')
+			</if>
+			<if test="token != null">
+				and token = #{token}
+			</if>
+		</where>
+		<choose>
+        	<when test="orderField!=null and orderField!=''">
+        		order by ${orderField} ${orderDirection}
+        	</when>
+        	<otherwise>
+        		order by createDateTime desc
+        	</otherwise>
+        </choose>
+	</select>
+	
+	<select id="findAllNum"  parameterType="map" resultType="int">
+		select count(id) from du_user
+		<where>
+			<if test="strNameOrAccount!=null and strNameOrAccount!=''">
+				and (strAccount like '%${strNameOrAccount}%' or strName like '%${strNameOrAccount}%')
+			</if>
+		</where>
+	</select>
+	
+	<!-- 
+		根据工号查找用户
+		@author WangWeiWei_020463
+	 -->
+	<resultMap type="com.nisco.dms.entity.User" id="findByUserNoMap">
+		<id property="id" column="id" />
+		<association property="dept" column="deptId" select="DepartmentDao.findOneById" javaType="com.nisco.dms.entity.Department"></association>
+	</resultMap>
+	<select id="findByUserNo" parameterType="String" resultMap="findByUserNoMap">
+		select * from du_user where strAccount = #{userNo}
+	</select>
+	
+	<!-- 根据部门id来查询人员信息 -->
+	<resultMap type="com.nisco.dms.entity.User" id="findByDeptIdMap">
+		<id property="id" column="id" />
+		<association property="dept" column="deptId" select="DepartmentDao.findOneById" javaType="com.nisco.dms.entity.Department"></association>
+	</resultMap>
+	<select id="findByDeptId" parameterType="String" resultMap="findByDeptIdMap">
+		select * from du_user where deptId = #{deptId}
+	</select>
+	
+	<!-- 
+		根据主键Id查找用户
+		@author WangWeiWei_020463
+	 -->
+	<resultMap type="com.nisco.dms.entity.User" id="findOneByIdMap">
+		<id property="id" column="id" />
+		<association property="dept" column="deptId" select="DepartmentDao.findOneById" javaType="com.nisco.dms.entity.Department"></association>
+	</resultMap>
+	<select id="findOneById" parameterType="String" resultMap="findOneByIdMap">
+		select * from du_user where id = #{id}
+	</select>
+	
+	<!-- 根据公司别信息查询人员信息 -->
+	<resultMap type="com.nisco.dms.entity.User" id="findByCompanyIdMap">
+		<id property="id" column="id" />
+		<association property="dept" column="deptId" select="DepartmentDao.findOneById" javaType="com.nisco.dms.entity.Department"></association>
+	</resultMap>
+	<select id="findByCompanyId" parameterType="String" resultMap="findByCompanyIdMap">
+		select * from du_user where companyId = #{companyId}
+	</select>
+	
+	<!-- 根据工号或者名字来查询唯一一条人员信息 -->
+	<resultMap type="com.nisco.dms.entity.User" id="findByStrAccountOrStrNameMap">
+		<id property="id" column="id" />
+		<association property="dept" column="deptId" select="DepartmentDao.findOneById" javaType="com.nisco.dms.entity.Department"></association>
+	</resultMap>
+	<select id="findByStrAccountOrStrName" parameterType="String" resultMap="findByStrAccountOrStrNameMap">
+		select * from du_user where (strAccount = #{accountOrName} or strName = #{strName})
+	</select>
+	
+	<!-- 
+		创建用户
+		@author WangWeiWei_020463
+	 -->
+	<insert id="create" parameterType="com.nisco.dms.entity.User" flushCache="true">
+		insert into du_user
+			(id, strAccount, strName, strPassword, strSalt, strStatus, strEmail, strLinePhone, strPhone, deptId, createUserId, createDateTime)
+		values(#{id}, #{strAccount}, #{strName}, #{strPassword}, #{strSalt}, #{strStatus}, #{strEmail}, #{strLinePhone}, #{strPhone}, #{dept.id}, #{createUser.strAccount}, #{createDateTime})
+	</insert>
+	
+	<!-- 
+		修改用户
+		@author WangWeiWei_020463
+	 -->
+	<update id="update" parameterType="com.nisco.dms.entity.User" flushCache="true">
+		update du_user 
+		<set>
+			<if test="strAccount != null and strAccount !=''">
+				strAccount = #{strAccount},
+			</if>
+			<if test="strName != null and strName != ''">
+				strName = #{strName},
+			</if>
+			<if test="strPassword!=null and strPassword !=''">
+				strPassword = #{strPassword},
+			</if>
+			<if test="strSalt!=null and strSalt !=''">
+				strSalt = #{strSalt},
+			</if>
+			<if test="strStatus != null and strStatus !=''">
+				strStatus = #{strStatus},
+			</if>
+			<if test="strPhone != null and strPhone !=''">
+				strPhone = #{strPhone},
+			</if>
+			<if test="strLinePhone != null and strLinePhone !=''">
+				strLinePhone = #{strLinePhone},
+			</if>
+			<if test="dept != null">
+				deptId = #{dept.id},
+			</if>
+			<if test="updateUser != null">
+				updateUserId = #{updateUser.strAccount},
+			</if>
+			<if test="token != null">
+				TOKEN = #{token},
+			</if>
+			<if test="updateDateTime!=null and updateDateTime !=''">
+				updateDateTime = #{updateDateTime}
+			</if>
+		</set>
+		<where>
+			id = #{id}
+		</where>
+	</update>
+	
+	<!-- 
+		根据主键Id删除一条用户信息
+		@author WangWeiWei_020463
+	 -->
+	<delete id="delete" parameterType="String" flushCache="true">
+		delete from du_user where id = #{id}
+	</delete>
+</mapper>

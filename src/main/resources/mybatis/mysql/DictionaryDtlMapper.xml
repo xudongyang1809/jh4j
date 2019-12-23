@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- Hints:
+     1. The code was automatic created;
+     2. Any other questions can ask the software engineer for help.
+	 @author sysadmin
+	 @date 2018-09-29
+	 @Copyright:江苏金恒信息科技股份有限公司
+ -->
+<mapper namespace="DictionaryDtlDao">
+	<!-- 查询数据字典明细 -->
+	<resultMap type="com.nisco.dms.entity.DictionaryDtl" id="findAllMap">
+		<id property="id" column="id" />
+  		<association property="createUser" column="dictId" select="UserDao.findByUserNo" javaType="com.nisco.dms.entity.User"></association>
+  		<association property="dict" column="dictId" select="DictionaryDao.findOneById" javaType="com.nisco.dms.entity.Dictionary"></association>
+	</resultMap>
+	<select id="findAll" parameterType="map" resultMap="findAllMap">
+		select 
+			*
+		from dc_sys_dictionary_dtl
+		<where>
+			<if test="keyWords != null and keyWords != ''">
+				and (strSn like '%${keyWords}%' or strValue like '%${keyWords}%')
+			</if>
+			<if test="strSn != null and strSn != ''">
+				and strSn = #{strSn}
+			</if>
+			<if test="dictId != null and dictId != ''">
+				and dictId = #{dictId}
+			</if>
+		</where>
+  	 	order by createDateTime desc
+	</select>
+	
+	<!-- 查询数据数据字典明细中所有记录 -->
+	<select id="getCount" resultType="int" parameterType="map">
+		select 
+			count(id)
+		from dc_sys_dictionary_dtl
+		<where>
+			<if test="keyWords != null and keyWords != ''">
+				and (strSn like '%${keyWords}%' or strValue like '%${keyWords}%')
+			</if>
+			<if test="dictId != null and dictId != ''">
+				and dictId = #{dictId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 添加一条字典明细 -->
+	<insert id="create" parameterType="com.nisco.dms.entity.DictionaryDtl">
+		INSERT INTO dc_sys_dictionary_dtl
+		(id, strSn, strValue, strDesc, dictId, createUserId, createDateTime, companyId) 
+		VALUES(#{id}, #{strSn}, #{strValue}, #{strDesc}, #{dict.id}, #{createUser.strAccount}, #{createDateTime}, #{company.strSn})
+	</insert>
+	
+	<!-- 根据id查询出一条词典明细信息 -->
+	<resultMap type="com.nisco.dms.entity.DictionaryDtl" id="findOneByIdMap">
+		<id property="id" column="id" />
+  		<association property="dict" column="dictId" select="DictionaryDao.findOneById" javaType="com.nisco.dms.entity.Dictionary"></association>
+	</resultMap>
+	<select id="findOneById" parameterType="String" resultMap="findOneByIdMap">
+		select * from dc_sys_dictionary_dtl where id = #{id}
+	</select>
+	
+	<!-- 根据词典Id查找该词典下所有的词典明细信息 -->
+	<resultMap type="com.nisco.dms.entity.DictionaryDtl" id="findByDictIdMap">
+		<id property="id" column="id" />
+  		<association property="dict" column="dictId" select="DictionaryDao.findOneById" javaType="com.nisco.dms.entity.Dictionary"></association>
+	</resultMap>
+	<select id="findByDictId" parameterType="String" resultMap="findByDictIdMap">
+		select * from dc_sys_dictionary_dtl where dictId = #{dictId}
+		order by strSn asc
+	</select>
+
+	<!-- 根据词典StrSn查找该词典下所有的词典明细信息 -->
+	<select id="findDictionaryDtlByDicStrSn" parameterType="String" resultType="Map" >
+		select
+      		a.id as "id",
+			a.dictId as "dictId",
+			a.strSn as "strSnDtl",
+			a.strValue as "strValue",
+			a.strDesc as "strDescDtl"
+	  		from dc_sys_dictionary_dtl a
+		LEFT JOIN dc_sys_dictionary b on a.dictId = b.id
+		where b.strSn = #{strSn} and a.intIsActive = 1
+		order by A.createDateTime ASC
+	</select>
+	
+	<!--修改一条明细-->
+	<update id="update" parameterType="com.nisco.dms.entity.DictionaryDtl">
+		update dc_sys_dictionary_dtl 
+		<set>
+			<if test="strSn != null and strSn != ''">
+				strSn = #{strSn},
+			</if>
+			<if test="strValue != null and strValue != ''">
+				strValue = #{strValue},
+			</if>
+			strDesc = #{strDesc},
+			<if test="dict != null">
+				dictId = #{dict.id},
+			</if>
+			<if test="updateUser != null">
+				updateUserId = #{updateUser.id},
+			</if>
+			<if test="updateDateTime!=null and updateDateTime!=''">
+				updateDateTime = #{updateDateTime},
+			</if>
+			<if test="intIsActive!=null and intIsActive!=''">
+				intIsActive = #{intIsActive},
+			</if>
+			<if test="intIsDelete!=null and intIsDelete!=''">
+				intIsDelete = #{intIsDelete}
+			</if>
+		</set>
+		<where>
+			id = #{id}
+		</where>
+	</update>
+	
+	<!--删除字典明细-->
+	<delete id="delete" parameterType="String">
+		delete from dc_sys_dictionary_dtl WHERE id = #{id}
+	</delete>
+	
+	<!-- 根据数据词典ID删除数据词典详细 -->
+	<delete id="deleteByDictionaryId" parameterType="String">
+		delete from dc_sys_dictionary_dtl WHERE dictId = #{dictId}
+	</delete>
+
+	<select id="findByDictIdIgnoreCom" parameterType="String" resultType="DictionaryDtl" >
+		select * from Dc_Sys_Dictionary_Dtl d where d.dictId= #{dictId} order by d.strSn
+	</select>
+
+</mapper>

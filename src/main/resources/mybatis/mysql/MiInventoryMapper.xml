@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+     @desc “此代码是自动生成，请继续优化注释”
+	 @author 超级管理员 admin
+	 @version 1.0.0
+	 @date 2019-05-27 10:13:34
+	 @Copyright: 江苏金恒信息科技股份有限公司
+ -->
+<mapper namespace="MiInventoryDao">
+	<!-- 查询所有记录 过滤公司别 -->
+	<select id="findAll" parameterType="map" resultType="MiInventoryEntity">
+		select
+		id,
+		intIsActive,
+		intIsDelete,
+		createUserId,
+		createDateTime,
+		updateUserId,
+		updateDateTime,
+		updateUserNo,
+		companyId,
+		strPoNo,
+		(select strName from mf_store_location d where d.id=a.strAreaId) strAreaId,
+		strMatrlNo,
+		strMatrlName,
+		strBrand,
+		bdBuyPrice,
+		bdQty,
+		bdAmt,
+		viewtype,
+		viewid,
+		viewnum,
+		strSpec,
+		strUnit,
+		deleteAmt,
+		deleteNum,
+		supplier,
+		status
+		from mi_inventory a
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+			<if test="viewtype != null and viewtype != ''">
+				and viewtype like '%${viewtype}%'
+			</if>
+			<if test="viewnum != null and viewnum != ''">
+				and viewnum  like '%${viewnum}%'
+			</if>
+			<if test="strPoNo != null and strPoNo != ''">
+				and strPoNo  = #{strPoNo}
+			</if>
+			<if test="strAreaId != null and strAreaId != ''">
+				and strAreaId = #{strAreaId}
+			</if>
+			<if test="strMatrlNo != null and strMatrlNo != ''">
+				and strMatrlNo like '%${strMatrlNo}%'
+			</if>
+			<if test="status != null and status != ''">
+				and status = #{status}
+			</if>
+		</where>
+   		order by createDateTime desc
+	</select>
+	
+	<!-- 查询所有记录 过滤公司别 -->
+	<select id="getCount" resultType="int" parameterType="map">
+		select count(id) from mi_inventory
+		<where>
+			<if test="currentCompany != null and currentCompany != ''">
+				and companyId = #{currentCompany}
+			</if>
+			<if test="viewtype != null and viewtype != ''">
+				and viewtype like '%${viewtype}%'
+			</if>
+			<if test="viewnum != null and viewnum != ''">
+				and viewnum like '%${viewnum}%'
+			</if>
+			<if test="strAreaId != null and strAreaId != ''">
+				and strAreaId = #{strAreaId}
+			</if>
+			<if test="strMatrlNo != null and strMatrlNo != ''">
+				and strMatrlNo like '%${strMatrlNo}%'
+			</if>
+			<if test="status != null and status != ''">
+				and status = #{status}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 根据ID查询记录 -->
+	<select id="findOneById" parameterType="String" resultType="MiInventoryEntity">
+		select 
+			*
+		from mi_inventory
+		where id = #{id}
+	</select>
+	
+	<!-- 添加记录 -->
+	<insert id="create" parameterType="MiInventoryEntity">
+		insert into mi_inventory
+		(id, intIsActive, intIsDelete, createUserId, createDateTime, updateUserNo, companyId, strPoNo, strAreaId, strMatrlNo, strMatrlName, strBrand, bdBuyPrice, bdQty, bdAmt, viewtype, viewid, viewnum)
+		values(#{id}, #{intIsActive}, #{intIsDelete}, #{createUser.id}, #{createDateTime}, #{updateUserNo}, #{company.id}, #{strPoNo}, #{strAreaId}, #{strMatrlNo}, #{strMatrlName}, #{strBrand}, #{bdBuyPrice}, #{bdQty}, #{bdAmt}, #{viewtype}, #{viewid}, #{viewnum})
+	</insert>
+	
+	<!-- 修改记录 -->
+	<update id="update" parameterType="MiInventoryEntity">
+		update mi_inventory
+		<set>
+			<if test="updateUserNo != null and updateUserNo != ''">
+				updateUserNo = #{updateUserNo},
+			</if>
+			<if test="strPoNo != null and strPoNo != ''">
+				strPoNo = #{strPoNo},
+			</if>
+			<if test="strAreaId != null and strAreaId != ''">
+				strAreaId = #{strAreaId},
+			</if>
+			<if test="strMatrlNo != null and strMatrlNo != ''">
+				strMatrlNo = #{strMatrlNo},
+			</if>
+			<if test="strMatrlName != null and strMatrlName != ''">
+				strMatrlName = #{strMatrlName},
+			</if>
+			<if test="strBrand != null and strBrand != ''">
+				strBrand = #{strBrand},
+			</if>
+			<if test="bdBuyPrice != null">
+				bdBuyPrice = #{bdBuyPrice},
+			</if>
+			<if test="bdQty != null">
+				bdQty = #{bdQty},
+			</if>
+			<if test="bdAmt != null">
+				bdAmt = #{bdAmt},
+			</if>
+			<if test="viewtype != null and viewtype != ''">
+				viewtype = #{viewtype},
+			</if>
+			<if test="viewid != null and viewid != ''">
+				viewid = #{viewid},
+			</if>
+			<if test="viewnum != null and viewnum != ''">
+				viewnum = #{viewnum},
+			</if>
+			<if test="updateUser != null">
+				updateUserId = #{updateUser.id},
+			</if>
+			<if test="updateDateTime != null and updateDateTime != ''">
+				updateDateTime = #{updateDateTime},
+			</if>
+			<if test="intIsActive != null and intIsActive != ''">
+				intIsActive = #{intIsActive},
+			</if>
+			<if test="intIsDelete != null and intIsDelete != ''">
+				intIsDelete = #{intIsDelete}
+			</if>
+		</set>
+		<where>
+			id = #{id}
+		</where>
+	</update>
+	
+	<!-- 删除记录 -->
+	<delete id="delete" parameterType="String">
+		delete from mi_inventory where id = #{id}
+	</delete>
+</mapper>

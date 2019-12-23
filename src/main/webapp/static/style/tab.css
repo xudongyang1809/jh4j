@@ -1,0 +1,169 @@
+@CHARSET "UTF-8";
+/* 查询栏位样式 */
+.layui-single-tab {
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+}
+
+.tab-header {
+	border-bottom: 1px solid #ccc;
+	min-height: 50px;
+	padding: 5px;
+}
+
+.tab-header .layui-form-item {
+	margin-bottom: 5px;
+	margin-top: 5px;
+}
+
+.tab-header .layui-form-label {
+    padding: 9px 7px;
+    width: auto;
+    text-align: right;
+}
+
+.tab-header .layui-input-inline {
+	width: 150px;
+}
+
+.tab-header .layui-form-item .layui-input-inline {
+	margin-right: 0px;
+}
+
+.tab-header  .layui-form-item .layui-inline {
+    margin-right: 0px;
+}
+
+/* 此处将查询按钮浮动到最右侧 */
+.tab-header .layui-form-item>.layui-inline:last-child {
+	float: right;
+}
+
+/* 操作按钮（指的是增删查改等按钮）栏位样式 */
+.tab-bars {
+	min-height: 30px;
+	border-bottom: 1px solid #ccc;
+	padding: 5px 5px 0px 5px;
+}
+
+/* 表格 */
+.tab-content {
+	position: absolute;
+	top: 105px;
+	bottom: 33px;
+	left: 0px;
+	right: 0px;
+	overflow: auto;
+}
+
+/* .tab-content .layui-table {
+	margin-top: 0px;
+}
+
+.layui-table tbody tr.selected:hover {
+	background-color: #7CC5E5;
+}
+
+.tab-content .layui-table td,
+.tab-content .layui-table th {
+	padding: 2px 5px;
+	color: black;
+}
+
+.layui-table tr.selected {
+	background-color: #7CC5E5;
+}
+
+.layui-table tr.selected td {
+	color: white;
+} */
+
+/* 自定义table样式 */
+.frog-table {
+	width: 100%;
+    background-color: #fff;
+    color: #666;
+}
+
+.frog-table tr {
+    transition: all .3s;
+    -webkit-transition: all .3s;
+}
+
+.frog-table th, .frog-table td {
+	border-width: 1px;
+    border-style: solid;
+    border-color: #e6e6e6;
+    color: black;
+}
+
+.frog-table th {
+    text-align: left;
+    font-weight: 400;
+}
+
+.frog-table td, .frog-table th {
+    position: relative;
+    padding: 2px 5px;
+    min-height: 20px;
+    line-height: 20px;
+    font-size: 14px;
+}
+
+.frog-table tr.selected {
+	background-color: #7CC5E5;
+}
+
+.frog-table tr.selected td {
+	color: white;
+}
+
+.frog-table tbody tr:hover {
+	background-color: #f2f2f2;
+}
+
+.frog-table tbody tr.selected:hover {
+	background-color: #7CC5E5;
+}
+
+.frog-table thead tr {
+	background-color: #f2f2f2;
+}
+
+#panelBar {
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	padding: 1px;
+	border-top: 1px solid #ccc;
+	background-color: #eeeeee;
+}
+
+#panelBar .layui-box {
+	margin: 0;
+}
+
+#panelBar .layui-box>* {
+	margin-bottom: 0px;
+}
+
+#panelBar .layui-laypage-count {
+	background-color: #eeeeee;
+}
+
+#panelBar span {
+	background-color: #eeeeee;
+	color: black;
+}
+
+#panelBar input {
+	border: 1px solid #ccc;
+}
+
+#panelBar a {
+	background-color: #eeeeee;
+}
